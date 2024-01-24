@@ -1,0 +1,134 @@
+import { Button, Input, Table, Space, Popconfirm, Dropdown, Flex } from 'antd'
+import axios from 'axios'
+import React from 'react'
+import NoticeObjectCreateModal from './NoticeObjectCreateModal'
+const { Search } = Input
+
+class NoticeObjects extends React.Component {
+
+  state = {
+    visible: false,
+    list: [],
+    // 表头
+    columns: [
+      {
+        title: 'ID',
+        dataIndex: 'uuid',
+        key: 'uuid',
+      },
+      {
+        title: '名称',
+        dataIndex: 'name',
+        key: 'name',
+      },
+      {
+        title: '环境',
+        dataIndex: 'env',
+        key: 'env',
+      },
+      {
+        title: '通知类型',
+        dataIndex: 'noticeType',
+        key: 'noticeType',
+      },
+      {
+        title: '值班ID',
+        dataIndex: 'dutyId',
+        key: 'dutyId',
+      },
+      {
+        title: '操作',
+        dataIndex: 'operation',
+        render: (_, record) =>
+          this.state.list.length >= 1 ? (
+            <div>
+              <Popconfirm
+                title="Sure to delete?"
+                onConfirm={() => this.handleDelete(_, record)}>
+                <a>删除</a>
+              </Popconfirm>
+
+              <Button
+                type="link" >
+                更新
+              </Button>
+            </div>
+          ) : null,
+      },
+    ]
+  }
+
+  async handleDelete (_, record) {
+
+    await axios.post(`http://localhost:9001/api/v1/alertNotice/delete?uuid=${record.uuid}`)
+    this.handleList()
+
+  }
+
+  async handleList () {
+
+    const res = await axios.get("http://localhost:9001/api/v1/alertNotice/list")
+    this.setState({
+      list: res.data.data
+    })
+
+  }
+
+  handleModalClose = () => {
+    this.setState({ visible: false })
+  };
+
+  componentDidMount () {
+    this.handleList()
+  }
+
+  render () {
+
+    const onSearch = (value, _e, info) => console.log(info?.source, value)
+
+    const items = [
+      {
+        key: '1',
+        label: '批量删除',
+      },
+    ]
+
+    const onMenuClick = (e) => {
+      console.log('click', e)
+    }
+
+    return (
+      <div>
+        <div style={{ display: 'flex' }}>
+          <Button type="primary" onClick={() => this.setState({ visible: true })}>
+            创建
+          </Button>
+
+          <NoticeObjectCreateModal visible={this.state.visible} onClose={this.handleModalClose} />
+
+          <Search
+            allowClear
+            placeholder="input search text"
+            onSearch={onSearch}
+            enterButton />
+
+          <div style={{ marginLeft: 'auto' }}>
+            <Dropdown.Button
+              menu={{
+                items,
+                onClick: onMenuClick,
+              }}>
+              更多操作
+            </Dropdown.Button>
+          </div>
+        </div>
+
+        <Table dataSource={this.state.list} columns={this.state.columns} />
+      </div>
+    )
+
+  }
+
+}
+
+export default NoticeObjects

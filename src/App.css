@@ -1,0 +1,13 @@
+@import '~antd/dist/antd.css';
+
+.container {
+  width: 600px;
+  margin: 0 auto;
+}
+.search-box {
+  display: flex;
+  margin-bottom: 10px;
+}
+.input-box {
+  margin-right: 20px;
+}
