@@ -7,7 +7,7 @@ import {
   CalendarOutlined,
   HomeOutlined
 } from '@ant-design/icons'
-import { Layout, Menu, theme, Image } from 'antd'
+import { Layout, Menu, theme, Avatar, Button, Popover } from 'antd'
 import AlertRules from './AlertRules'
 import SilenceRules from './SilenceRules'
 import NoticeObjects from './NoticeObjects'
@@ -19,9 +19,24 @@ const { Header, Content, Footer, Sider } = Layout
 const { SubMenu } = Menu
 
 function Base () {
+
+  const handleLogout = () => {
+    // 清除LocalStorage中的Authorization值
+    localStorage.removeItem('Authorization')
+    window.location.reload()
+  }
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken()
+
+  const content = (
+    <div>
+      <Button type="text" onClick={handleLogout}>
+        退出登录
+      </Button>
+    </div>
+  )
 
   const [selectedKeys, setSelectedKeys] = useState(['1'])
   const [selectedValue, setSelectedValue] = useState('首页')
@@ -32,6 +47,7 @@ function Base () {
     setSelectedValue(selectedButton.value)
   }
 
+  // 鉴权
   Auth()
 
   const menuItems = [
@@ -122,6 +138,23 @@ function Base () {
             }}>
 
             {selectedValue}
+
+            <div style={{ position: 'relative', marginTop: '-50px' }}>
+              <Popover content={content} trigger="click" placement="bottom">
+                <Avatar
+                  style={{
+                    backgroundColor: '#7265e6',
+                    verticalAlign: 'middle',
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                  }}
+                  size="large"
+                  gap="5"
+                  icon={<UserOutlined />}
+                />
+              </Popover>
+            </div>
 
           </div>
         </Header>
