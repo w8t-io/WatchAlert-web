@@ -13,6 +13,7 @@ import SilenceRules from './SilenceRules'
 import NoticeObjects from './NoticeObjects'
 import Datasources from './Datasources'
 import EchartsComponent from './EchartsComponent'
+import Auth from './Auth'
 
 const { Header, Content, Footer, Sider } = Layout
 const { SubMenu } = Menu
@@ -31,6 +32,8 @@ function Base () {
     setSelectedValue(selectedButton.value)
   }
 
+  Auth()
+
   const menuItems = [
     { key: '1', value: '首页' },
     { key: '2', value: '告警规则' },
@@ -47,6 +50,7 @@ function Base () {
   ]
 
   return (
+
     <Layout hasSider>
       {/* 导航栏 */}
       <Sider
