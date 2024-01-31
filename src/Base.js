@@ -14,6 +14,8 @@ import NoticeObjects from './NoticeObjects'
 import Datasources from './Datasources'
 import EchartsComponent from './EchartsComponent'
 import Auth from './Auth'
+import AlertCurEvent from './AlertCurEvent'
+import AlertHisEvent from './AlertHisEvent'
 
 const { Header, Content, Footer, Sider } = Layout
 const { SubMenu } = Menu
@@ -173,6 +175,8 @@ function Base () {
           {selectedKeys[0] === '1' && <EchartsComponent />}
           {selectedKeys[0] === '2' && <AlertRules />}
           {selectedKeys[0] === '3' && <SilenceRules />}
+          {selectedKeys[0] === '4' && <AlertCurEvent />}
+          {selectedKeys[0] === '5' && <AlertHisEvent />}
           {selectedKeys[0] === '6' && <NoticeObjects />}
           {selectedKeys[0] === '12' && <Datasources />}
 

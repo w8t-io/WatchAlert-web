@@ -135,7 +135,13 @@ class SilenceRules extends React.Component {
           </div>
         </div>
 
-        <Table dataSource={this.state.list} columns={this.state.columns} />
+        <div style={{ overflowX: 'auto', marginTop: 10 }}>
+          <Table
+            columns={this.state.columns}
+            dataSource={this.state.list}
+          />
+        </div>
+
       </div>
     )
 

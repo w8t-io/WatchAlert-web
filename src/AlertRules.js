@@ -1,12 +1,14 @@
-import { Button, Input, Table, Space, Popconfirm, Dropdown, Flex } from 'antd'
+import { Button, Input, Table, Space, Popconfirm, Dropdown, Tag } from 'antd'
 import axios from 'axios'
 import React from 'react'
+import AlertRuleCreateModal from './AlertRuleCreateModal'
 const { Search } = Input
 
 
 class AlertRules extends React.Component {
 
   state = {
+    visible: false,
     list: [],
     // 表头
     columns: [
@@ -29,6 +31,14 @@ class AlertRules extends React.Component {
         title: '数据源',
         dataIndex: 'datasourceId',
         key: 'datasourceId',
+        width: 100,
+        render: (text, record) => (
+          <span>
+            {Object.entries(record.datasourceId).map(([key, value]) => (
+              <Tag color="processing" key={key}>{`${value}`}</Tag>
+            ))}
+          </span>
+        ),
       },
       {
         title: '描述',
@@ -37,26 +47,38 @@ class AlertRules extends React.Component {
       },
       {
         title: '状态',
-        dataIndex: 'status',
-        key: 'status',
+        dataIndex: 'enabled',
+        key: 'enabled',
+        render: enabled => (
+          enabled ?
+            <Tag color="success">启用</Tag> :
+            <Tag color="error">禁用</Tag>
+        ),
       },
       {
         title: '操作',
         dataIndex: 'operation',
         render: (_, record) =>
           this.state.list.length >= 1 ? (
-            <Popconfirm
-              title="Sure to delete?"
-              onConfirm={() => this.handleDelete(_, record)}>
-              <a>Delete</a>
-            </Popconfirm>
+            <div>
+              <Popconfirm
+                title="Sure to delete?"
+                onConfirm={() => this.handleDelete(_, record)}>
+                <a>删除</a>
+              </Popconfirm>
+
+              <Button
+                type="link" >
+                更新
+              </Button>
+            </div>
           ) : null,
       },
     ]
   }
 
 
-  async fatchData () {
+  async handleList () {
 
     const res = await axios.get("http://localhost:9001/api/v1/rule/ruleList")
     this.setState({
@@ -65,9 +87,23 @@ class AlertRules extends React.Component {
 
   }
 
-  componentDidMount () {
-    this.fatchData()
+  // 删除
+  async handleDelete (_, record) {
+
+    await axios.post(`http://localhost:9001/api/v1/rule/ruleDelete?id=${record.ruleId}`)
+    this.handleList()
+
   }
+
+  componentDidMount () {
+    this.handleList()
+  }
+
+
+  handleModalClose = () => {
+    this.setState({ visible: false })
+  };
+
 
   render () {
 
@@ -87,9 +123,11 @@ class AlertRules extends React.Component {
     return (
       <div>
         <div style={{ display: 'flex' }}>
-          <Button type="primary">
+          <Button type="primary" onClick={() => this.setState({ visible: true })}>
             创建
           </Button>
+
+          <AlertRuleCreateModal visible={this.state.visible} onClose={this.handleModalClose} />
 
           <Search
             allowClear
@@ -108,7 +146,12 @@ class AlertRules extends React.Component {
           </div>
         </div>
 
-        <Table dataSource={this.state.list} columns={this.state.columns} />
+        <div style={{ overflowX: 'auto', marginTop: 10 }}>
+          <Table
+            columns={this.state.columns}
+            dataSource={this.state.list}
+          />
+        </div>
       </div>
     )
 

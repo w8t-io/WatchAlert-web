@@ -127,24 +127,27 @@ class Datasources extends React.Component {
           </div>
         </div>
 
-        <Table
-          dataSource={this.state.list}
-          columns={this.state.columns}
-          pagination={this.state.pagination}
-          onChange={pagination => {
-            this.setState(
-              prevState => ({
-                pagination: {
-                  ...prevState.pagination,
-                  current: pagination.current,
-                },
-              }),
-              () => {
-                this.fetchData()
-              }
-            )
-          }}
-        />
+        <div style={{ overflowX: 'auto', marginTop: 10 }}>
+          <Table
+            dataSource={this.state.list}
+            columns={this.state.columns}
+            pagination={this.state.pagination}
+            onChange={pagination => {
+              this.setState(
+                prevState => ({
+                  pagination: {
+                    ...prevState.pagination,
+                    current: pagination.current,
+                  },
+                }),
+                () => {
+                  this.fetchData()
+                }
+              )
+            }}
+          />
+        </div>
+
       </div>
     )
   }
