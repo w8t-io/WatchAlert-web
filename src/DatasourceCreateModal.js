@@ -1,7 +1,6 @@
 import { Modal, Form, Input, Button, Switch, Select, Tooltip } from 'antd'
 import axios from 'axios'
-import React, { useState } from 'react'
-import { QuestionCircleOutlined } from '@ant-design/icons'
+import React, { useState, useEffect } from 'react'
 
 const MyFormItemContext = React.createContext([])
 
@@ -21,18 +20,48 @@ const MyFormItem = ({ name, ...props }) => {
   return <Form.Item name={concatName} {...props} />
 }
 
-const DatasourceCreateModal = ({ visible, onClose }) => {
+const DatasourceCreateModal = ({ visible, onClose, selectedRow, type }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
+
+  useEffect(() => {
+    if (selectedRow) {
+      form.setFieldsValue({
+        name: selectedRow.name,
+        type: selectedRow.type,
+        http: {
+          url: selectedRow.http.url,
+          timeout: selectedRow.http.timeout
+        },
+        description: selectedRow.description,
+        enabled: selectedRow.enabled
+      })
+    }
+  }, [selectedRow, form])
 
   const handleCreate = async (data) => {
     await axios.post("http://localhost:9001/api/v1/alert/dataSourceCreate", data)
   }
 
+  const handleUpdate = async (data) => {
+    await axios.post("http://localhost:9001/api/v1/alert/dataSourceUpdate", data)
+  }
+
   const handleFormSubmit = async (values) => {
     console.log('Form submitted:', values)
 
-    await handleCreate(values)
+    if (type === 'create') {
+      await handleCreate(values)
+    }
+
+    if (type === 'update') {
+      const newValues = {
+        ...values,
+        id: selectedRow.id
+      }
+      console.log("更新", newValues)
+      await handleUpdate(newValues)
+    }
 
     // 关闭弹窗
     onClose()

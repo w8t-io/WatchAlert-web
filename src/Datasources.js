@@ -6,6 +6,8 @@ const { Search } = Input
 
 class Datasources extends React.Component {
   state = {
+    selectedRow: null,
+    updateVisible: false,
     visible: false,
     list: [],
     pagination: {
@@ -57,7 +59,8 @@ class Datasources extends React.Component {
               </Popconfirm>
 
               <Button
-                type="link" >
+                type="link"
+                onClick={() => this.handleUpdateModalOpen(record)}>
                 更新
               </Button>
             </div>
@@ -97,6 +100,17 @@ class Datasources extends React.Component {
     this.setState({ visible: false })
   };
 
+  handleUpdateModalClose = () => {
+    this.setState({ updateVisible: false })
+  }
+
+  handleUpdateModalOpen = (record) => {
+    this.setState({
+      selectedRow: record,
+      updateVisible: true,
+    })
+  };
+
   render () {
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 
@@ -118,7 +132,9 @@ class Datasources extends React.Component {
             创建
           </Button>
 
-          <DatasourceCreateModal visible={this.state.visible} onClose={this.handleModalClose} />
+          <DatasourceCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' />
+
+          <DatasourceCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type="update" />
 
           <Search allowClear placeholder="input search text" onSearch={onSearch} enterButton />
 

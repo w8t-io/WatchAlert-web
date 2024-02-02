@@ -16,6 +16,10 @@ import EchartsComponent from './EchartsComponent'
 import Auth from './Auth'
 import AlertCurEvent from './AlertCurEvent'
 import AlertHisEvent from './AlertHisEvent'
+import User from './User'
+import CalendarApp from './CalendarApp'
+import UserRole from './UserRole'
+import DutyManage from './DutyManage'
 
 const { Header, Content, Footer, Sider } = Layout
 const { SubMenu } = Menu
@@ -60,10 +64,9 @@ function Base () {
     { key: '5', value: '历史告警' },
     { key: '6', value: '通知对象' },
     { key: '7', value: '通知模版' },
-    { key: '8', value: '值班用户' },
-    { key: '9', value: '值班排表' },
+    { key: '9', value: '值班日程' },
     { key: '10', value: '用户管理' },
-    { key: '11', value: '组织管理' },
+    { key: '11', value: '角色管理' },
     { key: '12', value: '数据源' },
   ]
 
@@ -110,13 +113,12 @@ function Base () {
           </SubMenu>
 
           <SubMenu key="sub3" icon={<CalendarOutlined />} title="值班管理">
-            <Menu.Item key="8">值班用户</Menu.Item>
-            <Menu.Item key="9">值班排表</Menu.Item>
+            <Menu.Item key="9">值班日程</Menu.Item>
           </SubMenu>
 
           <SubMenu key="sub4" icon={<UserOutlined />} title="人员组织">
             <Menu.Item key="10">用户管理</Menu.Item>
-            <Menu.Item key="11">组织管理</Menu.Item>
+            <Menu.Item key="11">角色管理</Menu.Item>
           </SubMenu>
 
           <Menu.Item key="12" icon={<PieChartOutlined />}>数据源</Menu.Item>
@@ -178,6 +180,9 @@ function Base () {
           {selectedKeys[0] === '4' && <AlertCurEvent />}
           {selectedKeys[0] === '5' && <AlertHisEvent />}
           {selectedKeys[0] === '6' && <NoticeObjects />}
+          {selectedKeys[0] === '9' && <DutyManage />}
+          {selectedKeys[0] === '10' && <User />}
+          {selectedKeys[0] === '11' && <UserRole />}
           {selectedKeys[0] === '12' && <Datasources />}
 
         </Content>

@@ -1,6 +1,6 @@
 import { Modal, Form, Input, Button, DatePicker, Select, Space } from 'antd'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import moment from 'moment'
 const { RangePicker } = DatePicker
 
@@ -18,11 +18,21 @@ const MyFormItem = ({ name, ...props }) => {
 }
 
 // 函数组件
-const SilenceRuleCreateModal = ({ visible, onClose }) => {
+const SilenceRuleCreateModal = ({ visible, onClose, selectedRow }) => {
   const [form] = Form.useForm()
   const [startTimestamp, setStartTimestamp] = useState(null)
   const [endTimestamp, setEndTimestamp] = useState(null)
+  const [alertFingerprint, setAlertFingerprint] = useState([])
+  const [dataSourceType, setDataSourceType] = useState('')
 
+  useEffect(() => {
+    if (selectedRow) {
+      form.setFieldsValue({
+        datasource_type: selectedRow.datasource_type,
+        fingerprint: selectedRow.fingerprint,
+      })
+    }
+  }, [selectedRow, form])
 
   // 时间选择器
   const onChange = (dates, dateStrings) => {
@@ -42,6 +52,21 @@ const SilenceRuleCreateModal = ({ visible, onClose }) => {
   }
   // ---
 
+  // 获取当前告警
+  const handleSearchCurAlert = async () => {
+    try {
+      const res = await axios.get(`http://localhost:9001/api/v1/alert/curEvent?dsType=${dataSourceType}`)
+      const options = res.data.data.map((item) => ({ label: item.rule_name, value: item.fingerprint }))
+      setAlertFingerprint(options)
+      console.log(options)
+    } catch (error) {
+      console.error("Error fetching duty users:", error)
+    }
+  }
+
+  const onClickToDsType = async (value) => {
+    setDataSourceType(value)
+  }
 
   // 创建
   const handleCreate = async (data) => {
@@ -81,6 +106,7 @@ const SilenceRuleCreateModal = ({ visible, onClose }) => {
                 label: 'Prometheus',
               },
             ]}
+            onChange={onClickToDsType}
           />
         </MyFormItem>
 
@@ -90,13 +116,8 @@ const SilenceRuleCreateModal = ({ visible, onClose }) => {
             style={{
               flex: 1,
             }}
-            options={[
-              {
-                value: 'FeiShu',
-                label: 'FeiShu',
-              },
-            ]}
-            onChange={''}
+            options={alertFingerprint}
+            onClick={handleSearchCurAlert}
           />
         </MyFormItem>
 

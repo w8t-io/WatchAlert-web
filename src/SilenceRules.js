@@ -43,11 +43,6 @@ class SilenceRules extends React.Component {
         key: 'comment',
       },
       {
-        title: '状态',
-        dataIndex: 'status',
-        key: 'status',
-      },
-      {
         title: '操作',
         dataIndex: 'operation',
         render: (_, record) =>

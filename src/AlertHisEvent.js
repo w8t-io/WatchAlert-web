@@ -13,7 +13,7 @@ class AlertHisEvent extends React.Component {
         title: '规则名称',
         dataIndex: 'rule_name',
         key: 'rule_name',
-        width: 150,
+        width: 100,
       },
       {
         title: '指纹',

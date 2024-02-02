@@ -79,6 +79,7 @@ const Login = () => {
       const data = {
         "username": "admin",
         "email": "admin@qq.com",
+        "phone": "18888888888",
         "password": values.password,
         "amount_type": "admin"
       }

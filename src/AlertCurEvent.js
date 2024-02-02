@@ -1,11 +1,14 @@
 import { Select, Input, Table, Button, Popconfirm, Dropdown, Tag } from 'antd'
 import axios from 'axios'
 import React from 'react'
+import SilenceRuleCreateModal from './SilenceRuleCreateModal'
 const { Search } = Input
 
 class AlertHisEvent extends React.Component {
 
   state = {
+    selectedRow: null,
+    silenceVisible: false,
     visible: false,
     list: [],
     columns: [
@@ -25,12 +28,10 @@ class AlertHisEvent extends React.Component {
         title: '数据源',
         dataIndex: 'datasourceId',
         key: 'datasourceId',
-        width: 100,
+        width: 250,
         render: (text, record) => (
           <span>
-            {Object.entries(record.datasourceId).map(([key, value]) => (
-              <Tag color="processing" key={key}>{`${value}`}</Tag>
-            ))}
+            <div>{record.datasource_id[0]}</div>
           </span>
         ),
       },
@@ -77,13 +78,12 @@ class AlertHisEvent extends React.Component {
         render: (_, record) =>
           this.state.list.length >= 1 ? (
             <div>
-              <Button type="link">静默</Button>
+              <Button type="link" onClick={() => this.handleSilenceModalOpen(record)}>静默</Button>
             </div>
           ) : null,
       },
     ]
   }
-
 
   async componentDidMount () {
     this.handleList()
@@ -94,15 +94,22 @@ class AlertHisEvent extends React.Component {
     this.setState({
       list: res.data.data,
     })
-  };
-
-  handleDelete = async (_, record) => {
-    // await axios.post(`http://localhost:9001/api/v1/rule/ruleDelete?id=${record.ruleId}`);
-    this.handleList()
+    console.log(this.state.list)
   };
 
   handleModalClose = () => {
     this.setState({ visible: false })
+  };
+
+  handleSilenceModalClose = () => {
+    this.setState({ silenceVisible: false })
+  }
+
+  handleSilenceModalOpen = (record) => {
+    this.setState({
+      selectedRow: record,
+      silenceVisible: true,
+    })
   };
 
 
@@ -113,7 +120,6 @@ class AlertHisEvent extends React.Component {
     return (
       <div>
         <div style={{ display: 'flex' }}>
-
 
           <Select
             placeholder="数据源类型"
@@ -162,6 +168,8 @@ class AlertHisEvent extends React.Component {
             enterButton />
 
         </div>
+
+        <SilenceRuleCreateModal visible={this.state.silenceVisible} onClose={this.handleSilenceModalClose} selectedRow={this.state.selectedRow} />
 
         <div style={{ overflowX: 'auto', marginTop: 10 }}>
           <Table
