@@ -1,4 +1,4 @@
-import { Button, Input, Table, Space, Popconfirm, Dropdown, Flex } from 'antd'
+import { Button, Input, Table, Select, Popconfirm, Dropdown, Flex } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import NoticeObjectCreateModal from './NoticeObjectCreateModal'
@@ -7,6 +7,8 @@ const { Search } = Input
 class NoticeObjects extends React.Component {
 
   state = {
+    selectedRow: null,
+    updateVisible: false,
     visible: false,
     list: [],
     // 表头
@@ -49,7 +51,7 @@ class NoticeObjects extends React.Component {
               </Popconfirm>
 
               <Button
-                type="link" >
+                type="link" onClick={() => this.handleUpdateModalOpen(record)}>
                 更新
               </Button>
             </div>
@@ -57,6 +59,17 @@ class NoticeObjects extends React.Component {
       },
     ]
   }
+
+  handleUpdateModalClose = () => {
+    this.setState({ updateVisible: false })
+  }
+
+  handleUpdateModalOpen = (record) => {
+    this.setState({
+      selectedRow: record,
+      updateVisible: true,
+    })
+  };
 
   async handleDelete (_, record) {
 
@@ -104,13 +117,25 @@ class NoticeObjects extends React.Component {
             创建
           </Button>
 
-          <NoticeObjectCreateModal visible={this.state.visible} onClose={this.handleModalClose} />
+          <NoticeObjectCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' />
 
-          <Search
-            allowClear
-            placeholder="input search text"
-            onSearch={onSearch}
-            enterButton />
+          <NoticeObjectCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' />
+
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+            width: '1000px'
+          }}>
+
+            <Search
+              allowClear
+              placeholder="输入搜索关键字"
+              onSearch={onSearch}
+              enterButton
+              style={{ width: 300 }} />
+          </div>
 
           <div style={{ marginLeft: 'auto' }}>
             <Dropdown.Button

@@ -119,12 +119,18 @@ class AlertHisEvent extends React.Component {
 
     return (
       <div>
-        <div style={{ display: 'flex' }}>
-
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '10px',
+          width: '500px'
+        }}>
           <Select
             placeholder="数据源类型"
             style={{
               flex: 1,
+              width: 200
             }}
             allowClear
             options={[
@@ -143,6 +149,7 @@ class AlertHisEvent extends React.Component {
             placeholder="告警等级"
             style={{
               flex: 1,
+              width: 150
             }}
             allowClear
             options={[
@@ -163,9 +170,10 @@ class AlertHisEvent extends React.Component {
 
           <Search
             allowClear
-            placeholder="input search text"
+            placeholder="输入搜索关键字"
             onSearch={onSearch}
-            enterButton />
+            enterButton
+            style={{ width: 300 }} />
 
         </div>
 

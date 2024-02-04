@@ -1,4 +1,4 @@
-import { Button, Input, Table, Space, Popconfirm, Dropdown, Tag } from 'antd'
+import { Button, Input, Table, Select, Popconfirm, Dropdown, Tag } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import AlertRuleCreateModal from './AlertRuleCreateModal'
@@ -8,6 +8,8 @@ const { Search } = Input
 class AlertRules extends React.Component {
 
   state = {
+    selectedRow: null,
+    updateVisible: false,
     visible: false,
     list: [],
     // 表头
@@ -68,7 +70,7 @@ class AlertRules extends React.Component {
               </Popconfirm>
 
               <Button
-                type="link" >
+                type="link" onClick={() => this.handleUpdateModalOpen(record)} >
                 更新
               </Button>
             </div>
@@ -104,6 +106,16 @@ class AlertRules extends React.Component {
     this.setState({ visible: false })
   };
 
+  handleUpdateModalClose = () => {
+    this.setState({ updateVisible: false })
+  }
+
+  handleUpdateModalOpen = (record) => {
+    this.setState({
+      selectedRow: record,
+      updateVisible: true,
+    })
+  };
 
   render () {
 
@@ -127,13 +139,74 @@ class AlertRules extends React.Component {
             创建
           </Button>
 
-          <AlertRuleCreateModal visible={this.state.visible} onClose={this.handleModalClose} />
+          <AlertRuleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' />
 
-          <Search
-            allowClear
-            placeholder="input search text"
-            onSearch={onSearch}
-            enterButton />
+          <AlertRuleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' />
+
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+            width: '1000px'
+          }}>
+            <Select
+              placeholder="数据源类型"
+              style={{
+                // flex: 1,
+                width: 150
+              }}
+              allowClear
+              options={[
+                {
+                  value: 'Prometheus',
+                  label: 'Prometheus',
+                },
+              ]}
+            />
+
+            <Select
+              placeholder="数据源"
+              style={{
+                // flex: 1,
+                width: 100
+              }}
+              allowClear
+              options={[
+                {
+                  value: '1',
+                  label: 'test',
+                },
+              ]}
+            />
+
+            <Select
+              placeholder="状态"
+              style={{
+                // flex: 1,
+                width: 100
+              }}
+              allowClear
+
+              options={[
+                {
+                  value: 'true',
+                  label: '启用',
+                },
+                {
+                  value: 'false',
+                  label: '禁用',
+                },
+              ]}
+            />
+
+            <Search
+              allowClear
+              placeholder="输入搜索关键字"
+              onSearch={onSearch}
+              enterButton
+              style={{ width: 300 }} />
+          </div>
 
           <div style={{ marginLeft: 'auto' }}>
             <Dropdown.Button

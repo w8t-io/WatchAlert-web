@@ -143,29 +143,39 @@ class User extends React.Component {
 
           <UserCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' />
 
-          <Select
-            placeholder="状态"
-            style={{
-              flex: 1,
-            }}
-            allowClear
-            options={[
-              {
-                value: 'true',
-                label: '启用',
-              },
-              {
-                value: 'false',
-                label: '禁用',
-              },
-            ]}
-          />
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+            width: '1000px'
+          }}>
+            <Select
+              placeholder="状态"
+              style={{
+                // flex: 1,
+                width: 150
+              }}
+              allowClear
+              options={[
+                {
+                  value: 'true',
+                  label: '启用',
+                },
+                {
+                  value: 'false',
+                  label: '禁用',
+                },
+              ]}
+            />
 
-          <Search
-            allowClear
-            placeholder="input search text"
-            onSearch={onSearch}
-            enterButton />
+            <Search
+              allowClear
+              placeholder="输入搜索关键字"
+              onSearch={onSearch}
+              enterButton
+              style={{ width: 300 }} />
+          </div>
 
         </div>
 

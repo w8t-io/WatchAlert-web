@@ -17,7 +17,7 @@ import Auth from './Auth'
 import AlertCurEvent from './AlertCurEvent'
 import AlertHisEvent from './AlertHisEvent'
 import User from './User'
-import CalendarApp from './CalendarApp'
+import Error from './Error'
 import UserRole from './UserRole'
 import DutyManage from './DutyManage'
 
@@ -180,6 +180,7 @@ function Base () {
           {selectedKeys[0] === '4' && <AlertCurEvent />}
           {selectedKeys[0] === '5' && <AlertHisEvent />}
           {selectedKeys[0] === '6' && <NoticeObjects />}
+          {selectedKeys[0] === '7' && <Error />}
           {selectedKeys[0] === '9' && <DutyManage />}
           {selectedKeys[0] === '10' && <User />}
           {selectedKeys[0] === '11' && <UserRole />}

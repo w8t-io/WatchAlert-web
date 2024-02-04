@@ -1,6 +1,6 @@
 import { Modal, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, InputNumber } from 'antd'
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 
 const MyFormItemContext = React.createContext([])
@@ -23,7 +23,7 @@ const MyFormItem = ({ name, ...props }) => {
   return <Form.Item name={concatName} {...props} />
 }
 
-const AlertRuleCreateModal = ({ visible, onClose }) => {
+const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
   const [selectedType, setSelectedType] = useState('') // 数据源类型
@@ -41,15 +41,50 @@ const AlertRuleCreateModal = ({ visible, onClose }) => {
     setSeverityValue(e.target.value)
   }
 
+  useEffect(() => {
+    if (selectedRow) {
+      console.log(selectedRow)
+      form.setFieldsValue({
+        annotations: selectedRow.annotations,
+        datasourceId: selectedRow.datasourceId,
+        datasourceType: selectedRow.datasourceType,
+        description: selectedRow.description,
+        enabled: selectedRow.enabled,
+        evalInterval: selectedRow.evalInterval,
+        forDuration: selectedRow.forDuration,
+        labels: selectedRow.labels,
+        noticeGroup: selectedRow.noticeGroup,
+        noticeId: selectedRow.noticeId,
+        repeatNoticeInterval: selectedRow.repeatNoticeInterval,
+        ruleConfig: selectedRow.ruleConfig,
+        ruleId: selectedRow.ruleId,
+        ruleName: selectedRow.ruleName
+      })
+    }
+  }, [selectedRow, form])
+
+
   // 创建
   const handleFormSubmit = async (values) => {
 
-    const newData = {
-      ...values,
-      "noticeGroup": noticeLabels
+    if (type === 'create') {
+      const newData = {
+        ...values,
+        noticeGroup: noticeLabels
+      }
+
+      await axios.post("http://localhost:9001/api/v1/rule/ruleCreate", newData)
     }
 
-    await axios.post("http://localhost:9001/api/v1/rule/ruleCreate", newData)
+    if (type === 'update') {
+      const newData = {
+        ...values,
+        ruleId: selectedRow.ruleId,
+        noticeGroup: noticeLabels
+      }
+
+      await axios.post("http://localhost:9001/api/v1/rule/ruleUpdate", newData)
+    }
 
     // 关闭弹窗
     onClose()
@@ -104,8 +139,10 @@ const AlertRuleCreateModal = ({ visible, onClose }) => {
   // --
 
   React.useEffect(() => {
-    handleGetNoticeData()
-    handleGetDatasourceData()
+    if (visible === true) {
+      handleGetNoticeData()
+      handleGetDatasourceData()
+    }
   }, [])
 
   // 在onChange事件处理函数中更新选择的通知对象值

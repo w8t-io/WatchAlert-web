@@ -18,7 +18,7 @@ const MyFormItem = ({ name, ...props }) => {
 }
 
 // 函数组件
-const SilenceRuleCreateModal = ({ visible, onClose, selectedRow }) => {
+const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   const [form] = Form.useForm()
   const [startTimestamp, setStartTimestamp] = useState(null)
   const [endTimestamp, setEndTimestamp] = useState(null)
@@ -73,17 +73,35 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow }) => {
     await axios.post("http://localhost:9001/api/v1/silence/silenceCreate", data)
   }
 
+  // 更新
+  const handleUpdate = async (data) => {
+    await axios.post("http://localhost:9001/api/v1/silence/silenceUpdate", data)
+  }
+
   // 提交
   const handleFormSubmit = async (values) => {
 
-    const newData = {
-      ...values,
-      starts_at: startTimestamp,
-      ends_at: endTimestamp,
+    if (type === 'create') {
+      const newData = {
+        ...values,
+        starts_at: startTimestamp,
+        ends_at: endTimestamp,
+      }
+
+      await handleCreate(newData)
     }
 
-    console.log('Form submitted:', newData)
-    await handleCreate(newData)
+    if (type === 'update') {
+      const newData = {
+        ...values,
+        id: selectedRow.id,
+        create_by: selectedRow.create_by,
+        starts_at: startTimestamp,
+        ends_at: endTimestamp,
+      }
+
+      await handleUpdate(newData)
+    }
 
     // 关闭弹窗
     onClose()

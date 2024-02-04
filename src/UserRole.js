@@ -109,11 +109,21 @@ class UserRole extends React.Component {
 
           <UserRoleCreateModal visible={this.state.visible} onClose={this.handleModalClose} />
 
-          <Search
-            allowClear
-            placeholder="input search text"
-            onSearch={onSearch}
-            enterButton />
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+            width: '1000px'
+          }}>
+
+            <Search
+              allowClear
+              placeholder="输入搜索关键字"
+              onSearch={onSearch}
+              enterButton
+              style={{ width: 300 }} />
+          </div>
 
         </div>
 
