@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, DatePicker, Select, Switch } from 'antd'
+import { Modal, Form, Input, Button, Select, Switch } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 
@@ -30,7 +30,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
         phone: selectedRow.phone,
         joinDuty: enabled,
         fsUserId: selectedRow.fsUserId,
-        amount_type: selectedRow.amount_type
+        role: selectedRow.role
       })
     }
   }, [selectedRow, form])
@@ -116,7 +116,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
           <Input />
         </MyFormItem>
 
-        <MyFormItem name="amount_type" label="用户角色"
+        <MyFormItem name="role" label="用户角色"
           rules={[
             {
               required: true,

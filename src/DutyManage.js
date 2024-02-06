@@ -79,8 +79,8 @@ class DutyManage extends React.Component {
               <Popconfirm
                 title="Sure to delete?"
                 onConfirm={() => this.handleDelete(_, record)}
-                disabled={record.amount_type === 'admin'}>
-                <a style={{ cursor: record.amount_type === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
+                disabled={record.role === 'admin'}>
+                <a style={{ cursor: record.role === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
               </Popconfirm>
             </div>
           ) : null,

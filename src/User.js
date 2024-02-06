@@ -1,4 +1,4 @@
-import { Select, Input, Table, Button, Popconfirm, Dropdown, Tag } from 'antd'
+import { Select, Input, Table, Button, Popconfirm } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import UserCreateModal from './UserCreateModal'
@@ -47,8 +47,8 @@ class User extends React.Component {
       },
       {
         title: '角色',
-        dataIndex: 'amount_type',
-        key: 'amount_type',
+        dataIndex: 'role',
+        key: 'role',
         width: 30,
       },
       {
@@ -78,8 +78,8 @@ class User extends React.Component {
               <Popconfirm
                 title="Sure to delete?"
                 onConfirm={() => this.handleDelete(_, record)}
-                disabled={record.amount_type === 'admin'}>
-                <a style={{ cursor: record.amount_type === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
+                disabled={record.role === 'admin'}>
+                <a style={{ cursor: record.role === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
               </Popconfirm>
               <Button type="link"
                 onClick={() => this.handleUpdateModalOpen(record)}              >

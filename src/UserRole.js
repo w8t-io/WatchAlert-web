@@ -1,5 +1,4 @@
-import { Select, Input, Table, Button, Popconfirm, Dropdown, Tag } from 'antd'
-import axios from 'axios'
+import { Input, Table, Button, Popconfirm } from 'antd'
 import React from 'react'
 import UserRoleCreateModal from './UserRoleCreateModal'
 const { Search } = Input
@@ -57,7 +56,7 @@ class UserRole extends React.Component {
               <Popconfirm
                 title="Sure to delete?"
                 onConfirm={() => this.handleDelete(_, record)}>
-                <a style={{ cursor: record.amount_type === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
+                <a style={{ cursor: record.role === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
               </Popconfirm>
               <Button
                 type="link" >

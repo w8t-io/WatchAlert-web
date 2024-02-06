@@ -81,7 +81,7 @@ const Login = () => {
         "email": "admin@qq.com",
         "phone": "18888888888",
         "password": values.password,
-        "amount_type": "admin"
+        "role": "admin"
       }
 
       const res = await axios.post("http://localhost:9001/api/v1/auth/register", data)
@@ -120,6 +120,7 @@ const Login = () => {
               message: 'Please input your Username!',
             },
           ]}
+          style={{ width: '280px' }}
         >
           <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
         </Form.Item>
