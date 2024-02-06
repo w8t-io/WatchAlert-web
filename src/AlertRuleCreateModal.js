@@ -139,14 +139,15 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   // --
 
   React.useEffect(() => {
-    if (visible === true) {
-      handleGetNoticeData()
-      handleGetDatasourceData()
-    }
+
+    handleGetNoticeData()
+    handleGetDatasourceData()
+
   }, [])
 
   // 在onChange事件处理函数中更新选择的通知对象值
   const handleSelectChange = (value) => {
+    console.log(value)
     setSelectedNotice(value)
   }
 
@@ -265,9 +266,9 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
 
             <MyFormItem name="severity" label="告警等级">
               <Radio.Group onChange={onChange} value={severityValue}>
-                <Radio value={1}>一级告警</Radio>
-                <Radio value={2}>二级告警</Radio>
-                <Radio value={3}>三级告警</Radio>
+                <Radio value={0}>P0级告警</Radio>
+                <Radio value={1}>P1级告警</Radio>
+                <Radio value={2}>P2级告警</Radio>
               </Radio.Group>
             </MyFormItem>
 

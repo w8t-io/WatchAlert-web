@@ -40,12 +40,17 @@ class AlertHisEvent extends React.Component {
         dataIndex: 'severity',
         key: 'severity',
         width: 100,
+        render: (text) => (
+          <span>
+            P{text}
+          </span>
+        ),
       },
       {
         title: '事件标签',
         dataIndex: 'metric',
         key: 'metric',
-        width: 150,
+        width: 200,
         render: (text, record) => (
           <span>
             {Object.entries(record.metric).map(([key, value]) => (
@@ -154,16 +159,16 @@ class AlertHisEvent extends React.Component {
             allowClear
             options={[
               {
+                value: '0',
+                label: 'P0级告警',
+              },
+              {
                 value: '1',
-                label: '一级告警',
+                label: 'P1级告警',
               },
               {
                 value: '2',
-                label: '二级告警',
-              },
-              {
-                value: '3',
-                label: '三级告警',
+                label: 'P2级告警',
               },
             ]}
           />
@@ -185,7 +190,7 @@ class AlertHisEvent extends React.Component {
             dataSource={this.state.list}
             scroll={{
               x: 1500,
-              y: 300,
+              y: 500,
             }}
           />
         </div>

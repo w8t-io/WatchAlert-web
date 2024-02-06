@@ -1,6 +1,7 @@
 import { Select, Input, Table, Button, Popconfirm, Dropdown, Tag } from 'antd'
 import axios from 'axios'
 import React from 'react'
+import { CopyOutlined } from '@ant-design/icons'
 import DutyManageCreateModal from './DutyManageCreateModal'
 import CalendarApp from './CalendarApp'
 const { Search } = Input
@@ -21,12 +22,22 @@ class DutyManage extends React.Component {
         key: 'id',
         width: 50,
         render: (text, record) => (
-          <a
-            style={{ cursor: 'pointer' }}
-            onClick={() => this.setState({ selectedId: text, calendarVisible: true, calendarName: record.name, calendarDutyId: record.id })}
-          >
-            {text}
-          </a>
+          <div>
+
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <a
+                style={{ cursor: 'pointer' }}
+                onClick={() => this.setState({ selectedId: text, calendarVisible: true, calendarName: record.name, calendarDutyId: record.id })}
+              >
+                {text}
+              </a>
+              <CopyOutlined
+                style={{ marginLeft: '5px', cursor: 'pointer' }}
+                onClick={() => this.handleCopy(text)}
+              />
+            </div>
+          </div>
+
         ),
       },
       {
@@ -77,6 +88,9 @@ class DutyManage extends React.Component {
     ]
   }
 
+  handleCopy = (text) => {
+    navigator.clipboard.writeText(text)
+  };
 
   async componentDidMount () {
     this.handleList()

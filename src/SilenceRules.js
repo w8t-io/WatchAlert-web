@@ -204,7 +204,7 @@ class SilenceRules extends React.Component {
             dataSource={this.state.list}
             scroll={{
               x: 1500,
-              y: 300,
+              y: 500,
             }}
           />
         </div>

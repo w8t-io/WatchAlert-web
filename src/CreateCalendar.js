@@ -10,8 +10,8 @@ const CreateCalendar = ({ visible, onClose, dutyId }) => {
   const [dutyPeriod, setDutyPeriod] = useState(1)
   const [filteredOptions, setFilteredOptions] = useState([])
 
-  const handleSelectChange = (selectedValues) => {
-    setSelectedItems(selectedValues)
+  const handleSelectChange = (_, value) => {
+    setSelectedItems(value)
   }
 
   const onChangeDate = (date, dateString) => {
@@ -23,7 +23,6 @@ const CreateCalendar = ({ visible, onClose, dutyId }) => {
   }
 
   const handleFormSubmit = async (data) => {
-    console.log(data)
     await axios.post("http://localhost:9001/api/v1/schedule/create", data)
     onClose()
   }
@@ -31,9 +30,11 @@ const CreateCalendar = ({ visible, onClose, dutyId }) => {
   const handleSearchDutyUser = async () => {
     try {
       const res = await axios.get("http://localhost:9001/api/v1/auth/searchDutyUser")
-      const options = res.data.data.map((item) => ({ name: item.username, userid: item.userid }))
+      const options = res.data.data.map((item) => ({
+        username: item.username,
+        userid: item.userid
+      }))
       setFilteredOptions(options)
-      console.log(options)
     } catch (error) {
       console.error("Error fetching duty users:", error)
     }
@@ -50,7 +51,7 @@ const CreateCalendar = ({ visible, onClose, dutyId }) => {
         dutyId: dutyId,
         month: selectedMonth,
         dutyPeriod: dutyPeriod,
-        users: selectedItems.map((item) => ({ username: item })),
+        users: selectedItems.map((item) => ({ username: item.value, userid: item.userid })),
       }
 
       handleFormSubmit(calendarData)
@@ -112,7 +113,6 @@ const CreateCalendar = ({ visible, onClose, dutyId }) => {
           <Select
             mode="multiple"
             placeholder="Inserted are removed"
-            value={selectedItems}
             onChange={handleSelectChange}
             onClick={handleSearchDutyUser}
             style={{
@@ -120,8 +120,8 @@ const CreateCalendar = ({ visible, onClose, dutyId }) => {
             }}
           >
             {filteredOptions.map((item) => (
-              <Option key={item.name} value={item.userid}>
-                {item.name}
+              <Option key={item.username} value={item.username} userid={item.userid}>
+                {item.username}
               </Option>
             ))}
           </Select>
