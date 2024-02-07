@@ -55,7 +55,7 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   // 获取当前告警
   const handleSearchCurAlert = async () => {
     try {
-      const res = await axios.get(`http://localhost:9001/api/v1/alert/curEvent?dsType=${dataSourceType}`)
+      const res = await axios.get(`http://localhost:9001/api/w8s/event/curEvent?dsType=${dataSourceType}`)
       const options = res.data.data.map((item) => ({ label: item.rule_name, value: item.fingerprint }))
       setAlertFingerprint(options)
       console.log(options)
@@ -70,12 +70,12 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
 
   // 创建
   const handleCreate = async (data) => {
-    await axios.post("http://localhost:9001/api/v1/silence/silenceCreate", data)
+    await axios.post("http://localhost:9001/api/w8t/silence/silenceCreate", data)
   }
 
   // 更新
   const handleUpdate = async (data) => {
-    await axios.post("http://localhost:9001/api/v1/silence/silenceUpdate", data)
+    await axios.post("http://localhost:9001/api/w8t/silence/silenceUpdate", data)
   }
 
   // 提交

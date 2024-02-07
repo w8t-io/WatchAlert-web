@@ -73,14 +73,14 @@ class NoticeObjects extends React.Component {
 
   async handleDelete (_, record) {
 
-    await axios.post(`http://localhost:9001/api/v1/alertNotice/delete?uuid=${record.uuid}`)
+    await axios.post(`http://localhost:9001/api/w8t/notice/noticeDelete?uuid=${record.uuid}`)
     this.handleList()
 
   }
 
   async handleList () {
 
-    const res = await axios.get("http://localhost:9001/api/v1/alertNotice/list")
+    const res = await axios.get("http://localhost:9001/api/w8t/notice/noticeList")
     this.setState({
       list: res.data.data
     })

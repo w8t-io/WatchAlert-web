@@ -92,7 +92,7 @@ class SilenceRules extends React.Component {
   // 获取所有数据
   async handleList () {
 
-    const res = await axios.get("http://localhost:9001/api/v1/silence/silenceList")
+    const res = await axios.get("http://localhost:9001/api/w8t/silence/silenceList")
     this.setState({
       list: res.data.data
     })
@@ -106,7 +106,7 @@ class SilenceRules extends React.Component {
   // 删除
   async handleDelete (_, record) {
 
-    await axios.post(`http://localhost:9001/api/v1/silence/silenceDelete?id=${record.id}`)
+    await axios.post(`http://localhost:9001/api/w8t/silence/silenceDelete?id=${record.id}`)
     this.handleList()
 
   }

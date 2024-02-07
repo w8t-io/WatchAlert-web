@@ -82,7 +82,7 @@ class AlertRules extends React.Component {
 
   async handleList () {
 
-    const res = await axios.get("http://localhost:9001/api/v1/rule/ruleList")
+    const res = await axios.get("http://localhost:9001/api/w8t/rule/ruleList")
     this.setState({
       list: res.data.data
     })
@@ -92,7 +92,7 @@ class AlertRules extends React.Component {
   // 删除
   async handleDelete (_, record) {
 
-    await axios.post(`http://localhost:9001/api/v1/rule/ruleDelete?id=${record.ruleId}`)
+    await axios.post(`http://localhost:9001/api/w8t/rule/ruleDelete?id=${record.ruleId}`)
     this.handleList()
 
   }

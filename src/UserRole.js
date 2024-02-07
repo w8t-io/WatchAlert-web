@@ -1,5 +1,6 @@
 import { Input, Table, Button, Popconfirm } from 'antd'
 import React from 'react'
+import axios from 'axios'
 import UserRoleCreateModal from './UserRoleCreateModal'
 const { Search } = Input
 
@@ -13,26 +14,20 @@ class UserRole extends React.Component {
     columns: [
       {
         title: 'ID',
-        dataIndex: 'roleId',
-        key: 'roleId',
+        dataIndex: 'id',
+        key: 'id',
         width: 50,
       },
       {
         title: '角色名称',
-        dataIndex: 'roleName',
-        key: 'roleName',
+        dataIndex: 'name',
+        key: 'name',
         width: 50,
       },
       {
         title: '描述',
         dataIndex: 'description',
         key: 'description',
-        width: 50,
-      },
-      {
-        title: '创建人',
-        dataIndex: 'create_by',
-        key: 'create_by',
         width: 50,
       },
       {
@@ -55,8 +50,9 @@ class UserRole extends React.Component {
             <div>
               <Popconfirm
                 title="Sure to delete?"
-                onConfirm={() => this.handleDelete(_, record)}>
-                <a style={{ cursor: record.role === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
+                onConfirm={() => this.handleDelete(_, record)}
+                disabled={record.name === 'admin'}>
+                <a style={{ cursor: record.name === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
               </Popconfirm>
               <Button
                 type="link" >
@@ -74,14 +70,14 @@ class UserRole extends React.Component {
   }
 
   handleList = async () => {
-    // const res = await axios.get("http://localhost:9001/api/v1/auth/listUser")
-    // this.setState({
-    //   list: res.data.data,
-    // })
+    const res = await axios.get("http://localhost:9001/api/w8t/role/roleList")
+    this.setState({
+      list: res.data.data,
+    })
   };
 
   handleDelete = async (_, record) => {
-    // await axios.post(`http://localhost:9001/api/v1/auth/deleteUser?userid=${record.userid}`)
+    await axios.post(`http://localhost:9001/api/w8t/role/roleDelete?id=${record.id}`)
     this.handleList()
   };
 

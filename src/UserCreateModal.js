@@ -19,6 +19,7 @@ const MyFormItem = ({ name, ...props }) => {
 const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState("false")
+  const [roleData, setRoleData] = useState([])
 
   useEffect(() => {
     if (selectedRow) {
@@ -44,7 +45,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
         joinDuty: values.joinDuty ? "true" : "false"
       }
 
-      await axios.post("http://localhost:9001/api/v1/auth/register", newValues)
+      await axios.post("http://localhost:9001/api/system/register", newValues)
     }
 
     if (type === 'update') {
@@ -57,13 +58,25 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
 
       console.log(newValues)
 
-      await axios.post("http://localhost:9001/api/v1/auth/updateUser", newValues)
+      await axios.post("http://localhost:9001/api/w8t/user/userUpdate", newValues)
     }
 
 
     // 关闭弹窗
     onClose()
 
+  }
+
+  const handleGetRoleData = async () => {
+    const res = await axios.get("http://localhost:9001/api/w8t/role/roleList")
+    console.log(res.data.data)
+
+    const newData = res.data.data.map((item) => ({
+      label: item.name,
+      value: item.name
+    }))
+
+    setRoleData(newData)
   }
 
   const onChangeJoinDuty = (checked) => {
@@ -83,12 +96,12 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
             rules={[
               {
                 required: true,
-                message: 'Please input your password!',
+                message: 'Please input your username!',
               },
             ]}>
             <Input />
           </MyFormItem>
-          {type === '' && <Form.Item
+          {type === 'create' && <Form.Item
             name="password"
             label="Password"
             style={{
@@ -120,21 +133,23 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
           rules={[
             {
               required: true,
-              message: 'Please input your password!',
+              message: 'Please input your Role!',
             },
           ]}>
           <Select
             placeholder="请选择用户角色"
-            options={[
-              {
-                value: 'readonly',
-                label: '只读',
-              },
-              {
-                value: 'readwrite',
-                label: '读写',
-              },
-            ]}
+            onClick={handleGetRoleData}
+            options={roleData}
+          // options={[
+          //   {
+          //     value: 'readonly',
+          //     label: '只读',
+          //   },
+          //   {
+          //     value: 'readwrite',
+          //     label: '读写',
+          //   },
+          // ]}
           />
         </MyFormItem>
 

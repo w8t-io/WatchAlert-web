@@ -95,7 +95,7 @@ class AlertHisEvent extends React.Component {
   }
 
   handleList = async () => {
-    const res = await axios.get("http://localhost:9001/api/v1/alert/curEvent")
+    const res = await axios.get("http://localhost:9001/api/w8t/event/curEvent")
     this.setState({
       list: res.data.data,
     })

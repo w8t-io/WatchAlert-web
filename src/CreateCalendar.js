@@ -23,13 +23,13 @@ const CreateCalendar = ({ visible, onClose, dutyId }) => {
   }
 
   const handleFormSubmit = async (data) => {
-    await axios.post("http://localhost:9001/api/v1/schedule/create", data)
+    await axios.post("http://localhost:9001/api/w8t/calendar/calendarCreate", data)
     onClose()
   }
 
   const handleSearchDutyUser = async () => {
     try {
-      const res = await axios.get("http://localhost:9001/api/v1/auth/searchDutyUser")
+      const res = await axios.get("http://localhost:9001/api/w8t/user/searchDutyUser")
       const options = res.data.data.map((item) => ({
         username: item.username,
         userid: item.userid

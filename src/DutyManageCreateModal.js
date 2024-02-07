@@ -19,7 +19,7 @@ const DutyManageCreateModal = ({ visible, onClose }) => {
 
   const handleCreate = async (data) => {
     console.log(data)
-    await axios.post("http://localhost:9001/api/v1/dutyManage/create", data)
+    await axios.post("http://localhost:9001/api/w8t/dutyManage/dutyManageCreate", data)
   }
 
   const handleFormSubmit = async (values) => {

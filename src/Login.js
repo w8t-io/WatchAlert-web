@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 
 // 创建 Axios 实例
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:9001/api/v1', // 根据实际情况配置基本 URL
+  baseURL: 'http://localhost:9001/api', // 根据实际情况配置基本 URL
 })
 
 // 请求拦截器
@@ -39,7 +39,7 @@ const Login = () => {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const res = await axios.get("http://localhost:9001/api/v1/auth/checkUser?username=admin")
+        const res = await axios.get("http://localhost:9001/api/system/checkUser?username=admin")
         if (res.data.data.username === 'admin') {
           setPasswordModal(true)
         }
@@ -64,7 +64,7 @@ const Login = () => {
 
   const onFinish = async (data) => {
     try {
-      const response = await axiosInstance.post('/auth/login', data)
+      const response = await axiosInstance.post('/system/login', data)
       const token = response.data.data
       localStorage.setItem('Authorization', token)
       navigate('/') // 登录成功，跳转到首页
@@ -84,7 +84,7 @@ const Login = () => {
         "role": "admin"
       }
 
-      const res = await axios.post("http://localhost:9001/api/v1/auth/register", data)
+      const res = await axios.post("http://localhost:9001/api/system/register", data)
 
       console.log(res)
 

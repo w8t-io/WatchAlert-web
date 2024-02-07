@@ -97,14 +97,14 @@ class DutyManage extends React.Component {
   }
 
   handleList = async () => {
-    const res = await axios.get("http://localhost:9001/api/v1/dutyManage/list")
+    const res = await axios.get("http://localhost:9001/api/w8t/dutyManage/dutyManageList")
     this.setState({
       list: res.data.data,
     })
   };
 
   handleDelete = async (_, record) => {
-    await axios.post(`http://localhost:9001/api/v1/dutyManage/delete?id=${record.id}`)
+    await axios.post(`http://localhost:9001/api/w8t/dutyManage/dutyManageDelete?id=${record.id}`)
     this.handleList()
   };
 

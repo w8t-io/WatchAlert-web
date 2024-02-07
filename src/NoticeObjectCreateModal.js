@@ -39,7 +39,7 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type }) => {
   }
 
   const handleCreate = async (data) => {
-    await axios.post("http://localhost:9001/api/v1/alertNotice/create", data)
+    await axios.post("http://localhost:9001/api/w8t/notice/noticeCreate", data)
   }
 
   const handleUpdate = async (data) => {
@@ -48,7 +48,7 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type }) => {
       uuid: selectedRow.uuid,
     }
 
-    await axios.post("http://localhost:9001/api/v1/alertNotice/update", newData)
+    await axios.post("http://localhost:9001/api/w8t/notice/noticeUpdate", newData)
   }
 
   const handleFormSubmit = async (values) => {

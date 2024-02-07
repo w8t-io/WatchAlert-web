@@ -40,11 +40,11 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type }) => {
   }, [selectedRow, form])
 
   const handleCreate = async (data) => {
-    await axios.post("http://localhost:9001/api/v1/alert/dataSourceCreate", data)
+    await axios.post("http://localhost:9001/api/w8t/datasource/dataSourceCreate", data)
   }
 
   const handleUpdate = async (data) => {
-    await axios.post("http://localhost:9001/api/v1/alert/dataSourceUpdate", data)
+    await axios.post("http://localhost:9001/api/w8t/datasource/dataSourceUpdate", data)
   }
 
   const handleFormSubmit = async (values) => {

@@ -97,14 +97,14 @@ class User extends React.Component {
   }
 
   handleList = async () => {
-    const res = await axios.get("http://localhost:9001/api/v1/auth/listUser")
+    const res = await axios.get("http://localhost:9001/api/w8t/user/userList")
     this.setState({
       list: res.data.data,
     })
   };
 
   handleDelete = async (_, record) => {
-    await axios.post(`http://localhost:9001/api/v1/auth/deleteUser?userid=${record.userid}`)
+    await axios.post(`http://localhost:9001/api/w8t/user/userDelete?userid=${record.userid}`)
     this.handleList()
   };
 

@@ -6,7 +6,7 @@ import CreateCalendar from './CreateCalendar'
 export const fetchDutyData = async (dutyId) => {
   try {
     const response = await axios.get(
-      `http://localhost:9001/api/v1/schedule/select?dutyId=${dutyId}`
+      `http://localhost:9001/api/w8t/calendar/calendarSearch?dutyId=${dutyId}`
     )
     const data = await response.data.data
     console.log(data)

@@ -73,7 +73,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
         noticeGroup: noticeLabels
       }
 
-      await axios.post("http://localhost:9001/api/v1/rule/ruleCreate", newData)
+      await axios.post("http://localhost:9001/api/w8t/rule/ruleCreate", newData)
     }
 
     if (type === 'update') {
@@ -83,7 +83,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
         noticeGroup: noticeLabels
       }
 
-      await axios.post("http://localhost:9001/api/v1/rule/ruleUpdate", newData)
+      await axios.post("http://localhost:9001/api/w8t/rule/ruleUpdate", newData)
     }
 
     // 关闭弹窗
@@ -93,7 +93,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   // 获取数据源
   const handleGetDatasourceData = async (data) => {
 
-    const res = await axios.get(`http://localhost:9001/api/v1/alert/dataSourceSearch?dsType=${data}`)
+    const res = await axios.get(`http://localhost:9001/api/w8t/datasource/dataSourceSearch?dsType=${data}`)
 
     const newData = res.data.data.map((item) => ({
       label: item.name,
@@ -107,7 +107,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   // 获取通知对象
   const handleGetNoticeData = async (data) => {
 
-    const res = await axios.get(`http://localhost:9001/api/v1/alertNotice/list`)
+    const res = await axios.get(`http://localhost:9001/api/w8t/notice/noticeList`)
 
     const newData = res.data.data.map((item) => ({
       label: item.name,

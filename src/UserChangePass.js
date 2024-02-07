@@ -10,7 +10,7 @@ const UserChangePass = ({ visible, onClose, userid }) => {
 
     console.log(values)
 
-    const res = await axios.post(`http://localhost:9001/api/v1/auth/changePass?userid=${userid}`, values)
+    const res = await axios.post(`http://localhost:9001/api/w8t/user/userChangePass?userid=${userid}`, values)
 
     console.log(res)
     // 关闭弹窗

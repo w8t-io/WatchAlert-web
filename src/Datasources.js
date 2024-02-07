@@ -1,4 +1,4 @@
-import { Button, Input, Table, Tag, Popconfirm, Dropdown } from 'antd'
+import { Button, Input, Table, Tag, Popconfirm, Dropdown, Select } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import DatasourceCreateModal from './DatasourceCreateModal'
@@ -71,7 +71,7 @@ class Datasources extends React.Component {
 
   async fetchData () {
     const { current, pageSize } = this.state.pagination
-    const res = await axios.get('http://localhost:9001/api/v1/alert/dataSourceList', {
+    const res = await axios.get('http://localhost:9001/api/w8t/datasource/dataSourceList', {
       params: {
         page: current,
         size: pageSize,
@@ -92,7 +92,7 @@ class Datasources extends React.Component {
   }
 
   async handleDelete (_, record) {
-    const res = await axios.post(`http://localhost:9001/api/v1/alert/dataSourceDelete?id=${record.id}`)
+    const res = await axios.post(`http://localhost:9001/api/w8t/datasource/dataSourceDelete?id=${record.id}`)
     this.fetchData()
   }
 
@@ -136,7 +136,55 @@ class Datasources extends React.Component {
 
           <DatasourceCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type="update" />
 
-          <Search allowClear placeholder="input search text" onSearch={onSearch} enterButton />
+
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+            width: '1000px'
+          }}>
+            <Select
+              placeholder="数据源类型"
+              style={{
+                // flex: 1,
+                width: 150
+              }}
+              allowClear
+              options={[
+                {
+                  value: 'Prometheus',
+                  label: 'Prometheus',
+                },
+              ]}
+            />
+
+            <Select
+              placeholder="状态"
+              style={{
+                // flex: 1,
+                width: 150
+              }}
+              allowClear
+              options={[
+                {
+                  value: 'true',
+                  label: '启用',
+                },
+                {
+                  value: 'false',
+                  label: '禁用',
+                },
+              ]}
+            />
+
+            <Search
+              allowClear
+              placeholder="输入搜索关键字"
+              onSearch={onSearch}
+              enterButton
+              style={{ width: 300 }} />
+          </div>
 
           <div style={{ marginLeft: 'auto' }}>
             <Dropdown.Button menu={{ items, onClick: onMenuClick }}>更多操作</Dropdown.Button>
