@@ -191,7 +191,7 @@ class AlertHisEvent extends React.Component {
             dataSource={this.state.list}
             scroll={{
               x: 1500,
-              y: 680,
+              y: 420,
             }}
           />
         </div>

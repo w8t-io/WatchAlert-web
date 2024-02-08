@@ -71,6 +71,20 @@ function Base () {
     { key: '12', value: '数据源' },
   ]
 
+  const menuItemsMap = {
+    '1': <EchartsComponent />,
+    '2': <AlertRules />,
+    '3': <SilenceRules />,
+    '4': <AlertCurEvent />,
+    '5': <AlertHisEvent />,
+    '6': <NoticeObjects />,
+    '7': <NoticeTemplate />,
+    '9': <DutyManage />,
+    '10': <User />,
+    '11': <UserRole />,
+    '12': <Datasources />,
+  }
+
   return (
 
     <Layout hasSider>
@@ -124,71 +138,74 @@ function Base () {
 
           <Menu.Item key="12" icon={<PieChartOutlined />}>数据源</Menu.Item>
         </Menu>
+
+
       </Sider>
 
-      {/* 右侧顶部 */}
-      <Layout style={{ marginLeft: 200 }}>
-        <Header
-          style={{
-            height: '8vh',
-            margin: '16px 16px 0',
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}>
-
-          <div
+      {/* 内容区 */}
+      <Layout className="site-layout" style={{ marginLeft: 200 }}>
+        {/* 右侧顶部 */}
+        <Layout style={{ padding: 0 }}>
+          <Header
             style={{
-              fontWeight: 'bold',
-              fontSize: '20px'
+              height: '8vh',
+              margin: '16px 16px 0',
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
             }}>
 
-            {selectedValue}
+            <div
+              style={{
+                fontWeight: 'bold',
+                fontSize: '20px'
+              }}>
 
-            <div style={{ position: 'relative', marginTop: '-50px' }}>
-              <Popover content={content} trigger="click" placement="bottom">
-                <Avatar
-                  style={{
-                    backgroundColor: '#7265e6',
-                    verticalAlign: 'middle',
-                    position: 'absolute',
-                    top: 0,
-                    right: 0,
-                  }}
-                  size="large"
-                  gap="5"
-                  icon={<UserOutlined />}
-                />
-              </Popover>
+              {selectedValue}
+
+              <div style={{ position: 'relative', marginTop: '-50px' }}>
+                <Popover content={content} trigger="click" placement="bottom">
+                  <Avatar
+                    style={{
+                      backgroundColor: '#7265e6',
+                      verticalAlign: 'middle',
+                      position: 'absolute',
+                      top: 0,
+                      right: 0,
+                    }}
+                    size="large"
+                    gap="5"
+                    icon={<UserOutlined />}
+                  />
+                </Popover>
+              </div>
+
             </div>
+          </Header>
+        </Layout>
 
-          </div>
-        </Header>
+        {/* 右侧内容区 */}
+        <Layout>
+          <Content
+            style={{
+              margin: '20px 10px 0',
+              overflow: 'initial',
+              height: '77vh',
+              margin: '16px 16px 0',
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
 
-        {/* 右侧中部内容区 */}
-        <Content
-          style={{
-            margin: '20px 16px 0',
-            height: '90vh',
-            padding: 5,
-            minHeight: 360,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          {selectedKeys[0] === '1' && <EchartsComponent />}
-          {selectedKeys[0] === '2' && <AlertRules />}
-          {selectedKeys[0] === '3' && <SilenceRules />}
-          {selectedKeys[0] === '4' && <AlertCurEvent />}
-          {selectedKeys[0] === '5' && <AlertHisEvent />}
-          {selectedKeys[0] === '6' && <NoticeObjects />}
-          {selectedKeys[0] === '7' && <NoticeTemplate />}
-          {selectedKeys[0] === '9' && <DutyManage />}
-          {selectedKeys[0] === '10' && <User />}
-          {selectedKeys[0] === '11' && <UserRole />}
-          {selectedKeys[0] === '12' && <Datasources />}
+            }}
+          >
+            <div
+              className="site-layout-background"
+              style={{ padding: 24, textAlign: 'center' }}
+            >
+              {menuItemsMap[selectedKeys]}
+            </div>
+          </Content>
+        </Layout>
 
-        </Content>
-
+        <Footer style={{ textAlign: 'center' }}>WatchAlert ©2024 Created by Cairry</Footer>
       </Layout>
     </Layout>
   )
