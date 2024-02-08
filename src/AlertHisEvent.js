@@ -1,6 +1,7 @@
 import { Select, Input, Table, Space, Popconfirm, Dropdown, Tag } from 'antd'
 import axios from 'axios'
 import React from 'react'
+import backendIP from './config'
 const { Search } = Input
 
 class AlertHisEvent extends React.Component {
@@ -82,7 +83,7 @@ class AlertHisEvent extends React.Component {
 
   async handleList () {
 
-    const res = await axios.get("http://localhost:9001/api/w8t/event/hisEvent")
+    const res = await axios.get(`http://${backendIP}/api/w8t/event/hisEvent`)
     console.log(res.data.data)
     this.setState({
       list: res.data.data
@@ -93,7 +94,7 @@ class AlertHisEvent extends React.Component {
   // 删除
   async handleDelete (_, record) {
 
-    await axios.post(`http://localhost:9001/api/w8t/rule/ruleDelete?id=${record.ruleId}`)
+    await axios.post(`http://${backendIP}/api/w8t/rule/ruleDelete?id=${record.ruleId}`)
     this.handleList()
 
   }

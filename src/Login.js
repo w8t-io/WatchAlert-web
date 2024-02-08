@@ -3,10 +3,11 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, Modal } from 'antd'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import backendIP from './config'
 
 // 创建 Axios 实例
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:9001/api', // 根据实际情况配置基本 URL
+  baseURL: `http://${backendIP}/api`, // 根据实际情况配置基本 URL
 })
 
 // 请求拦截器
@@ -39,7 +40,7 @@ const Login = () => {
   useEffect(() => {
     const checkUser = async () => {
       try {
-        const res = await axios.get("http://localhost:9001/api/system/checkUser?username=admin")
+        const res = await axios.get(`http://${backendIP}/api/system/checkUser?username=admin`)
         if (res.data.data.username === 'admin') {
           setPasswordModal(true)
         }
@@ -83,7 +84,7 @@ const Login = () => {
         "role": "admin"
       }
 
-      const res = await axios.post("http://localhost:9001/api/system/register", data)
+      const res = await axios.post(`http://${backendIP}/api/system/register`, data)
 
       handleHideModal()
       window.location.reload()

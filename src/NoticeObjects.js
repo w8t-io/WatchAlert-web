@@ -2,6 +2,7 @@ import { Button, Input, Table, Select, Popconfirm, Dropdown, Flex } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import NoticeObjectCreateModal from './NoticeObjectCreateModal'
+import backendIP from './config'
 const { Search } = Input
 
 class NoticeObjects extends React.Component {
@@ -73,14 +74,14 @@ class NoticeObjects extends React.Component {
 
   async handleDelete (_, record) {
 
-    await axios.post(`http://localhost:9001/api/w8t/notice/noticeDelete?uuid=${record.uuid}`)
+    await axios.post(`http://${backendIP}/api/w8t/notice/noticeDelete?uuid=${record.uuid}`)
     this.handleList()
 
   }
 
   async handleList () {
 
-    const res = await axios.get("http://localhost:9001/api/w8t/notice/noticeList")
+    const res = await axios.get(`http://${backendIP}/api/w8t/notice/noticeList`)
     this.setState({
       list: res.data.data
     })

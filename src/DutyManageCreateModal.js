@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Button, Switch, Select, Tooltip } from 'antd'
 import axios from 'axios'
 import React, { useState } from 'react'
+import backendIP from './config'
 
 const MyFormItemContext = React.createContext([])
 
@@ -18,7 +19,7 @@ const DutyManageCreateModal = ({ visible, onClose }) => {
   const [form] = Form.useForm()
 
   const handleCreate = async (data) => {
-    await axios.post("http://localhost:9001/api/w8t/dutyManage/dutyManageCreate", data)
+    await axios.post(`http://${backendIP}/api/w8t/dutyManage/dutyManageCreate`, data)
   }
 
   const handleFormSubmit = async (values) => {

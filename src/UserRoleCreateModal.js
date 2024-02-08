@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Button, Transfer } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import backendIP from './config'
 const MyFormItemContext = React.createContext([])
 
 function toArr (str) {
@@ -41,7 +42,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type }) => {
       permissions: targetKeys
     }
 
-    const res = await axios.post("http://localhost:9001/api/w8t/role/roleCreate", newValues)
+    const res = await axios.post(`http://${backendIP}/api/w8t/role/roleCreate`, newValues)
 
     // 关闭弹窗
     onClose()
@@ -52,7 +53,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type }) => {
     // 模拟从后端获取数据的请求
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:9001/api/w8t/permissions/permsList')
+        const response = await axios.get(`http://${backendIP}/api/w8t/permissions/permsList`)
         const data = response.data.data
         formatData(data) // 格式化数据
       } catch (error) {

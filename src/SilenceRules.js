@@ -2,6 +2,7 @@ import { Button, Input, Table, Select, Popconfirm, Dropdown, Flex } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import SilenceRuleCreateModal from './SilenceRuleCreateModal'
+import backendIP from './config'
 const { Search } = Input
 
 
@@ -92,7 +93,7 @@ class SilenceRules extends React.Component {
   // 获取所有数据
   async handleList () {
 
-    const res = await axios.get("http://localhost:9001/api/w8t/silence/silenceList")
+    const res = await axios.get(`http://${backendIP}/api/w8t/silence/silenceList`)
     this.setState({
       list: res.data.data
     })
@@ -106,7 +107,7 @@ class SilenceRules extends React.Component {
   // 删除
   async handleDelete (_, record) {
 
-    await axios.post(`http://localhost:9001/api/w8t/silence/silenceDelete?id=${record.id}`)
+    await axios.post(`http://${backendIP}/api/w8t/silence/silenceDelete?id=${record.id}`)
     this.handleList()
 
   }

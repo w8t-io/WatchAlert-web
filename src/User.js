@@ -3,6 +3,7 @@ import axios from 'axios'
 import React from 'react'
 import UserCreateModal from './UserCreateModal'
 import UserChangePass from './UserChangePass'
+import backendIP from './config'
 const { Search } = Input
 
 class User extends React.Component {
@@ -97,14 +98,14 @@ class User extends React.Component {
   }
 
   handleList = async () => {
-    const res = await axios.get("http://localhost:9001/api/w8t/user/userList")
+    const res = await axios.get(`http://${backendIP}/api/w8t/user/userList`)
     this.setState({
       list: res.data.data,
     })
   };
 
   handleDelete = async (_, record) => {
-    await axios.post(`http://localhost:9001/api/w8t/user/userDelete?userid=${record.userid}`)
+    await axios.post(`http://${backendIP}/api/w8t/user/userDelete?userid=${record.userid}`)
     this.handleList()
   };
 

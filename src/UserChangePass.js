@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Button } from 'antd'
 import axios from 'axios'
 import React from 'react'
+import backendIP from './config'
 
 // 函数组件
 const UserChangePass = ({ visible, onClose, userid }) => {
@@ -8,7 +9,7 @@ const UserChangePass = ({ visible, onClose, userid }) => {
   // 提交
   const handleFormSubmit = async (values) => {
 
-    const res = await axios.post(`http://localhost:9001/api/w8t/user/userChangePass?userid=${userid}`, values)
+    const res = await axios.post(`http://${backendIP}/api/w8t/user/userChangePass?userid=${userid}`, values)
 
     // 关闭弹窗
     onClose()

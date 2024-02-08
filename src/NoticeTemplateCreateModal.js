@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Button } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import backendIP from './config'
 const MyFormItemContext = React.createContext([])
 const { TextArea } = Input
 
@@ -33,7 +34,7 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type }) => {
   // 提交
   const handleFormSubmit = async (values) => {
 
-    const res = await axios.post("http://localhost:9001/api/w8t/noticeTemplate/noticeTemplateCreate", values)
+    const res = await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateCreate`, values)
 
     // 关闭弹窗
     onClose()

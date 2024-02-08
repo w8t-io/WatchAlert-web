@@ -2,7 +2,7 @@ import { Modal, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, In
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
-
+import backendIP from './config'
 const MyFormItemContext = React.createContext([])
 
 function toArr (str) {
@@ -72,7 +72,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
         noticeGroup: noticeLabels
       }
 
-      await axios.post("http://localhost:9001/api/w8t/rule/ruleCreate", newData)
+      await axios.post(`http://${backendIP}/api/w8t/rule/ruleCreate`, newData)
     }
 
     if (type === 'update') {
@@ -82,7 +82,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
         noticeGroup: noticeLabels
       }
 
-      await axios.post("http://localhost:9001/api/w8t/rule/ruleUpdate", newData)
+      await axios.post(`http://${backendIP}/api/w8t/rule/ruleUpdate`, newData)
     }
 
     // 关闭弹窗
@@ -92,7 +92,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   // 获取数据源
   const handleGetDatasourceData = async (data) => {
 
-    const res = await axios.get(`http://localhost:9001/api/w8t/datasource/dataSourceSearch?dsType=${data}`)
+    const res = await axios.get(`http://${backendIP}/api/w8t/datasource/dataSourceSearch?dsType=${data}`)
 
     const newData = res.data.data.map((item) => ({
       label: item.name,
@@ -106,7 +106,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   // 获取通知对象
   const handleGetNoticeData = async (data) => {
 
-    const res = await axios.get(`http://localhost:9001/api/w8t/notice/noticeList`)
+    const res = await axios.get(`http://${backendIP}/api/w8t/notice/noticeList`)
 
     const newData = res.data.data.map((item) => ({
       label: item.name,

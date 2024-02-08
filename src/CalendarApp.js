@@ -2,11 +2,12 @@ import { Calendar, Modal, Divider, Button, DatePicker, Select, Space } from 'ant
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import CreateCalendar from './CreateCalendar'
+import backendIP from './config'
 
 export const fetchDutyData = async (dutyId) => {
   try {
     const response = await axios.get(
-      `http://localhost:9001/api/w8t/calendar/calendarSearch?dutyId=${dutyId}`
+      `http://${backendIP}/api/w8t/calendar/calendarSearch?dutyId=${dutyId}`
     )
     const data = await response.data.data
     return data

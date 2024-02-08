@@ -4,6 +4,7 @@ import React from 'react'
 import { CopyOutlined } from '@ant-design/icons'
 import DutyManageCreateModal from './DutyManageCreateModal'
 import CalendarApp from './CalendarApp'
+import backendIP from './config'
 const { Search } = Input
 
 class DutyManage extends React.Component {
@@ -97,14 +98,14 @@ class DutyManage extends React.Component {
   }
 
   handleList = async () => {
-    const res = await axios.get("http://localhost:9001/api/w8t/dutyManage/dutyManageList")
+    const res = await axios.get(`http://${backendIP}/api/w8t/dutyManage/dutyManageList`)
     this.setState({
       list: res.data.data,
     })
   };
 
   handleDelete = async (_, record) => {
-    await axios.post(`http://localhost:9001/api/w8t/dutyManage/dutyManageDelete?id=${record.id}`)
+    await axios.post(`http://${backendIP}/api/w8t/dutyManage/dutyManageDelete?id=${record.id}`)
     this.handleList()
   };
 

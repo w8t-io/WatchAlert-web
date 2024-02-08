@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Button, Select, Switch } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
+import backendIP from './config'
 
 const MyFormItemContext = React.createContext([])
 
@@ -47,7 +48,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
         joinDuty: values.joinDuty ? "true" : "false"
       }
 
-      await axios.post("http://localhost:9001/api/system/register", newValues)
+      await axios.post(`http://${backendIP}/api/system/register`, newValues)
     }
 
     if (type === 'update') {
@@ -58,7 +59,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
         password: selectedRow.password,
       }
 
-      await axios.post("http://localhost:9001/api/w8t/user/userUpdate", newValues)
+      await axios.post(`http://${backendIP}/api/w8t/user/userUpdate`, newValues)
     }
 
 
@@ -68,7 +69,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
   }
 
   const handleGetRoleData = async () => {
-    const res = await axios.get("http://localhost:9001/api/w8t/role/roleList")
+    const res = await axios.get(`http://${backendIP}/api/w8t/role/roleList`)
 
     const newData = res.data.data.map((item) => ({
       label: item.name,

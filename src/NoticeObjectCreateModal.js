@@ -2,6 +2,7 @@ import { Modal, Form, Input, Button, Select, Checkbox, Tooltip } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
+import backendIP from './config'
 const { TextArea } = Input
 const MyFormItemContext = React.createContext([])
 
@@ -49,7 +50,7 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type }) => {
       ...data,
       enableCard: isChecked ? "true" : "false"
     }
-    await axios.post("http://localhost:9001/api/w8t/notice/noticeCreate", newData)
+    await axios.post(`http://${backendIP}/api/w8t/notice/noticeCreate`, newData)
   }
 
   const handleUpdate = async (data) => {
@@ -59,7 +60,7 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type }) => {
       uuid: selectedRow.uuid,
     }
 
-    await axios.post("http://localhost:9001/api/w8t/notice/noticeUpdate", newData)
+    await axios.post(`http://${backendIP}/api/w8t/notice/noticeUpdate`, newData)
   }
 
   const handleFormSubmit = async (values) => {

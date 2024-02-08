@@ -2,6 +2,7 @@ import { Select, Input, Table, Button, Popconfirm, Dropdown, Tag } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import SilenceRuleCreateModal from './SilenceRuleCreateModal'
+import backendIP from './config'
 const { Search } = Input
 
 class AlertHisEvent extends React.Component {
@@ -95,7 +96,7 @@ class AlertHisEvent extends React.Component {
   }
 
   handleList = async () => {
-    const res = await axios.get("http://localhost:9001/api/w8t/event/curEvent")
+    const res = await axios.get(`http://${backendIP}/api/w8t/event/curEvent`)
     this.setState({
       list: res.data.data,
     })

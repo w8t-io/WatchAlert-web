@@ -2,6 +2,7 @@ import { Input, Table, Button, Popconfirm } from 'antd'
 import React from 'react'
 import axios from 'axios'
 import UserRoleCreateModal from './UserRoleCreateModal'
+import backendIP from './config'
 const { Search } = Input
 
 class UserRole extends React.Component {
@@ -71,14 +72,14 @@ class UserRole extends React.Component {
   }
 
   handleList = async () => {
-    const res = await axios.get("http://localhost:9001/api/w8t/role/roleList")
+    const res = await axios.get(`http://${backendIP}/api/w8t/role/roleList`)
     this.setState({
       list: res.data.data,
     })
   };
 
   handleDelete = async (_, record) => {
-    await axios.post(`http://localhost:9001/api/w8t/role/roleDelete?id=${record.id}`)
+    await axios.post(`http://${backendIP}/api/w8t/role/roleDelete?id=${record.id}`)
     this.handleList()
   };
 

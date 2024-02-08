@@ -1,6 +1,7 @@
 import { Modal, Form, Input, Button, Switch, Select, Tooltip } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
+import backendIP from './config'
 
 const MyFormItemContext = React.createContext([])
 
@@ -40,11 +41,11 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type }) => {
   }, [selectedRow, form])
 
   const handleCreate = async (data) => {
-    await axios.post("http://localhost:9001/api/w8t/datasource/dataSourceCreate", data)
+    await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceCreate`, data)
   }
 
   const handleUpdate = async (data) => {
-    await axios.post("http://localhost:9001/api/w8t/datasource/dataSourceUpdate", data)
+    await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceUpdate`, data)
   }
 
   const handleFormSubmit = async (values) => {

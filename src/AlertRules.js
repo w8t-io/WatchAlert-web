@@ -2,6 +2,7 @@ import { Button, Input, Table, Select, Popconfirm, Dropdown, Tag } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import AlertRuleCreateModal from './AlertRuleCreateModal'
+import backendIP from './config'
 const { Search } = Input
 
 
@@ -82,7 +83,7 @@ class AlertRules extends React.Component {
 
   async handleList () {
 
-    const res = await axios.get("http://localhost:9001/api/w8t/rule/ruleList")
+    const res = await axios.get(`http://${backendIP}/api/w8t/rule/ruleList`)
     this.setState({
       list: res.data.data
     })
@@ -92,7 +93,7 @@ class AlertRules extends React.Component {
   // 删除
   async handleDelete (_, record) {
 
-    await axios.post(`http://localhost:9001/api/w8t/rule/ruleDelete?id=${record.ruleId}`)
+    await axios.post(`http://${backendIP}/api/w8t/rule/ruleDelete?id=${record.ruleId}`)
     this.handleList()
 
   }

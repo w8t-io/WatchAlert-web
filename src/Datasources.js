@@ -2,6 +2,7 @@ import { Button, Input, Table, Tag, Popconfirm, Dropdown, Select } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import DatasourceCreateModal from './DatasourceCreateModal'
+import backendIP from './config'
 const { Search } = Input
 
 class Datasources extends React.Component {
@@ -71,7 +72,7 @@ class Datasources extends React.Component {
 
   async fetchData () {
     const { current, pageSize } = this.state.pagination
-    const res = await axios.get('http://localhost:9001/api/w8t/datasource/dataSourceList', {
+    const res = await axios.get(`http://${backendIP}/api/w8t/datasource/dataSourceList`, {
       params: {
         page: current,
         size: pageSize,
@@ -91,7 +92,7 @@ class Datasources extends React.Component {
   }
 
   async handleDelete (_, record) {
-    const res = await axios.post(`http://localhost:9001/api/w8t/datasource/dataSourceDelete?id=${record.id}`)
+    const res = await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceDelete?id=${record.id}`)
     this.fetchData()
   }
 
