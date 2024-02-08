@@ -17,10 +17,11 @@ import Auth from './Auth'
 import AlertCurEvent from './AlertCurEvent'
 import AlertHisEvent from './AlertHisEvent'
 import User from './User'
-import Error from './Error'
 import UserRole from './UserRole'
 import DutyManage from './DutyManage'
 import NoticeTemplate from './NoticeTemplate'
+import logoIcon from './logo.jpeg'
+import githubIcon from './github_logo.png'
 
 const { Header, Content, Footer, Sider } = Layout
 const { SubMenu } = Menu
@@ -100,11 +101,18 @@ function Base () {
           background: 'white', // 将背景色调整为白色
         }}
       >
-        <img
-          style={{ width: 200 }}
-          src="https://media.istockphoto.com/id/1481521952/zh/%E5%90%91%E9%87%8F/professional-innovative-initial-wv-logo-and-vw-logo-letter-wv-or-vw-minimal-elegant-monogram.jpg?s=612x612&w=0&k=20&c=tcqk6EYeLI9-qgURv8SZX5dGdMEf8PQd30-NGYMsql4="
-          alt="Image"
-        />
+
+        <div className="footer">
+          <a target="_blank" title="Logo">
+            <img src={logoIcon} alt="Logo" className="icon" style={{ width: '25vh', height: '25vh' }} />
+          </a>
+        </div>
+
+        <div className="footer">
+          <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub">
+            <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '25px', height: '25px', marginLeft: '10vh' }} />
+          </a>
+        </div>
 
         <Menu
           theme="light"
