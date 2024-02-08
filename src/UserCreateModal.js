@@ -20,11 +20,13 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState("false")
   const [roleData, setRoleData] = useState([])
+  const [username, serUsername] = useState("")
 
   useEffect(() => {
     if (selectedRow) {
       if (type === 'update') {
         setEnabled(selectedRow.joinDuty)
+        serUsername(selectedRow.username)
       }
       form.setFieldsValue({
         username: selectedRow.username,
@@ -137,16 +139,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
             placeholder="请选择用户角色"
             onClick={handleGetRoleData}
             options={roleData}
-          // options={[
-          //   {
-          //     value: 'readonly',
-          //     label: '只读',
-          //   },
-          //   {
-          //     value: 'readwrite',
-          //     label: '读写',
-          //   },
-          // ]}
+            disabled={username === "admin"}
           />
         </MyFormItem>
 
