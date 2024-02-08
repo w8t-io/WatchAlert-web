@@ -107,7 +107,6 @@ class NoticeObjects extends React.Component {
     ]
 
     const onMenuClick = (e) => {
-      console.log('click', e)
     }
 
     return (

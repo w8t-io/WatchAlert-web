@@ -44,16 +44,13 @@ const EchartsComponent = () => {
   const [count, setCount] = useState(0)
 
   const onChartReady = (echarts) => {
-    console.log('echarts is ready', echarts)
   }
 
   const onChartClick = (param, echarts) => {
-    console.log(param, echarts)
     setCount(count + 1)
   }
 
   const onChartLegendselectchanged = (param, echarts) => {
-    console.log(param, echarts)
   }
 
   return (

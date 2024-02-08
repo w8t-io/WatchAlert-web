@@ -54,7 +54,6 @@ const Login = () => {
   // 检查用户是否已经登录
   useEffect(() => {
     const token = localStorage.getItem('Authorization')
-    console.log(token)
     if (!token) {
       navigate('/login') // 未登录，跳转到登录页面
     } else {
@@ -85,8 +84,6 @@ const Login = () => {
       }
 
       const res = await axios.post("http://localhost:9001/api/system/register", data)
-
-      console.log(res)
 
       handleHideModal()
       window.location.reload()

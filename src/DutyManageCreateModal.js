@@ -18,12 +18,10 @@ const DutyManageCreateModal = ({ visible, onClose }) => {
   const [form] = Form.useForm()
 
   const handleCreate = async (data) => {
-    console.log(data)
     await axios.post("http://localhost:9001/api/w8t/dutyManage/dutyManageCreate", data)
   }
 
   const handleFormSubmit = async (values) => {
-    console.log('Form submitted:', values)
 
     await handleCreate(values)
 

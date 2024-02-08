@@ -56,8 +56,6 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
         password: selectedRow.password,
       }
 
-      console.log(newValues)
-
       await axios.post("http://localhost:9001/api/w8t/user/userUpdate", newValues)
     }
 
@@ -69,7 +67,6 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
 
   const handleGetRoleData = async () => {
     const res = await axios.get("http://localhost:9001/api/w8t/role/roleList")
-    console.log(res.data.data)
 
     const newData = res.data.data.map((item) => ({
       label: item.name,
@@ -99,7 +96,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
                 message: 'Please input your username!',
               },
             ]}>
-            <Input />
+            <Input disabled={type === 'update'} />
           </MyFormItem>
           {type === 'create' && <Form.Item
             name="password"

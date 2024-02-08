@@ -8,11 +8,8 @@ const UserChangePass = ({ visible, onClose, userid }) => {
   // 提交
   const handleFormSubmit = async (values) => {
 
-    console.log(values)
-
     const res = await axios.post(`http://localhost:9001/api/w8t/user/userChangePass?userid=${userid}`, values)
 
-    console.log(res)
     // 关闭弹窗
     onClose()
 

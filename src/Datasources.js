@@ -84,7 +84,6 @@ class Datasources extends React.Component {
         total: res.data.total,
       },
     }))
-    console.log(res.data.data)
   }
 
   componentDidMount () {
@@ -122,7 +121,6 @@ class Datasources extends React.Component {
     ]
 
     const onMenuClick = e => {
-      console.log('click', e)
     }
 
     return (

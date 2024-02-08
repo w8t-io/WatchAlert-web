@@ -15,10 +15,23 @@ const MyFormItem = ({ name, ...props }) => {
 }
 
 // 函数组件
-const UserRoleCreateModal = ({ visible, onClose }) => {
+const UserRoleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   const [form] = Form.useForm()
   const [mockData, setMockData] = useState([])
   const [targetKeys, setTargetKeys] = useState([])
+
+  useEffect(() => {
+    if (selectedRow) {
+      setTargetKeys(selectedRow.permissions)
+      form.setFieldsValue({
+        id: selectedRow.id,
+        name: selectedRow.name,
+        description: selectedRow.description,
+        permissions: targetKeys,
+      })
+    }
+  }, [selectedRow, form])
+
 
   // 提交
   const handleFormSubmit = async (values) => {
@@ -30,7 +43,6 @@ const UserRoleCreateModal = ({ visible, onClose }) => {
 
     const res = await axios.post("http://localhost:9001/api/w8t/role/roleCreate", newValues)
 
-    console.log(res)
     // 关闭弹窗
     onClose()
 
@@ -90,7 +102,7 @@ const UserRoleCreateModal = ({ visible, onClose }) => {
               message: 'Please input your roleName!',
             },
           ]}>
-          <Input />
+          <Input disabled={type === 'update'} />
         </MyFormItem>
 
         <MyFormItem name="description" label="描述">

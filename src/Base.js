@@ -20,6 +20,7 @@ import User from './User'
 import Error from './Error'
 import UserRole from './UserRole'
 import DutyManage from './DutyManage'
+import NoticeTemplate from './NoticeTemplate'
 
 const { Header, Content, Footer, Sider } = Layout
 const { SubMenu } = Menu
@@ -180,7 +181,7 @@ function Base () {
           {selectedKeys[0] === '4' && <AlertCurEvent />}
           {selectedKeys[0] === '5' && <AlertHisEvent />}
           {selectedKeys[0] === '6' && <NoticeObjects />}
-          {selectedKeys[0] === '7' && <Error />}
+          {selectedKeys[0] === '7' && <NoticeTemplate />}
           {selectedKeys[0] === '9' && <DutyManage />}
           {selectedKeys[0] === '10' && <User />}
           {selectedKeys[0] === '11' && <UserRole />}

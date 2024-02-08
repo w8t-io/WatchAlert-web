@@ -43,7 +43,6 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
 
   useEffect(() => {
     if (selectedRow) {
-      console.log(selectedRow)
       form.setFieldsValue({
         annotations: selectedRow.annotations,
         datasourceId: selectedRow.datasourceId,
@@ -147,8 +146,6 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
 
   // 在onChange事件处理函数中更新选择的通知对象值
   const handleSelectChange = (value) => {
-    console.log(value)
-    setSelectedNotice(value)
   }
 
   return (
@@ -177,7 +174,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
                 },
               ]}
             >
-              <Input />
+              <Input disabled={type === 'update'} />
             </MyFormItem>
 
             <MyFormItem

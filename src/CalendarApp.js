@@ -9,7 +9,6 @@ export const fetchDutyData = async (dutyId) => {
       `http://localhost:9001/api/w8t/calendar/calendarSearch?dutyId=${dutyId}`
     )
     const data = await response.data.data
-    console.log(data)
     return data
   } catch (error) {
     console.error('Error fetching duty data:', error)
@@ -37,11 +36,9 @@ const CalendarApp = ({ visible, onClose, name, dutyId }) => {
   }, [visible])
 
   const onPanelChange = (value, mode) => {
-    console.log(value.format('YYYY-MM-DD'), mode)
   }
 
   const dateCellRender = (value) => {
-    // console.log(dutyData)
     const matchingDutyData = dutyData.find((item) => {
       const itemDate = new Date(item.time)
       return (

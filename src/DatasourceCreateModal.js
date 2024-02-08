@@ -48,7 +48,6 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type }) => {
   }
 
   const handleFormSubmit = async (values) => {
-    console.log('Form submitted:', values)
 
     if (type === 'create') {
       await handleCreate(values)
@@ -59,7 +58,6 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type }) => {
         ...values,
         id: selectedRow.id
       }
-      console.log("更新", newValues)
       await handleUpdate(newValues)
     }
 
@@ -71,7 +69,7 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type }) => {
     <Modal visible={visible} onCancel={onClose} footer={null}>
       <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
         <MyFormItem name="name" label="数据源名称">
-          <Input />
+          <Input disabled={type === 'update'} />
         </MyFormItem>
 
         <MyFormItem name="type" label="数据源类型">
