@@ -33,6 +33,14 @@ class NoticeObjects extends React.Component {
         title: '通知类型',
         dataIndex: 'noticeType',
         key: 'noticeType',
+        render: (text, record) => {
+          if (record.noticeType === 'FeiShu') {
+            return '飞书'
+          } else if (record.noticeType === 'DingDing') {
+            return '钉钉'
+          }
+          return ''
+        },
       },
       {
         title: '值班ID',

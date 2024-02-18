@@ -282,6 +282,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
               rules={[
                 {
                   required: true,
+                  min: 1,
                 },
               ]}
             >
@@ -301,6 +302,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
               rules={[
                 {
                   required: true,
+                  min: 1,
                 },
               ]}
             >
@@ -362,6 +364,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
               rules={[
                 {
                   required: true,
+                  min: 1,
                 },
               ]}
             >
