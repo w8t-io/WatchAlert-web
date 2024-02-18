@@ -132,6 +132,10 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type }) => {
                   value: "FeiShu",
                   label: "飞书",
                 },
+                {
+                  value: "DingDing",
+                  label: "钉钉"
+                }
               ]}
 
               onChange={handleNotificationTypeChange}

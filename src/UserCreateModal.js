@@ -33,7 +33,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
         username: selectedRow.username,
         phone: selectedRow.phone,
         joinDuty: enabled,
-        fsUserId: selectedRow.fsUserId,
+        dutyUserId: selectedRow.dutyUserId,
         role: selectedRow.role
       })
     }
@@ -148,11 +148,11 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
           <Switch defaultChecked={false} onChange={onChangeJoinDuty} />
         </MyFormItem>
 
-        {enabled === 'true' && <MyFormItem name="fsUserId" label="飞书UserID"
+        {enabled === 'true' && <MyFormItem name="dutyUserId" label="UserID「飞书/钉钉」"
           rules={[
             {
               required: true,
-              message: 'Please input your 飞书UserID!',
+              message: 'Please input your UserID!',
             },
           ]}>
           <Input />
