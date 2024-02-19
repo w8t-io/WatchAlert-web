@@ -81,7 +81,7 @@ class AlertRules extends React.Component {
   }
 
 
-  async handleList () {
+  handleList = async () => {
 
     const res = await axios.get(`http://${backendIP}/api/w8t/rule/ruleList`)
     this.setState({
@@ -139,9 +139,9 @@ class AlertRules extends React.Component {
             创建
           </Button>
 
-          <AlertRuleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' />
+          <AlertRuleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
-          <AlertRuleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' />
+          <AlertRuleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
           <div style={{
             display: 'flex',

@@ -23,7 +23,7 @@ const MyFormItem = ({ name, ...props }) => {
   return <Form.Item name={concatName} {...props} />
 }
 
-const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
+const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
   const [selectedType, setSelectedType] = useState('') // 数据源类型
@@ -84,6 +84,8 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
 
       await axios.post(`http://${backendIP}/api/w8t/rule/ruleUpdate`, newData)
     }
+
+    handleList()
 
     // 关闭弹窗
     onClose()
@@ -282,7 +284,6 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
               rules={[
                 {
                   required: true,
-                  min: 1,
                 },
               ]}
             >
@@ -290,6 +291,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
                 style={{ width: '97%' }}
                 addonAfter={<span>秒</span>}
                 placeholder="10"
+                min={1}
               />
             </MyFormItem>
 
@@ -302,7 +304,6 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
               rules={[
                 {
                   required: true,
-                  min: 1,
                 },
               ]}
             >
@@ -310,6 +311,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
                 style={{ width: '100%' }}
                 addonAfter={<span>秒</span>}
                 placeholder="60"
+                min={1}
                 rules={[
                   {
                     required: true,
@@ -364,7 +366,6 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
               rules={[
                 {
                   required: true,
-                  min: 1,
                 },
               ]}
             >
@@ -372,6 +373,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
                 style={{ width: '100%' }}
                 addonAfter={<span>分钟</span>}
                 placeholder="60"
+                min={1}
               />
             </MyFormItem>
           </div>

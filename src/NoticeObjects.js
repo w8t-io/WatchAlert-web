@@ -87,7 +87,7 @@ class NoticeObjects extends React.Component {
 
   }
 
-  async handleList () {
+  handleList = async () => {
 
     const res = await axios.get(`http://${backendIP}/api/w8t/notice/noticeList`)
     this.setState({
@@ -125,9 +125,9 @@ class NoticeObjects extends React.Component {
             创建
           </Button>
 
-          <NoticeObjectCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' />
+          <NoticeObjectCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
-          <NoticeObjectCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' />
+          <NoticeObjectCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
           <div style={{
             display: 'flex',

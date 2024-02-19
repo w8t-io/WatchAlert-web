@@ -21,7 +21,7 @@ const MyFormItem = ({ name, ...props }) => {
   return <Form.Item name={concatName} {...props} />
 }
 
-const DatasourceCreateModal = ({ visible, onClose, selectedRow, type }) => {
+const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
 
@@ -64,6 +64,9 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type }) => {
 
     // 关闭弹窗
     onClose()
+
+    handleList()
+
   }
 
   return (

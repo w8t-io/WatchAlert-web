@@ -15,7 +15,7 @@ const MyFormItem = ({ name, ...props }) => {
   return <Form.Item name={concatName} {...props} />
 }
 
-const DutyManageCreateModal = ({ visible, onClose }) => {
+const DutyManageCreateModal = ({ visible, onClose, handleList }) => {
   const [form] = Form.useForm()
 
   const handleCreate = async (data) => {
@@ -25,6 +25,8 @@ const DutyManageCreateModal = ({ visible, onClose }) => {
   const handleFormSubmit = async (values) => {
 
     await handleCreate(values)
+
+    handleList()
 
     // 关闭弹窗
     onClose()

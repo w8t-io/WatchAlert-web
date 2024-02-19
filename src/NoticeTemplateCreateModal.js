@@ -17,7 +17,7 @@ const MyFormItem = ({ name, ...props }) => {
 }
 
 // 函数组件
-const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type }) => {
+const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
 
   useEffect(() => {
@@ -35,6 +35,8 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type }) => {
   const handleFormSubmit = async (values) => {
 
     const res = await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateCreate`, values)
+
+    handleList()
 
     // 关闭弹窗
     onClose()

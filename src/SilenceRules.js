@@ -91,7 +91,7 @@ class SilenceRules extends React.Component {
   }
 
   // 获取所有数据
-  async handleList () {
+  handleList = async () => {
 
     const res = await axios.get(`http://${backendIP}/api/w8t/silence/silenceList`)
     this.setState({
@@ -149,9 +149,9 @@ class SilenceRules extends React.Component {
             创建
           </Button>
 
-          <SilenceRuleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' />
+          <SilenceRuleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
-          <SilenceRuleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' />
+          <SilenceRuleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
           <div style={{
             display: 'flex',

@@ -70,7 +70,7 @@ class Datasources extends React.Component {
     ]
   };
 
-  async fetchData () {
+  fetchData = async () => {
     const { current, pageSize } = this.state.pagination
     const res = await axios.get(`http://${backendIP}/api/w8t/datasource/dataSourceList`, {
       params: {
@@ -131,9 +131,9 @@ class Datasources extends React.Component {
             创建
           </Button>
 
-          <DatasourceCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' />
+          <DatasourceCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.fetchData} />
 
-          <DatasourceCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type="update" />
+          <DatasourceCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type="update" handleList={this.fetchData} />
 
 
           <div style={{

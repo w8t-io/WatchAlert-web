@@ -134,9 +134,9 @@ class DutyManage extends React.Component {
             创建
           </Button>
 
-          <DutyManageCreateModal visible={this.state.visible} onClose={this.handleModalClose} />
+          <DutyManageCreateModal visible={this.state.visible} onClose={this.handleModalClose} handleList={this.handleList} />
 
-          <CalendarApp visible={this.state.calendarVisible} onClose={this.handleCalendarModalClose} name={this.state.calendarName} dutyId={this.state.calendarDutyId} />
+          <CalendarApp visible={this.state.calendarVisible} onClose={this.handleCalendarModalClose} name={this.state.calendarName} dutyId={this.state.calendarDutyId} handleList={this.handleList} />
 
           <div style={{
             display: 'flex',

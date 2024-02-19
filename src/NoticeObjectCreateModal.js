@@ -16,7 +16,7 @@ const MyFormItem = ({ name, ...props }) => {
   return <Form.Item name={concatName} {...props} />
 }
 
-const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type }) => {
+const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
   const [notificationType, setNotificationType] = useState(null)
   const isFeishuNotification = notificationType === 'FeiShu'
@@ -72,6 +72,8 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type }) => {
     if (type === 'update') {
       await handleUpdate(values)
     }
+
+    handleList()
 
     // 关闭弹窗
     onClose()

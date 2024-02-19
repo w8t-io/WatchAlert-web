@@ -16,7 +16,7 @@ const MyFormItem = ({ name, ...props }) => {
 }
 
 // 函数组件
-const UserRoleCreateModal = ({ visible, onClose, selectedRow, type }) => {
+const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
   const [mockData, setMockData] = useState([])
   const [targetKeys, setTargetKeys] = useState([])
@@ -62,6 +62,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type }) => {
       const res = await axios.post(`http://${backendIP}/api/w8t/role/roleUpdate`, newValues)
     }
 
+    handleList()
     // 关闭弹窗
     onClose()
 

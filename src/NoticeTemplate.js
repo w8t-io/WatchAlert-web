@@ -65,12 +65,12 @@ class NoticeTemplate extends React.Component {
 
   async handleDelete (_, record) {
 
-    await axios.post(`http://${backendIP}}/api/w8t/noticeTemplate/noticeTemplateDelete?id=${record.id}`)
+    await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateDelete?id=${record.id}`)
     this.handleList()
 
   }
 
-  async handleList () {
+  handleList = async () => {
 
     const res = await axios.get(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateList`)
     this.setState({
@@ -108,9 +108,9 @@ class NoticeTemplate extends React.Component {
             创建
           </Button>
 
-          <NoticeTemplateCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' />
+          <NoticeTemplateCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
-          <NoticeTemplateCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' />
+          <NoticeTemplateCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
           <div style={{
             display: 'flex',

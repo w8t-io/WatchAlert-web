@@ -17,7 +17,7 @@ const MyFormItem = ({ name, ...props }) => {
 }
 
 // 函数组件
-const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
+const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState("false")
   const [roleData, setRoleData] = useState([])
@@ -63,6 +63,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
       await axios.post(`http://${backendIP}/api/w8t/user/userUpdate`, newValues)
     }
 
+    handleList()
 
     // 关闭弹窗
     onClose()

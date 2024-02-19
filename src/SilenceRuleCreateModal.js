@@ -19,7 +19,7 @@ const MyFormItem = ({ name, ...props }) => {
 }
 
 // 函数组件
-const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
+const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
   const [startTimestamp, setStartTimestamp] = useState(null)
   const [endTimestamp, setEndTimestamp] = useState(null)
@@ -102,6 +102,8 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type }) => {
 
       await handleUpdate(newData)
     }
+
+    handleList()
 
     // 关闭弹窗
     onClose()

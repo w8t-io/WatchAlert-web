@@ -141,9 +141,9 @@ class User extends React.Component {
             创建
           </Button>
 
-          <UserCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' />
+          <UserCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
-          <UserCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' />
+          <UserCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
           <div style={{
             display: 'flex',
