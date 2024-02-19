@@ -157,10 +157,13 @@ function Base () {
             <Menu.Item key="9">值班日程</Menu.Item>
           </SubMenu>
 
-          <SubMenu key="sub4" icon={<UserOutlined />} title="人员组织">
-            <Menu.Item key="10">用户管理</Menu.Item>
-            <Menu.Item key="11">角色管理</Menu.Item>
-          </SubMenu>
+
+          {userInfo !== null && userInfo.role === 'admin' ? (
+            <SubMenu key="sub4" icon={<UserOutlined />} title="人员组织">
+              <Menu.Item key="10">用户管理</Menu.Item>
+              <Menu.Item key="11">角色管理</Menu.Item>
+            </SubMenu>
+          ) : null}
 
           <Menu.Item key="12" icon={<PieChartOutlined />}>数据源</Menu.Item>
         </Menu>
