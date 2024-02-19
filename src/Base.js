@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   UserOutlined,
   BellOutlined,
@@ -22,6 +22,8 @@ import DutyManage from './DutyManage'
 import NoticeTemplate from './NoticeTemplate'
 import logoIcon from './logo.jpeg'
 import githubIcon from './github_logo.png'
+import backendIP from './config'
+import axios from 'axios'
 
 const { Header, Content, Footer, Sider } = Layout
 const { SubMenu } = Menu
@@ -48,6 +50,28 @@ function Base () {
 
   const [selectedKeys, setSelectedKeys] = useState(['1'])
   const [selectedValue, setSelectedValue] = useState('首页')
+  const [userInfo, setUserInfo] = useState(null)
+
+  useEffect(() => {
+    let isMounted = true
+
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`http://${backendIP}/api/w8t/user/userInfo`)
+        if (isMounted) {
+          setUserInfo(res.data.data)
+        }
+      } catch (error) {
+        console.error(error)
+      }
+    }
+
+    fetchData()
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
 
   const handleMenuSelect = ({ key }) => {
     const selectedButton = menuItems.find(item => item.key === key)
@@ -104,13 +128,7 @@ function Base () {
 
         <div className="footer">
           <a target="_blank" title="Logo">
-            <img src={logoIcon} alt="Logo" className="icon" style={{ width: '25vh', height: '25vh' }} />
-          </a>
-        </div>
-
-        <div className="footer">
-          <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub">
-            <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '25px', height: '25px', marginLeft: '10vh' }} />
+            <img src={logoIcon} alt="Logo" className="icon" style={{ width: '100%', height: '100%' }} />
           </a>
         </div>
 
@@ -156,38 +174,41 @@ function Base () {
         <Layout style={{ padding: 0 }}>
           <Header
             style={{
-              height: '8vh',
+              height: '9vh',
               margin: '16px 16px 0',
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
-            }}>
-
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
             <div
               style={{
                 fontWeight: 'bold',
-                fontSize: '20px'
-              }}>
-
+                fontSize: '20px',
+                marginRight: 'auto',
+              }}
+            >
               {selectedValue}
+            </div>
 
-              <div style={{ position: 'relative', marginTop: '-50px' }}>
+            {userInfo !== null ? (
+              <div style={{ position: 'relative' }}>
                 <Popover content={content} trigger="click" placement="bottom">
                   <Avatar
                     style={{
                       backgroundColor: '#7265e6',
                       verticalAlign: 'middle',
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
+                      marginLeft: '10px',
                     }}
                     size="large"
                     gap="5"
-                    icon={<UserOutlined />}
-                  />
+                  >
+                    {userInfo.username}
+                  </Avatar>
                 </Popover>
               </div>
-
-            </div>
+            ) : null}
           </Header>
         </Layout>
 
@@ -213,7 +234,10 @@ function Base () {
           </Content>
         </Layout>
 
-        <Footer style={{ textAlign: 'center' }}>WatchAlert ©2024 Created by Cairry</Footer>
+        <Footer style={{ textAlign: 'center', margin: '0', marginLeft: '5px' }}><a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub">
+          <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '3vh', height: '3vh', marginRight: '5px' }} />
+        </a>WatchAlert ©2024 Created by Cairry</Footer>
+
       </Layout>
     </Layout>
   )

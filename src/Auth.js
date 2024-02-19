@@ -29,7 +29,7 @@ const Auth = () => {
       return response
     },
     error => {
-      if (error.response.status === 400) {
+      if (error.response.status === 401) {
         setErrorCount(prevCount => prevCount + 1)
       }
       return Promise.reject(error)

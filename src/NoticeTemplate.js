@@ -139,10 +139,14 @@ class NoticeTemplate extends React.Component {
           </div>
         </div>
 
-        <div style={{ overflowX: 'auto', marginTop: 10 }}>
+        <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
           <Table
             columns={this.state.columns}
             dataSource={this.state.list}
+            scroll={{
+              x: 1500,
+              y: 'calc(60vh - 64px - 40px)'
+            }}
           />
         </div>
       </div>
