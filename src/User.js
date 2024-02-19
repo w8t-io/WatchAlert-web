@@ -12,6 +12,7 @@ class User extends React.Component {
     selectedRow: null,
     updateVisible: false,
     changeVisible: false,
+    selectedUsername: null,
     selectedUserId: null,
     visible: false,
     list: [],
@@ -71,11 +72,11 @@ class User extends React.Component {
           this.state.list.length >= 1 ? (
             <div>
               <Button type="link"
-                onClick={() => this.setState({ changeVisible: true, selectedUserId: record.userid })}
+                onClick={() => this.setState({ changeVisible: true, selectedUserId: record.userid, selectedUsername: record.username })}
               >
                 重置密码
               </Button>
-              <UserChangePass visible={this.state.changeVisible} onClose={this.handleChanagePassModalClose} userid={this.state.selectedUserId} />
+              <UserChangePass visible={this.state.changeVisible} onClose={this.handleChanagePassModalClose} userid={this.state.selectedUserId} username={this.state.selectedUsername} />
               <Popconfirm
                 title="Sure to delete?"
                 onConfirm={() => this.handleDelete(_, record)}

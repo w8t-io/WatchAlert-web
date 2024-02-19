@@ -4,7 +4,7 @@ import React from 'react'
 import backendIP from './config'
 
 // 函数组件
-const UserChangePass = ({ visible, onClose, userid }) => {
+const UserChangePass = ({ visible, onClose, userid, username }) => {
 
   // 提交
   const handleFormSubmit = async (values) => {
@@ -18,6 +18,8 @@ const UserChangePass = ({ visible, onClose, userid }) => {
 
   return (
     <Modal visible={visible} onCancel={onClose} footer={null}>
+
+      <h3>用户名: {username}</h3>
 
       <Form name="password_form" onFinish={handleFormSubmit} style={{ marginTop: '30px' }}>
         <Form.Item
