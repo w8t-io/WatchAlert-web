@@ -20,6 +20,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   const [form] = Form.useForm()
   const [mockData, setMockData] = useState([])
   const [targetKeys, setTargetKeys] = useState([])
+  const [disabledPermission, setDisabledPermission] = useState(false)
 
   useEffect(() => {
     if (selectedRow) {
@@ -30,6 +31,11 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type }) => {
         description: selectedRow.description,
         permissions: targetKeys,
       })
+      if (selectedRow.name === 'admin') {
+        setDisabledPermission(true)
+      } else {
+        setDisabledPermission(false)
+      }
     }
   }, [selectedRow, form])
 
@@ -132,6 +138,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type }) => {
             onChange={(keys) => handleOnChange(keys)}
             render={(item) => item.title}
             listStyle={{ height: 300, width: 300 }} // 设置列表样式
+            disabled={disabledPermission}
           />
         </MyFormItem>
 
