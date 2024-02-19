@@ -32,6 +32,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type }) => {
       form.setFieldsValue({
         username: selectedRow.username,
         phone: selectedRow.phone,
+        email: selectedRow.email,
         joinDuty: enabled,
         dutyUserId: selectedRow.dutyUserId,
         role: selectedRow.role
