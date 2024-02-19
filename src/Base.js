@@ -57,7 +57,7 @@ function Base () {
 
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://${backendIP}/api/w8t/user/userInfo`)
+        const res = await axios.get(`http://${backendIP}/api/system/userInfo`)
         if (isMounted) {
           setUserInfo(res.data.data)
         }

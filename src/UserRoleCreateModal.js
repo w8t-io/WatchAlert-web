@@ -37,12 +37,24 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type }) => {
   // 提交
   const handleFormSubmit = async (values) => {
 
-    const newValues = {
-      ...values,
-      permissions: targetKeys
+    if (type === 'create') {
+      const newValues = {
+        ...values,
+        permissions: targetKeys
+      }
+
+      const res = await axios.post(`http://${backendIP}/api/w8t/role/roleCreate`, newValues)
     }
 
-    const res = await axios.post(`http://${backendIP}/api/w8t/role/roleCreate`, newValues)
+    if (type === 'update') {
+      const newValues = {
+        ...values,
+        id: selectedRow.id,
+        permissions: targetKeys
+      }
+
+      const res = await axios.post(`http://${backendIP}/api/w8t/role/roleUpdate`, newValues)
+    }
 
     // 关闭弹窗
     onClose()
