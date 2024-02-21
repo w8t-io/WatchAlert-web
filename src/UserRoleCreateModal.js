@@ -41,7 +41,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
 
 
   // 提交
-  const handleFormSubmit = async (values) => {
+  const handleFormSubmit = (values) => {
 
     if (type === 'create') {
       const newValues = {
@@ -53,6 +53,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
         .then((res) => {
           if (res.status === 200) {
             message.success("创建成功")
+            handleList()
           }
         })
         .catch(() => {
@@ -72,6 +73,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
         .then((res) => {
           if (res.status === 200) {
             message.success("更新成功")
+            handleList()
           }
         })
         .catch(() => {
@@ -80,7 +82,6 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
 
     }
 
-    handleList()
     // 关闭弹窗
     onClose()
 

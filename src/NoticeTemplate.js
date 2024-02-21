@@ -68,12 +68,12 @@ class NoticeTemplate extends React.Component {
       .then((res) => {
         if (res.status === 200) {
           message.success("删除成功")
+          this.handleList()
         }
       })
       .catch(() => {
         message.error("删除失败")
       })
-    this.handleList()
   }
 
   handleList = async () => {

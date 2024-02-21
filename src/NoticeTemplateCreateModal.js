@@ -36,12 +36,12 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
       .then((res) => {
         if (res.status === 200) {
           message.success("创建成功")
+          handleList()
         }
       })
       .catch(() => {
         message.error("创建失败")
       })
-    handleList()
   }
 
   const handleUpdate = async (values) => {
@@ -53,12 +53,12 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
       .then((res) => {
         if (res.status === 200) {
           message.success("更新成功")
+          handleList()
         }
       })
       .catch(() => {
         message.error("更新失败")
       })
-    handleList()
   }
 
   // 提交

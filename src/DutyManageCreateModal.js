@@ -23,6 +23,7 @@ const DutyManageCreateModal = ({ visible, onClose, handleList }) => {
       .then((res) => {
         if (res.status === 200) {
           message.success("创建成功")
+          handleList()
         }
       })
       .catch(() => {
@@ -33,8 +34,6 @@ const DutyManageCreateModal = ({ visible, onClose, handleList }) => {
   const handleFormSubmit = async (values) => {
 
     await handleCreate(values)
-
-    handleList()
 
     // 关闭弹窗
     onClose()

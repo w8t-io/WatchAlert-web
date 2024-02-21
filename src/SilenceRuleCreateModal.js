@@ -74,6 +74,7 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type, handleLis
       .then((res) => {
         if (res.status === 200) {
           message.success("创建成功")
+          handleList()
         }
       })
       .catch(() => {
@@ -87,6 +88,7 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type, handleLis
       .then((res) => {
         if (res.status === 200) {
           message.success("更新成功")
+          handleList()
         }
       })
       .catch(() => {
@@ -118,8 +120,6 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type, handleLis
 
       await handleUpdate(newData)
     }
-
-    handleList()
 
     // 关闭弹窗
     onClose()

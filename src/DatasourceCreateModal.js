@@ -45,6 +45,7 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
       .then((res) => {
         if (res.status === 200) {
           message.success("创建成功")
+          handleList()
         }
       })
       .catch(() => {
@@ -57,6 +58,7 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
       .then((res) => {
         if (res.status === 200) {
           message.success("更新成功")
+          handleList()
         }
       })
       .catch(() => {
@@ -80,8 +82,6 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
 
     // 关闭弹窗
     onClose()
-
-    handleList()
 
   }
 

@@ -76,6 +76,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
         .then((res) => {
           if (res.status === 200) {
             message.success("创建成功")
+            handleList()
           }
         })
         .catch(() => {
@@ -93,14 +94,13 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
         .then((res) => {
           if (res.status === 200) {
             message.success("更新成功")
+            handleList()
           }
         })
         .catch(() => {
           message.error("更新失败")
         })
     }
-
-    handleList()
 
     // 关闭弹窗
     onClose()

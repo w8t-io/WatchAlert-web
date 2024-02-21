@@ -100,7 +100,6 @@ class AlertHisEvent extends React.Component {
     this.setState({
       list: res.data.data,
     })
-    console.log(this.state.list)
   };
 
   handleModalClose = () => {

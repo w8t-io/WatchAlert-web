@@ -54,6 +54,7 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
       .then((res) => {
         if (res.status === 200) {
           message.success("创建成功")
+          handleList()
         }
       })
       .catch(() => {
@@ -71,6 +72,7 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
       .then((res) => {
         if (res.status === 200) {
           message.success("更新成功")
+          handleList()
         }
       })
       .catch(() => {
@@ -87,8 +89,6 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
     if (type === 'update') {
       await handleUpdate(values)
     }
-
-    handleList()
 
     // 关闭弹窗
     onClose()
