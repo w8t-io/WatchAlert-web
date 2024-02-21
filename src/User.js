@@ -80,8 +80,8 @@ class User extends React.Component {
               <Popconfirm
                 title="Sure to delete?"
                 onConfirm={() => this.handleDelete(_, record)}
-                disabled={record.role === 'admin'}>
-                <a style={{ cursor: record.role === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
+                disabled={record.username === 'admin'}>
+                <a style={{ cursor: record.username === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
               </Popconfirm>
               <Button type="link"
                 onClick={() => this.handleUpdateModalOpen(record)}              >
