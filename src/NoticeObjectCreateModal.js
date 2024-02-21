@@ -50,12 +50,15 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
       ...data,
       enableCard: isChecked ? "true" : "false"
     }
-    const res = await axios.post(`http://${backendIP}/api/w8t/notice/noticeCreate`, newData)
-    if (res.status === 200) {
-      message.success("创建成功")
-    } else {
-      message.error("创建失败", res.data.data)
-    }
+    axios.post(`http://${backendIP}/api/w8t/notice/noticeCreate`, newData)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("创建成功")
+        }
+      })
+      .catch(() => {
+        message.error("创建失败")
+      })
   }
 
   const handleUpdate = async (data) => {
@@ -64,13 +67,15 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
       enableCard: isChecked ? "true" : "false",
       uuid: selectedRow.uuid,
     }
-
-    const res = await axios.post(`http://${backendIP}/api/w8t/notice/noticeUpdate`, newData)
-    if (res.status === 200) {
-      message.success("更新成功")
-    } else {
-      message.error("更新失败", res.data.data)
-    }
+    axios.post(`http://${backendIP}/api/w8t/notice/noticeUpdate`, newData)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("更新成功")
+        }
+      })
+      .catch(() => {
+        message.error("更新失败")
+      })
   }
 
   const handleFormSubmit = async (values) => {

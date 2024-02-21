@@ -72,13 +72,15 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
         ...values,
         noticeGroup: noticeLabels
       }
-
-      const res = await axios.post(`http://${backendIP}/api/w8t/rule/ruleCreate`, newData)
-      if (res.status === 200) {
-        message.success("创建成功")
-      } else {
-        message.error("创建失败", res.data.data)
-      }
+      axios.post(`http://${backendIP}/api/w8t/rule/ruleCreate`, newData)
+        .then((res) => {
+          if (res.status === 200) {
+            message.success("创建成功")
+          }
+        })
+        .catch(() => {
+          message.error("创建失败")
+        })
     }
 
     if (type === 'update') {
@@ -87,13 +89,15 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
         ruleId: selectedRow.ruleId,
         noticeGroup: noticeLabels
       }
-
-      const res = await axios.post(`http://${backendIP}/api/w8t/rule/ruleUpdate`, newData)
-      if (res.status === 200) {
-        message.success("更新成功")
-      } else {
-        message.error("更新失败", res.data.data)
-      }
+      axios.post(`http://${backendIP}/api/w8t/rule/ruleUpdate`, newData)
+        .then((res) => {
+          if (res.status === 200) {
+            message.success("更新成功")
+          }
+        })
+        .catch(() => {
+          message.error("更新失败")
+        })
     }
 
     handleList()

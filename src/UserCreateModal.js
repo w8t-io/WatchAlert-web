@@ -40,22 +40,42 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
     }
   }, [selectedRow, form])
 
+  // 创建
+  const handleCreate = (values) => {
+    axios.post(`http://${backendIP}/api/system/register`, values)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("创建成功")
+        }
+      })
+      .catch(() => {
+        message.error("创建失败")
+      })
+  }
+
+  // 更新
+  const handleUpdate = (values) => {
+    axios.post(`http://${backendIP}/api/w8t/user/userUpdate`, values)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("更新成功")
+        }
+      })
+      .catch(() => {
+        message.error("更新失败")
+      })
+  }
+
   // 提交
-  const handleFormSubmit = async (values) => {
+  const handleFormSubmit = (values) => {
 
     if (type === 'create') {
       const newValues = {
         ...values,
         joinDuty: values.joinDuty ? "true" : "false"
       }
+      handleCreate(newValues)
 
-      const res = await axios.post(`http://${backendIP}/api/system/register`, newValues)
-
-      if (res.status === 200) {
-        message.success("创建成功")
-      } else {
-        message.error("创建失败", res.data.data)
-      }
     }
 
     if (type === 'update') {
@@ -66,13 +86,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
         password: selectedRow.password,
       }
 
-      const res = await axios.post(`http://${backendIP}/api/w8t/user/userUpdate`, newValues)
-
-      if (res.status === 200) {
-        message.success("更新成功")
-      } else {
-        message.error("更新失败", res.data.data)
-      }
+      handleUpdate(newValues)
     }
 
     handleList()

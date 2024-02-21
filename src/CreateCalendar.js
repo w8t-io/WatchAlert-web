@@ -24,12 +24,15 @@ const CreateCalendar = ({ visible, onClose, dutyId }) => {
   }
 
   const handleFormSubmit = async (data) => {
-    const res = await axios.post(`http://${backendIP}/api/w8t/calendar/calendarCreate`, data)
-    if (res.status === 200) {
-      message.success("创建成功")
-    } else {
-      message.error("创建失败", res.data.data)
-    }
+    axios.post(`http://${backendIP}/api/w8t/calendar/calendarCreate`, data)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("创建成功")
+        }
+      })
+      .catch(() => {
+        message.error("创建失败")
+      })
     onClose()
   }
 

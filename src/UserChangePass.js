@@ -8,14 +8,15 @@ const UserChangePass = ({ visible, onClose, userid, username }) => {
 
   // 提交
   const handleFormSubmit = async (values) => {
-
-    const res = await axios.post(`http://${backendIP}/api/w8t/user/userChangePass?userid=${userid}`, values)
-
-    if (res.status === 200) {
-      message.success(username, "密码重置成功")
-    } else {
-      message.error(username, "密码重置失败", res.data.data)
-    }
+    axios.post(`http://${backendIP}/api/w8t/user/userChangePass?userid=${userid}`, values)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("密码重置成功")
+        }
+      })
+      .catch(() => {
+        message.error("密码重置失败")
+      })
 
     // 关闭弹窗
     onClose()

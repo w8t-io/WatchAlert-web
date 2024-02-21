@@ -32,12 +32,15 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
   }, [selectedRow, form])
 
   const handleCreate = async (values) => {
-    const res = await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateCreate`, values)
-    if (res.status === 200) {
-      message.success("创建成功")
-    } else {
-      message.error("创建失败", res.data.data)
-    }
+    axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateCreate`, values)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("创建成功")
+        }
+      })
+      .catch(() => {
+        message.error("创建失败")
+      })
     handleList()
   }
 
@@ -46,12 +49,15 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
       ...values,
       id: selectedRow.id,
     }
-    const res = await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateUpdate`, newValue)
-    if (res.status === 200) {
-      message.success("更新成功")
-    } else {
-      message.error("更新失败", res.data.data)
-    }
+    axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateUpdate`, newValue)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("更新成功")
+        }
+      })
+      .catch(() => {
+        message.error("更新失败")
+      })
     handleList()
   }
 

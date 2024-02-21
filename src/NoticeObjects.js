@@ -81,15 +81,16 @@ class NoticeObjects extends React.Component {
   };
 
   async handleDelete (_, record) {
-
-    const res = await axios.post(`http://${backendIP}/api/w8t/notice/noticeDelete?uuid=${record.uuid}`)
-    if (res.status === 200) {
-      message.success("删除成功")
-    } else {
-      message.error("删除失败", res.data.data)
-    }
+    axios.post(`http://${backendIP}/api/w8t/notice/noticeDelete?uuid=${record.uuid}`)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("删除成功")
+        }
+      })
+      .catch(() => {
+        message.error("删除失败")
+      })
     this.handleList()
-
   }
 
   handleList = async () => {

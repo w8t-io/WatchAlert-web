@@ -70,22 +70,28 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type, handleLis
 
   // 创建
   const handleCreate = async (data) => {
-    const res = await axios.post(`http://${backendIP}/api/w8t/silence/silenceCreate`, data)
-    if (res.status === 200) {
-      message.success("创建成功")
-    } else {
-      message.error("创建失败", res.data.data)
-    }
+    axios.post(`http://${backendIP}/api/w8t/silence/silenceCreate`, data)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("创建成功")
+        }
+      })
+      .catch(() => {
+        message.error("创建失败")
+      })
   }
 
   // 更新
   const handleUpdate = async (data) => {
-    const res = await axios.post(`http://${backendIP}/api/w8t/silence/silenceUpdate`, data)
-    if (res.status === 200) {
-      message.success("更新成功")
-    } else {
-      message.error("更新失败", res.data.data)
-    }
+    axios.post(`http://${backendIP}/api/w8t/silence/silenceUpdate`, data)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("更新成功")
+        }
+      })
+      .catch(() => {
+        message.error("更新失败")
+      })
   }
 
   // 提交

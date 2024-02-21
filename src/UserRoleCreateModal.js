@@ -49,13 +49,16 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
         permissions: targetKeys
       }
 
-      const res = await axios.post(`http://${backendIP}/api/w8t/role/roleCreate`, newValues)
+      axios.post(`http://${backendIP}/api/w8t/role/roleCreate`, newValues)
+        .then((res) => {
+          if (res.status === 200) {
+            message.success("创建成功")
+          }
+        })
+        .catch(() => {
+          message.error("创建失败")
+        })
 
-      if (res.status === 200) {
-        message.success("创建成功")
-      } else {
-        message.error("创建失败", res.data.data)
-      }
     }
 
     if (type === 'update') {
@@ -65,13 +68,16 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
         permissions: targetKeys
       }
 
-      const res = await axios.post(`http://${backendIP}/api/w8t/role/roleUpdate`, newValues)
+      axios.post(`http://${backendIP}/api/w8t/role/roleUpdate`, newValues)
+        .then((res) => {
+          if (res.status === 200) {
+            message.success("更新成功")
+          }
+        })
+        .catch(() => {
+          message.error("更新失败")
+        })
 
-      if (res.status === 200) {
-        message.success("更新成功")
-      } else {
-        message.error("更新失败", res.data.data)
-      }
     }
 
     handleList()

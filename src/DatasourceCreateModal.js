@@ -41,25 +41,27 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
   }, [selectedRow, form])
 
   const handleCreate = async (data) => {
-    const res = await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceCreate`, data)
-
-    if (res.status === 200) {
-      message.success("创建成功")
-    } else {
-      message.error("创建失败", res.data.data)
-    }
-
+    axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceCreate`, data)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("创建成功")
+        }
+      })
+      .catch(() => {
+        message.error("创建失败")
+      })
   }
 
   const handleUpdate = async (data) => {
-    const res = await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceUpdate`, data)
-
-    if (res.status === 200) {
-      message.success("更新成功")
-    } else {
-      message.error("更新失败", res.data.data)
-    }
-
+    axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceUpdate`, data)
+      .then((res) => {
+        if (res.status === 200) {
+          message.success("更新成功")
+        }
+      })
+      .catch(() => {
+        message.error("更新失败")
+      })
   }
 
   const handleFormSubmit = async (values) => {
