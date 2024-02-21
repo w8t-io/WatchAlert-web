@@ -131,7 +131,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
           </MyFormItem>
           {type === 'create' && <Form.Item
             name="password"
-            label="Password"
+            label="密码"
             style={{
               marginRight: '10px',
               width: '500px',

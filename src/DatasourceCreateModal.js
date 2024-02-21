@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, Switch, Select, Tooltip, message } from 'antd'
+import { Modal, Form, Input, Button, Switch, Select, InputNumber, message } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import backendIP from './config'
@@ -88,11 +88,21 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
   return (
     <Modal visible={visible} onCancel={onClose} footer={null}>
       <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
-        <MyFormItem name="name" label="数据源名称">
+        <MyFormItem name="name" label="数据源名称"
+          rules={[
+            {
+              required: true,
+            },
+          ]}>
           <Input disabled={type === 'update'} />
         </MyFormItem>
 
-        <MyFormItem name="type" label="数据源类型">
+        <MyFormItem name="type" label="数据源类型"
+          rules={[
+            {
+              required: true,
+            },
+          ]}>
           <Select
             placeholder="请选择数据源类型"
             style={{
@@ -108,12 +118,31 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
         </MyFormItem>
 
         <MyFormItemGroup prefix={['http']}>
-          <MyFormItem name="url" label="URL">
+          <MyFormItem name="url" label="URL"
+            rules={[
+              {
+                required: true,
+              },
+              {
+                pattern: /^(http|https):\/\//,
+                message: '输入正确的URL格式',
+              },
+            ]}>
             <Input />
           </MyFormItem>
 
-          <MyFormItem name="timeout" label="Timeout">
-            <Input />
+          <MyFormItem name="timeout" label="Timeout"
+            rules={[
+              {
+                required: true,
+              },
+            ]}>
+            <InputNumber
+              style={{ width: '100%' }}
+              addonAfter={<span>秒</span>}
+              placeholder="10"
+              min={1}
+            />
           </MyFormItem>
         </MyFormItemGroup>
 

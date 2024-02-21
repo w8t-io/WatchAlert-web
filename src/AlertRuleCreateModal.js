@@ -240,7 +240,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
               ]}
             >
               <Select
-                placeholder="请选择数据源类型"
+                placeholder="选择数据源类型"
                 style={{
                   flex: 1,
                 }}
@@ -268,7 +268,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
               ]}>
               <Select
                 mode="multiple"
-                placeholder="Inserted are removed"
+                placeholder="选择数据源"
                 value={selectedItems}
                 onChange={setSelectedItems}
                 style={{
@@ -287,7 +287,12 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
               <Input />
             </MyFormItem>
 
-            <MyFormItem name="severity" label="告警等级">
+            <MyFormItem name="severity" label="告警等级"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}>
               <Radio.Group onChange={onChange} value={severityValue}>
                 <Radio value={0}>P0级告警</Radio>
                 <Radio value={1}>P1级告警</Radio>
@@ -375,6 +380,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
                   width: 370,
                 }}
                 allowClear
+                placeholder="选择通知对象"
                 value={selectedNotice} // 将选择的值与状态中的值进行绑定
                 options={noticeOptions}
                 onChange={handleSelectChange} // 使用onChange事件处理函数来捕获选择的值
@@ -421,7 +427,11 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
                   name={`[${index}].key`}
                   label="Key"
                   style={{ marginRight: '10px', width: '200px' }}
-                >
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}>
                   <Input
                     value={label.key}
                     onChange={(e) => updateLabel(index, 'key', e.target.value)}
@@ -432,7 +442,11 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
                   name={`[${index}].value`}
                   label="Value"
                   style={{ marginRight: '10px', width: '200px' }}
-                >
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}>
                   <Input
                     value={label.value}
                     onChange={(e) => updateLabel(index, 'value', e.target.value)}
@@ -443,11 +457,15 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
                   name={`[${index}].noticeId`}
                   label="通知对象"
                   style={{ marginRight: '10px', width: '500px' }}
-                  rules={[{ message: '请选择通知对象' }]}
-                >
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}>
                   <Select
                     style={{ width: 370 }}
                     allowClear
+                    placeholder="选择通知对象"
                     options={noticeOptions}
                     value={label.noticeId}
                     onChange={(e) => updateLabel(index, 'noticeId', e)}

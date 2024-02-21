@@ -185,6 +185,10 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
               {
                 required: true,
               },
+              {
+                pattern: /^(http|https):\/\//,
+                message: '输入正确的URL格式',
+              },
             ]}>
             <Input />
           </MyFormItem>
@@ -215,7 +219,12 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
               style={{
                 marginRight: '10px',
                 width: '100vh',
-              }}>
+              }}
+              rules={[
+                {
+                  required: true,
+                },
+              ]}>
               <TextArea rows={15} placeholder="输入告警模版" maxLength={10000} />
             </MyFormItem>
           </div>
@@ -227,7 +236,12 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
                 style={{
                   marginRight: '10px',
                   width: '100vh',
-                }}>
+                }}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}>
                 <TextArea rows={15} placeholder="输入告警模版" maxLength={10000} />
               </MyFormItem>
               <MyFormItem
@@ -236,7 +250,12 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
                 style={{
                   marginRight: '10px',
                   width: '100vh',
-                }}>
+                }}
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}>
                 <TextArea rows={15} placeholder="输入告警模版" maxLength={10000} />
               </MyFormItem>
             </div>
