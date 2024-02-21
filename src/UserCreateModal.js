@@ -19,21 +19,21 @@ const MyFormItem = ({ name, ...props }) => {
 // 函数组件
 const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
-  const [enabled, setEnabled] = useState("false")
+  const [checked, setChecked] = useState(false) // 修改这里
   const [roleData, setRoleData] = useState([])
-  const [username, serUsername] = useState("")
+  const [username, setUsername] = useState("")
 
   useEffect(() => {
     if (selectedRow) {
       if (type === 'update') {
-        setEnabled(selectedRow.joinDuty)
-        serUsername(selectedRow.username)
+        setChecked(selectedRow.joinDuty) // 修改这里
+        setUsername(selectedRow.username)
       }
       form.setFieldsValue({
         username: selectedRow.username,
         phone: selectedRow.phone,
         email: selectedRow.email,
-        joinDuty: enabled,
+        joinDuty: selectedRow.joinDuty, // 修改这里
         dutyUserId: selectedRow.dutyUserId,
         role: selectedRow.role
       })
@@ -108,7 +108,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
   }
 
   const onChangeJoinDuty = (checked) => {
-    setEnabled(checked ? "true" : "false")
+    setChecked(checked) // 修改这里
   }
 
   return (
@@ -173,10 +173,10 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
         </MyFormItem>
 
         <MyFormItem name="joinDuty" label="接受值班">
-          <Switch defaultChecked={false} onChange={onChangeJoinDuty} />
+          <Switch checked={checked === 'true' ? true : false} onChange={onChangeJoinDuty} />
         </MyFormItem>
 
-        {enabled === 'true' && <MyFormItem name="dutyUserId" label="UserID「飞书/钉钉」"
+        {checked === 'true' && <MyFormItem name="dutyUserId" label="UserID「飞书/钉钉」"
           rules={[
             {
               required: true,
