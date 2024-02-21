@@ -237,9 +237,12 @@ function Base () {
           </Content>
         </Layout>
 
-        <Footer style={{ textAlign: 'center', margin: '0', marginLeft: '5px' }}><a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub">
-          <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '3vh', height: '3vh', marginRight: '5px' }} />
-        </a>WatchAlert ©2024 Created by Cairry</Footer>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '25px' }}>
+          <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub">
+            <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />
+          </a>
+        </div>
+        <Footer style={{ textAlign: 'center', padding: '10px' }}>WatchAlert ©2024 Created by Cairry</Footer>
 
       </Layout>
     </Layout>
