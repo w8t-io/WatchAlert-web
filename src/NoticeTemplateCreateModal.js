@@ -31,9 +31,7 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
     }
   }, [selectedRow, form])
 
-  // 提交
-  const handleFormSubmit = async (values) => {
-
+  const handleCreate = async (values) => {
     const res = await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateCreate`, values)
     if (res.status === 200) {
       message.success("创建成功")
@@ -41,6 +39,32 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
       message.error("创建失败", res.data.data)
     }
     handleList()
+  }
+
+  const handleUpdate = async (values) => {
+    const newValue = {
+      ...values,
+      id: selectedRow.id,
+    }
+    const res = await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateUpdate`, newValue)
+    if (res.status === 200) {
+      message.success("更新成功")
+    } else {
+      message.error("更新失败", res.data.data)
+    }
+    handleList()
+  }
+
+  // 提交
+  const handleFormSubmit = (values) => {
+
+    if (type === 'create') {
+      handleCreate(values)
+
+    }
+    if (type === 'update') {
+      handleUpdate(values)
+    }
 
     // 关闭弹窗
     onClose()
