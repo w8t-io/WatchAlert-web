@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, InputNumber } from 'antd'
+import { Modal, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, InputNumber, message } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
@@ -26,7 +26,7 @@ const MyFormItem = ({ name, ...props }) => {
 const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
-  const [selectedType, setSelectedType] = useState('') // 数据源类型
+  const [selectedType, setSelectedType] = useState() // 数据源类型
   const [datasourceOptions, setDatasourceOptions] = useState([])  // 数据源列表
   const [selectedItems, setSelectedItems] = useState([])  //选择数据源
 
@@ -59,6 +59,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
         ruleId: selectedRow.ruleId,
         ruleName: selectedRow.ruleName
       })
+      setSelectedType(selectedRow.datasourceType)
     }
   }, [selectedRow, form])
 
@@ -72,7 +73,12 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
         noticeGroup: noticeLabels
       }
 
-      await axios.post(`http://${backendIP}/api/w8t/rule/ruleCreate`, newData)
+      const res = await axios.post(`http://${backendIP}/api/w8t/rule/ruleCreate`, newData)
+      if (res.status === 200) {
+        message.success("创建成功")
+      } else {
+        message.error("创建失败", res.data.data)
+      }
     }
 
     if (type === 'update') {
@@ -82,7 +88,12 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
         noticeGroup: noticeLabels
       }
 
-      await axios.post(`http://${backendIP}/api/w8t/rule/ruleUpdate`, newData)
+      const res = await axios.post(`http://${backendIP}/api/w8t/rule/ruleUpdate`, newData)
+      if (res.status === 200) {
+        message.success("更新成功")
+      } else {
+        message.error("更新失败", res.data.data)
+      }
     }
 
     handleList()
@@ -94,16 +105,25 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
   // 获取数据源
   const handleGetDatasourceData = async (data) => {
 
-    const res = await axios.get(`http://${backendIP}/api/w8t/datasource/dataSourceSearch?dsType=${data}`)
-
-    const newData = res.data.data.map((item) => ({
-      label: item.name,
-      value: item.id
-    }))
-
-    // 将数据设置为选项对象数组
-    setDatasourceOptions(newData)
+    setSelectedType(data)
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+
+      const res = await axios.get(`http://${backendIP}/api/w8t/datasource/dataSourceSearch?dsType=${selectedType}`)
+
+      const newData = res.data.data.map((item) => ({
+        label: item.name,
+        value: item.id
+      }))
+
+      // 将数据设置为选项对象数组
+      setDatasourceOptions(newData)
+    }
+
+    fetchData()
+  }, [selectedType])
 
   // 获取通知对象
   const handleGetNoticeData = async (data) => {
@@ -142,7 +162,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
   React.useEffect(() => {
 
     handleGetNoticeData()
-    handleGetDatasourceData()
+    // handleGetDatasourceData()
 
   }, [])
 
@@ -226,7 +246,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
                     label: 'Prometheus',
                   },
                 ]}
-                value={selectedType}
+                // value={selectedType}
                 onChange={handleGetDatasourceData}
               />
             </MyFormItem>

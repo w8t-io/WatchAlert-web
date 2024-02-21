@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button } from 'antd'
+import { Modal, Form, Input, Button, message } from 'antd'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import backendIP from './config'
@@ -35,7 +35,11 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
   const handleFormSubmit = async (values) => {
 
     const res = await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateCreate`, values)
-
+    if (res.status === 200) {
+      message.success("创建成功")
+    } else {
+      message.error("创建失败", res.data.data)
+    }
     handleList()
 
     // 关闭弹窗

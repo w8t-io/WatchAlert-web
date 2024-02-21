@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, Switch, Select, Tooltip } from 'antd'
+import { Modal, Form, Input, Button, Switch, Select, Tooltip, message } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import backendIP from './config'
@@ -41,11 +41,25 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
   }, [selectedRow, form])
 
   const handleCreate = async (data) => {
-    await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceCreate`, data)
+    const res = await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceCreate`, data)
+
+    if (res.status === 200) {
+      message.success("创建成功")
+    } else {
+      message.error("创建失败", res.data.data)
+    }
+
   }
 
   const handleUpdate = async (data) => {
-    await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceUpdate`, data)
+    const res = await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceUpdate`, data)
+
+    if (res.status === 200) {
+      message.success("更新成功")
+    } else {
+      message.error("更新失败", res.data.data)
+    }
+
   }
 
   const handleFormSubmit = async (values) => {

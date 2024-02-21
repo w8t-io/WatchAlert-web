@@ -1,4 +1,4 @@
-import { Button, Input, Table, Tag, Popconfirm, Dropdown, Select } from 'antd'
+import { Button, Input, Table, Tag, Popconfirm, Dropdown, Select, message } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import DatasourceCreateModal from './DatasourceCreateModal'
@@ -93,6 +93,11 @@ class Datasources extends React.Component {
 
   async handleDelete (_, record) {
     const res = await axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceDelete?id=${record.id}`)
+    if (res.status === 200) {
+      message.success("删除成功")
+    } else {
+      message.error("删除失败", res.data.data)
+    }
     this.fetchData()
   }
 

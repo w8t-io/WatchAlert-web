@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button } from 'antd'
+import { Modal, Form, Input, Button, message } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import backendIP from './config'
@@ -10,6 +10,12 @@ const UserChangePass = ({ visible, onClose, userid, username }) => {
   const handleFormSubmit = async (values) => {
 
     const res = await axios.post(`http://${backendIP}/api/w8t/user/userChangePass?userid=${userid}`, values)
+
+    if (res.status === 200) {
+      message.success(username, "密码重置成功")
+    } else {
+      message.error(username, "密码重置失败", res.data.data)
+    }
 
     // 关闭弹窗
     onClose()

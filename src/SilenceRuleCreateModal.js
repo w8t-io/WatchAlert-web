@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, DatePicker, Select, Space } from 'antd'
+import { Modal, Form, Input, Button, DatePicker, Select, Space, message } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import moment from 'moment'
@@ -70,12 +70,22 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type, handleLis
 
   // 创建
   const handleCreate = async (data) => {
-    await axios.post(`http://${backendIP}/api/w8t/silence/silenceCreate`, data)
+    const res = await axios.post(`http://${backendIP}/api/w8t/silence/silenceCreate`, data)
+    if (res.status === 200) {
+      message.success("创建成功")
+    } else {
+      message.error("创建失败", res.data.data)
+    }
   }
 
   // 更新
   const handleUpdate = async (data) => {
-    await axios.post(`http://${backendIP}/api/w8t/silence/silenceUpdate`, data)
+    const res = await axios.post(`http://${backendIP}/api/w8t/silence/silenceUpdate`, data)
+    if (res.status === 200) {
+      message.success("更新成功")
+    } else {
+      message.error("更新失败", res.data.data)
+    }
   }
 
   // 提交

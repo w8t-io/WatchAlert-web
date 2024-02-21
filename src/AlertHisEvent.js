@@ -91,14 +91,6 @@ class AlertHisEvent extends React.Component {
 
   }
 
-  // 删除
-  async handleDelete (_, record) {
-
-    await axios.post(`http://${backendIP}/api/w8t/rule/ruleDelete?id=${record.ruleId}`)
-    this.handleList()
-
-  }
-
   componentDidMount () {
     this.handleList()
   }

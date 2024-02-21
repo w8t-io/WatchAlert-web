@@ -1,4 +1,4 @@
-import { Button, Input, Table, Select, Popconfirm, Dropdown, Tag } from 'antd'
+import { Button, Input, Table, Select, Popconfirm, Dropdown, Tag, message } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import AlertRuleCreateModal from './AlertRuleCreateModal'
@@ -93,7 +93,12 @@ class AlertRules extends React.Component {
   // 删除
   async handleDelete (_, record) {
 
-    await axios.post(`http://${backendIP}/api/w8t/rule/ruleDelete?id=${record.ruleId}`)
+    const res = await axios.post(`http://${backendIP}/api/w8t/rule/ruleDelete?id=${record.ruleId}`)
+    if (res.status === 200) {
+      message.success("删除成功")
+    } else {
+      message.error("删除失败", res.data.data)
+    }
     this.handleList()
 
   }

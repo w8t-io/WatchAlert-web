@@ -1,4 +1,4 @@
-import { Button, Input, Table, Select, Popconfirm, Dropdown, Flex } from 'antd'
+import { Button, Input, Table, Select, Popconfirm, Dropdown, message } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import NoticeTemplateCreateModal from './NoticeTemplateCreateModal'
@@ -65,7 +65,12 @@ class NoticeTemplate extends React.Component {
 
   async handleDelete (_, record) {
 
-    await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateDelete?id=${record.id}`)
+    const res = await axios.post(`http://${backendIP}/api/w8t/noticeTemplate/noticeTemplateDelete?id=${record.id}`)
+    if (res.status === 200) {
+      message.success("删除成功")
+    } else {
+      message.error("删除失败", res.data.data)
+    }
     this.handleList()
 
   }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
-import { Form, Modal, Divider, InputNumber, DatePicker, Select, Button } from 'antd'
+import { Form, Modal, Divider, InputNumber, DatePicker, Select, Button, message } from 'antd'
 import backendIP from './config'
 
 const CreateCalendar = ({ visible, onClose, dutyId }) => {
@@ -24,7 +24,12 @@ const CreateCalendar = ({ visible, onClose, dutyId }) => {
   }
 
   const handleFormSubmit = async (data) => {
-    await axios.post(`http://${backendIP}/api/w8t/calendar/calendarCreate`, data)
+    const res = await axios.post(`http://${backendIP}/api/w8t/calendar/calendarCreate`, data)
+    if (res.status === 200) {
+      message.success("创建成功")
+    } else {
+      message.error("创建失败", res.data.data)
+    }
     onClose()
   }
 

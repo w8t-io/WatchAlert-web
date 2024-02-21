@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, Select, Checkbox, Tooltip } from 'antd'
+import { Modal, Form, Input, Button, Select, Checkbox, Tooltip, message } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
@@ -50,7 +50,12 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
       ...data,
       enableCard: isChecked ? "true" : "false"
     }
-    await axios.post(`http://${backendIP}/api/w8t/notice/noticeCreate`, newData)
+    const res = await axios.post(`http://${backendIP}/api/w8t/notice/noticeCreate`, newData)
+    if (res.status === 200) {
+      message.success("创建成功")
+    } else {
+      message.error("创建失败", res.data.data)
+    }
   }
 
   const handleUpdate = async (data) => {
@@ -60,7 +65,12 @@ const NoticeObjectCreateModal = ({ visible, onClose, selectedRow, type, handleLi
       uuid: selectedRow.uuid,
     }
 
-    await axios.post(`http://${backendIP}/api/w8t/notice/noticeUpdate`, newData)
+    const res = await axios.post(`http://${backendIP}/api/w8t/notice/noticeUpdate`, newData)
+    if (res.status === 200) {
+      message.success("更新成功")
+    } else {
+      message.error("更新失败", res.data.data)
+    }
   }
 
   const handleFormSubmit = async (values) => {

@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, Select, Switch } from 'antd'
+import { Modal, Form, Input, Button, Select, Switch, message } from 'antd'
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import backendIP from './config'
@@ -49,7 +49,13 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
         joinDuty: values.joinDuty ? "true" : "false"
       }
 
-      await axios.post(`http://${backendIP}/api/system/register`, newValues)
+      const res = await axios.post(`http://${backendIP}/api/system/register`, newValues)
+
+      if (res.status === 200) {
+        message.success("创建成功")
+      } else {
+        message.error("创建失败", res.data.data)
+      }
     }
 
     if (type === 'update') {
@@ -60,7 +66,13 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
         password: selectedRow.password,
       }
 
-      await axios.post(`http://${backendIP}/api/w8t/user/userUpdate`, newValues)
+      const res = await axios.post(`http://${backendIP}/api/w8t/user/userUpdate`, newValues)
+
+      if (res.status === 200) {
+        message.success("更新成功")
+      } else {
+        message.error("更新失败", res.data.data)
+      }
     }
 
     handleList()
