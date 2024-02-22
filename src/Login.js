@@ -4,6 +4,7 @@ import { Button, Checkbox, Form, Input, Modal } from 'antd'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import backendIP from './config'
+import WatchAlertLogo from './WatchAlert.png'
 
 // 创建 Axios 实例
 const axiosInstance = axios.create({
@@ -94,122 +95,141 @@ const Login = () => {
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-      }}
-    >
-      <Form
-        name="normal_login"
-        className="login-form"
-        initialValues={{
-          remember: true,
+    <div>
+      <a
+        href=""
+        target="_blank"
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: '100%',
+          height: '100%',
+          marginTop: '20vh'
         }}
-        onFinish={onFinish}
       >
-        <Form.Item
-          name="username"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your Username!',
-            },
-          ]}
-          style={{ width: '280px' }}
+        <img src={WatchAlertLogo} className="icon" style={{ width: '50vh', height: '15vh' }} />
+      </a>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          marginTop: '-30vh'
+        }}
+      >
+        <Form
+          name="normal_login"
+          className="login-form"
+          initialValues={{
+            remember: true,
+          }}
+          onFinish={onFinish}
         >
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
-        </Form.Item>
-        <Form.Item
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: 'Please input your Password!',
-            },
-          ]}
-        >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
+          <Form.Item
+            name="username"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Username!',
+              },
+            ]}
+            style={{ width: '280px' }}
+          >
+            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: 'Please input your Password!',
+              },
+            ]}
+          >
+            <Input
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              type="password"
+              placeholder="Password"
+            />
+          </Form.Item>
+          <Form.Item>
+            <Form.Item name="remember" valuePropName="checked" noStyle>
+              <Checkbox>Remember me</Checkbox>
+            </Form.Item>
+
+            {!passwordModal && (
+              <a className="login-form-forgot" onClick={handleShowModal}>
+                Initialization Password
+              </a>
+            )}
+
           </Form.Item>
 
-          {!passwordModal && (
-            <a className="login-form-forgot" onClick={handleShowModal}>
-              Initialization Password
-            </a>
-          )}
+          <Modal
+            title="初始化密码"
+            visible={isModalVisible}
+            onCancel={handleHideModal}
+            footer={null}>
 
-        </Form.Item>
-
-        <Modal
-          title="初始化密码"
-          visible={isModalVisible}
-          onCancel={handleHideModal}
-          footer={null}>
-
-          <Form name="password_form" onFinish={handlePasswordSubmit}>
-            <Form.Item
-              name="password"
-              label="Password"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input your password!',
-                },
-              ]}
-              hasFeedback
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item
-              name="confirm"
-              label="Confirm Password"
-              dependencies={['password']}
-              hasFeedback
-              rules={[
-                {
-                  required: true,
-                  message: 'Please confirm your password!',
-                },
-                ({ getFieldValue }) => ({
-                  validator (_, value) {
-                    if (!value || getFieldValue('password') === value) {
-                      return Promise.resolve()
-                    }
-                    return Promise.reject(new Error('The new password that you entered do not match!'))
+            <Form name="password_form" onFinish={handlePasswordSubmit}>
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your password!',
                   },
-                }),
-              ]}
-            >
-              <Input.Password />
-            </Form.Item>
+                ]}
+                hasFeedback
+              >
+                <Input.Password />
+              </Form.Item>
 
-            <Form.Item wrapperCol={{ offset: 100, span: 16 }}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
+              <Form.Item
+                name="confirm"
+                label="Confirm Password"
+                dependencies={['password']}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please confirm your password!',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator (_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(new Error('The new password that you entered do not match!'))
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
 
-        </Modal>
+              <Form.Item wrapperCol={{ offset: 100, span: 16 }}>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="login-form-button">
-            Log in
-          </Button>
-        </Form.Item>
-      </Form>
+          </Modal>
+
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="login-form-button">
+              Log in
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </div>
+
   )
 }
 
