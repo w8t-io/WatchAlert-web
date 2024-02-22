@@ -3,6 +3,7 @@ import React from 'react'
 import axios from 'axios'
 import UserRoleCreateModal from './UserRoleCreateModal'
 import backendIP from './config'
+import Base from './Base'
 const { Search } = Input
 
 class UserRole extends React.Component {
@@ -115,46 +116,48 @@ class UserRole extends React.Component {
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 
     return (
-      <div>
-        <div style={{ display: 'flex' }}>
+      <Base name='角色管理'>
+        <div>
+          <div style={{ display: 'flex' }}>
 
-          <Button type="primary" onClick={() => this.setState({ visible: true })}>
-            创建
-          </Button>
+            <Button type="primary" onClick={() => this.setState({ visible: true })}>
+              创建
+            </Button>
 
-          <UserRoleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
+            <UserRoleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
-          <UserRoleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
+            <UserRoleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '10px',
-            width: '1000px'
-          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '10px',
+              width: '1000px'
+            }}>
 
-            <Search
-              allowClear
-              placeholder="输入搜索关键字"
-              onSearch={onSearch}
-              enterButton
-              style={{ width: 300 }} />
+              <Search
+                allowClear
+                placeholder="输入搜索关键字"
+                onSearch={onSearch}
+                enterButton
+                style={{ width: 300 }} />
+            </div>
+
           </div>
 
+          <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
+            <Table
+              columns={this.state.columns}
+              dataSource={this.state.list}
+              scroll={{
+                x: 1500,
+                y: 'calc(60vh - 64px - 40px)'
+              }}
+            />
+          </div>
         </div>
-
-        <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
-          <Table
-            columns={this.state.columns}
-            dataSource={this.state.list}
-            scroll={{
-              x: 1500,
-              y: 'calc(60vh - 64px - 40px)'
-            }}
-          />
-        </div>
-      </div>
+      </Base>
     )
 
   }

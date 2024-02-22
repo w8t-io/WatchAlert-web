@@ -5,6 +5,7 @@ import { CopyOutlined } from '@ant-design/icons'
 import DutyManageCreateModal from './DutyManageCreateModal'
 import CalendarApp from './CalendarApp'
 import backendIP from './config'
+import Base from './Base'
 const { Search } = Input
 
 class DutyManage extends React.Component {
@@ -135,46 +136,48 @@ class DutyManage extends React.Component {
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 
     return (
-      <div>
-        <div style={{ display: 'flex' }}>
+      <Base name='值班管理'>
+        <div>
+          <div style={{ display: 'flex' }}>
 
-          <Button type="primary" onClick={() => this.setState({ visible: true })}>
-            创建
-          </Button>
+            <Button type="primary" onClick={() => this.setState({ visible: true })}>
+              创建
+            </Button>
 
-          <DutyManageCreateModal visible={this.state.visible} onClose={this.handleModalClose} handleList={this.handleList} />
+            <DutyManageCreateModal visible={this.state.visible} onClose={this.handleModalClose} handleList={this.handleList} />
 
-          <CalendarApp visible={this.state.calendarVisible} onClose={this.handleCalendarModalClose} name={this.state.calendarName} dutyId={this.state.calendarDutyId} handleList={this.handleList} />
+            <CalendarApp visible={this.state.calendarVisible} onClose={this.handleCalendarModalClose} name={this.state.calendarName} dutyId={this.state.calendarDutyId} handleList={this.handleList} />
 
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '10px',
-            width: '1000px'
-          }}>
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '10px',
+              width: '1000px'
+            }}>
 
-            <Search
-              allowClear
-              placeholder="输入搜索关键字"
-              onSearch={onSearch}
-              enterButton
-              style={{ width: 300 }} />
+              <Search
+                allowClear
+                placeholder="输入搜索关键字"
+                onSearch={onSearch}
+                enterButton
+                style={{ width: 300 }} />
+            </div>
+
           </div>
 
+          <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
+            <Table
+              columns={this.state.columns}
+              dataSource={this.state.list}
+              scroll={{
+                x: 1500,
+                y: 'calc(60vh - 64px - 40px)'
+              }}
+            />
+          </div>
         </div>
-
-        <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
-          <Table
-            columns={this.state.columns}
-            dataSource={this.state.list}
-            scroll={{
-              x: 1500,
-              y: 'calc(60vh - 64px - 40px)'
-            }}
-          />
-        </div>
-      </div>
+      </Base>
     )
 
   }

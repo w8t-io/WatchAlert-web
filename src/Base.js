@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import {
   UserOutlined,
   BellOutlined,
@@ -7,29 +7,28 @@ import {
   CalendarOutlined,
   HomeOutlined
 } from '@ant-design/icons'
-import { Layout, Menu, theme, Avatar, Button, Popover } from 'antd'
-import AlertRules from './AlertRules'
-import SilenceRules from './SilenceRules'
-import NoticeObjects from './NoticeObjects'
-import Datasources from './Datasources'
-import EchartsComponent from './EchartsComponent'
+import { Layout, Menu, theme, Avatar, Button, Popover, Spin } from 'antd'
 import Auth from './Auth'
-import AlertCurEvent from './AlertCurEvent'
-import AlertHisEvent from './AlertHisEvent'
-import User from './User'
-import UserRole from './UserRole'
-import DutyManage from './DutyManage'
-import NoticeTemplate from './NoticeTemplate'
 import logoIcon from './logo.jpeg'
 import githubIcon from './github_logo.png'
 import backendIP from './config'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const { Header, Content, Footer, Sider } = Layout
 const { SubMenu } = Menu
 
-function Base () {
+function Base (props) {
+  // 鉴权
+  Auth()
 
+  const navigate = useNavigate()
+  const [userInfo, setUserInfo] = useState(null)
+  const [selectedMenuKey, setSelectedMenuKey] = useState('')
+  const [loading, setLoading] = useState(true)
+  const cancelToken = useRef(null)
+
+  // 退出
   const handleLogout = () => {
     // 清除LocalStorage中的Authorization值
     localStorage.removeItem('Authorization')
@@ -48,66 +47,79 @@ function Base () {
     </div>
   )
 
-  const [selectedKeys, setSelectedKeys] = useState(['1'])
-  const [selectedValue, setSelectedValue] = useState('首页')
-  const [userInfo, setUserInfo] = useState(null)
-
   useEffect(() => {
-    let isMounted = true
+    cancelToken.current = axios.CancelToken.source()
 
     const fetchData = async () => {
       try {
-        const res = await axios.get(`http://${backendIP}/api/system/userInfo`)
-        if (isMounted) {
-          setUserInfo(res.data.data)
-        }
+        const res = await axios.get(`http://${backendIP}/api/system/userInfo`, {
+          cancelToken: cancelToken.current.token
+        })
+        setUserInfo(res.data.data)
+        setLoading(false)
       } catch (error) {
-        console.error(error)
+        if (!axios.isCancel(error)) {
+          console.error(error)
+        }
       }
     }
 
     fetchData()
 
     return () => {
-      isMounted = false
+      cancelToken.current.cancel()
     }
   }, [])
 
-  const handleMenuSelect = ({ key }) => {
-    const selectedButton = menuItems.find(item => item.key === key)
-    setSelectedKeys([key])
-    setSelectedValue(selectedButton.value)
+
+  const handleMenuClick = (key) => {
+    setSelectedMenuKey(key)
+    switch (key) {
+      case '1':
+        navigate('/')
+        break
+      case '2':
+        navigate('/alertRules')
+        break
+      case '3':
+        navigate('/silenceRules')
+        break
+      case '4':
+        navigate('/alertCurEvent')
+        break
+      case '5':
+        navigate('/alertHisEvent')
+        break
+      case '6':
+        navigate('/noticeObjects')
+        break
+      case '7':
+        navigate('/noticeTemplate')
+        break
+      case '9':
+        navigate('/dutyManage')
+        break
+      case '10':
+        navigate('/user')
+        break
+      case '11':
+        navigate('/userRole')
+        break
+      case '12':
+        navigate('/datasource')
+        break
+      default:
+        break
+    }
   }
 
-  // 鉴权
-  Auth()
-
-  const menuItems = [
-    { key: '1', value: '首页' },
-    { key: '2', value: '告警规则' },
-    { key: '3', value: '静默规则' },
-    { key: '4', value: '当前告警' },
-    { key: '5', value: '历史告警' },
-    { key: '6', value: '通知对象' },
-    { key: '7', value: '通知模版' },
-    { key: '9', value: '值班日程' },
-    { key: '10', value: '用户管理' },
-    { key: '11', value: '角色管理' },
-    { key: '12', value: '数据源' },
-  ]
-
-  const menuItemsMap = {
-    '1': <EchartsComponent />,
-    '2': <AlertRules />,
-    '3': <SilenceRules />,
-    '4': <AlertCurEvent />,
-    '5': <AlertHisEvent />,
-    '6': <NoticeObjects />,
-    '7': <NoticeTemplate />,
-    '9': <DutyManage />,
-    '10': <User />,
-    '11': <UserRole />,
-    '12': <Datasources />,
+  // 加载页
+  if (loading) {
+    return (
+      <Spin tip="Loading...">
+        <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
+      </Spin>
+    )
   }
 
   return (
@@ -135,39 +147,37 @@ function Base () {
         <Menu
           theme="light"
           mode="inline"
-          selectedKeys={selectedKeys}
-          onSelect={handleMenuSelect}
+          selectedKeys={[selectedMenuKey]}
         >
 
-          <Menu.Item key="1" icon={<HomeOutlined />}>首页</Menu.Item>
+          <Menu.Item key="1" onClick={() => handleMenuClick('1')} icon={<HomeOutlined />}>首页</Menu.Item>
 
           <SubMenu key="sub1" icon={<BellOutlined />} title="告警管理">
-            <Menu.Item key="2">告警规则</Menu.Item>
-            <Menu.Item key="3">静默规则</Menu.Item>
-            <Menu.Item key="4">当前告警</Menu.Item>
-            <Menu.Item key="5">历史告警</Menu.Item>
+            <Menu.Item key="2" onClick={() => handleMenuClick('2')}>告警规则</Menu.Item>
+            <Menu.Item key="3" onClick={() => handleMenuClick('3')}>静默规则</Menu.Item>
+            <Menu.Item key="4" onClick={() => handleMenuClick('4')}>当前告警</Menu.Item>
+            <Menu.Item key="5" onClick={() => handleMenuClick('5')}>历史告警</Menu.Item>
           </SubMenu>
 
           <SubMenu key="sub2" icon={<NotificationOutlined />} title="告警通知">
-            <Menu.Item key="6">通知对象</Menu.Item>
-            <Menu.Item key="7">通知模版</Menu.Item>
+            <Menu.Item key="6" onClick={() => handleMenuClick('6')}>通知对象</Menu.Item>
+            <Menu.Item key="7" onClick={() => handleMenuClick('7')}>通知模版</Menu.Item>
           </SubMenu>
 
           <SubMenu key="sub3" icon={<CalendarOutlined />} title="值班管理">
-            <Menu.Item key="9">值班日程</Menu.Item>
+            <Menu.Item key="9" onClick={() => handleMenuClick('9')}>值班日程</Menu.Item>
           </SubMenu>
 
 
           {userInfo !== null && userInfo.role === 'admin' ? (
             <SubMenu key="sub4" icon={<UserOutlined />} title="人员组织">
-              <Menu.Item key="10">用户管理</Menu.Item>
-              <Menu.Item key="11">角色管理</Menu.Item>
+              <Menu.Item key="10" onClick={() => handleMenuClick('10')}>用户管理</Menu.Item>
+              <Menu.Item key="11" onClick={() => handleMenuClick('11')}>角色管理</Menu.Item>
             </SubMenu>
           ) : null}
 
-          <Menu.Item key="12" icon={<PieChartOutlined />}>数据源</Menu.Item>
+          <Menu.Item key="12" onClick={() => handleMenuClick('12')} icon={<PieChartOutlined />}>数据源</Menu.Item>
         </Menu>
-
 
       </Sider>
 
@@ -192,7 +202,7 @@ function Base () {
                 marginRight: 'auto',
               }}
             >
-              {selectedValue}
+              {props.name}
             </div>
 
             {userInfo !== null ? (
@@ -232,7 +242,7 @@ function Base () {
               className="site-layout-background"
               style={{ padding: 24, textAlign: 'center' }}
             >
-              {menuItemsMap[selectedKeys]}
+              {props.children}
             </div>
           </Content>
         </Layout>
@@ -242,11 +252,12 @@ function Base () {
             <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />
           </a>
         </div>
-        <Footer style={{ textAlign: 'center', padding: '10px' }}>WatchAlert ©2024 Created by Cairry</Footer>
+        <Footer style={{ textAlign: 'center', padding: '1px' }}>WatchAlert ©2024 Created by Cairry</Footer>
 
       </Layout>
     </Layout>
   )
+
 }
 
 export default Base

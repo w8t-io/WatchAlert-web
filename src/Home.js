@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import ReactECharts from 'echarts-for-react'
+import Base from './Base'
 
-const EchartsComponent = () => {
+const Home = () => {
   const option = {
     title: {
       text: '告警系统拓扑图',
@@ -54,7 +55,7 @@ const EchartsComponent = () => {
   }
 
   return (
-    <>
+    <Base name='首页'>
       <ReactECharts
         option={option}
         style={{ height: 500 }}
@@ -64,8 +65,8 @@ const EchartsComponent = () => {
           'legendselectchanged': onChartLegendselectchanged
         }}
       />
-    </>
+    </Base>
   )
 }
 
-export default EchartsComponent
+export default Home

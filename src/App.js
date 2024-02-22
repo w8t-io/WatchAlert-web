@@ -1,8 +1,18 @@
 import React from 'react'
 import { Helmet } from 'react-helmet'
-import Base from './Base'
 import Login from './Login'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Datasources from './Datasources'
+import Home from './Home'
+import AlertRules from './AlertRules'
+import SilenceRules from './SilenceRules'
+import NoticeObjects from './NoticeObjects'
+import AlertCurEvent from './AlertCurEvent'
+import AlertHisEvent from './AlertHisEvent'
+import User from './User'
+import UserRole from './UserRole'
+import DutyManage from './DutyManage'
+import NoticeTemplate from './NoticeTemplate'
 
 class App extends React.Component {
   render () {
@@ -10,8 +20,18 @@ class App extends React.Component {
       <BrowserRouter>
         {/* 路由 */}
         <Routes>
-          <Route path="/" element={<Base />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/alertRules" element={<AlertRules />} />
+          <Route path="/silenceRules" element={<SilenceRules />} />
+          <Route path="/alertCurEvent" element={<AlertCurEvent />} />
+          <Route path="/alertHisEvent" element={<AlertHisEvent />} />
+          <Route path="/noticeObjects" element={<NoticeObjects />} />
+          <Route path="/noticeTemplate" element={<NoticeTemplate />} />
+          <Route path="/dutyManage" element={<DutyManage />} />
+          <Route path="/user" element={<User />} />
+          <Route path="/userRole" element={<UserRole />} />
+          <Route path='/datasource' element={<Datasources />} />
         </Routes>
       </BrowserRouter>
     )

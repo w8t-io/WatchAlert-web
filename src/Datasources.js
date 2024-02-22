@@ -2,6 +2,7 @@ import { Button, Input, Table, Tag, Popconfirm, Dropdown, Select, message } from
 import axios from 'axios'
 import React from 'react'
 import DatasourceCreateModal from './DatasourceCreateModal'
+import Base from './Base'
 import backendIP from './config'
 const { Search } = Input
 
@@ -133,97 +134,99 @@ class Datasources extends React.Component {
     }
 
     return (
-      <div>
-        <div style={{ display: 'flex' }}>
-          <Button type="primary" onClick={() => this.setState({ visible: true })}>
-            创建
-          </Button>
+      <Base name='数据源'>
+        <div>
+          <div style={{ display: 'flex' }}>
+            <Button type="primary" onClick={() => this.setState({ visible: true })}>
+              创建
+            </Button>
 
-          <DatasourceCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.fetchData} />
+            <DatasourceCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.fetchData} />
 
-          <DatasourceCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type="update" handleList={this.fetchData} />
+            <DatasourceCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type="update" handleList={this.fetchData} />
 
 
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '10px',
-            width: '1000px'
-          }}>
-            <Select
-              placeholder="数据源类型"
-              style={{
-                // flex: 1,
-                width: 150
-              }}
-              allowClear
-              options={[
-                {
-                  value: 'Prometheus',
-                  label: 'Prometheus',
-                },
-              ]}
-            />
-
-            <Select
-              placeholder="状态"
-              style={{
-                // flex: 1,
-                width: 150
-              }}
-              allowClear
-              options={[
-                {
-                  value: 'true',
-                  label: '启用',
-                },
-                {
-                  value: 'false',
-                  label: '禁用',
-                },
-              ]}
-            />
-
-            <Search
-              allowClear
-              placeholder="输入搜索关键字"
-              onSearch={onSearch}
-              enterButton
-              style={{ width: 300 }} />
-          </div>
-
-          <div style={{ marginLeft: 'auto' }}>
-            <Dropdown.Button menu={{ items, onClick: onMenuClick }}>更多操作</Dropdown.Button>
-          </div>
-        </div>
-
-        <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
-          <Table
-            dataSource={this.state.list}
-            columns={this.state.columns}
-            pagination={this.state.pagination}
-            scroll={{
-              x: 1500,
-              y: 'calc(60vh - 64px - 40px)'
-            }}
-            onChange={pagination => {
-              this.setState(
-                prevState => ({
-                  pagination: {
-                    ...prevState.pagination,
-                    current: pagination.current,
+            <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '10px',
+              width: '1000px'
+            }}>
+              <Select
+                placeholder="数据源类型"
+                style={{
+                  // flex: 1,
+                  width: 150
+                }}
+                allowClear
+                options={[
+                  {
+                    value: 'Prometheus',
+                    label: 'Prometheus',
                   },
-                }),
-                () => {
-                  this.fetchData()
-                }
-              )
-            }}
-          />
-        </div>
+                ]}
+              />
 
-      </div>
+              <Select
+                placeholder="状态"
+                style={{
+                  // flex: 1,
+                  width: 150
+                }}
+                allowClear
+                options={[
+                  {
+                    value: 'true',
+                    label: '启用',
+                  },
+                  {
+                    value: 'false',
+                    label: '禁用',
+                  },
+                ]}
+              />
+
+              <Search
+                allowClear
+                placeholder="输入搜索关键字"
+                onSearch={onSearch}
+                enterButton
+                style={{ width: 300 }} />
+            </div>
+
+            <div style={{ marginLeft: 'auto' }}>
+              <Dropdown.Button menu={{ items, onClick: onMenuClick }}>更多操作</Dropdown.Button>
+            </div>
+          </div>
+
+          <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
+            <Table
+              dataSource={this.state.list}
+              columns={this.state.columns}
+              pagination={this.state.pagination}
+              scroll={{
+                x: 1500,
+                y: 'calc(60vh - 64px - 40px)'
+              }}
+              onChange={pagination => {
+                this.setState(
+                  prevState => ({
+                    pagination: {
+                      ...prevState.pagination,
+                      current: pagination.current,
+                    },
+                  }),
+                  () => {
+                    this.fetchData()
+                  }
+                )
+              }}
+            />
+          </div>
+
+        </div>
+      </Base>
     )
   }
 }
