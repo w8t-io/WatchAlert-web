@@ -1,6 +1,6 @@
 import { Modal, Form, Input, Button, message, Select, Tooltip } from 'antd'
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import backendIP from './config'
 
 const MyFormItemContext = React.createContext([])
@@ -17,6 +17,22 @@ const MyFormItem = ({ name, ...props }) => {
 
 const AlertRuleGroupCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
+
+  // 禁止输入空格
+  const [spaceValue, setSpaceValue] = useState('')
+
+  const handleInputChange = (e) => {
+    // 移除输入值中的空格
+    const newValue = e.target.value.replace(/\s/g, '')
+    setSpaceValue(newValue)
+  }
+
+  const handleKeyPress = (e) => {
+    // 阻止空格键的默认行为
+    if (e.key === ' ') {
+      e.preventDefault()
+    }
+  }
 
   useEffect(() => {
     if (selectedRow) {
@@ -83,7 +99,10 @@ const AlertRuleGroupCreateModal = ({ visible, onClose, selectedRow, type, handle
             },
           ]}
         >
-          <Input />
+          <Input
+            value={spaceValue}
+            onChange={handleInputChange}
+            onKeyPress={handleKeyPress} />
         </MyFormItem>
 
         <MyFormItem name="description" label="描述">

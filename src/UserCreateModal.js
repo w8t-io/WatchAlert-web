@@ -23,6 +23,22 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
   const [roleData, setRoleData] = useState([])
   const [username, setUsername] = useState("")
 
+  // 禁止输入空格
+  const [spaceValue, setSpaceValue] = useState('')
+
+  const handleInputChange = (e) => {
+    // 移除输入值中的空格
+    const newValue = e.target.value.replace(/\s/g, '')
+    setSpaceValue(newValue)
+  }
+
+  const handleKeyPress = (e) => {
+    // 阻止空格键的默认行为
+    if (e.key === ' ') {
+      e.preventDefault()
+    }
+  }
+
   useEffect(() => {
     if (selectedRow) {
       if (type === 'update') {
@@ -127,7 +143,11 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
                 message: 'Please input your username!',
               },
             ]}>
-            <Input disabled={type === 'update'} />
+            <Input
+              value={spaceValue}
+              onChange={handleInputChange}
+              onKeyPress={handleKeyPress}
+              disabled={type === 'update'} />
           </MyFormItem>
           {type === 'create' && <Form.Item
             name="password"

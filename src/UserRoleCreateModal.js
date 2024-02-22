@@ -22,6 +22,22 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
   const [targetKeys, setTargetKeys] = useState([])
   const [disabledPermission, setDisabledPermission] = useState(false)
 
+  // 禁止输入空格
+  const [spaceValue, setSpaceValue] = useState('')
+
+  const handleInputChange = (e) => {
+    // 移除输入值中的空格
+    const newValue = e.target.value.replace(/\s/g, '')
+    setSpaceValue(newValue)
+  }
+
+  const handleKeyPress = (e) => {
+    // 阻止空格键的默认行为
+    if (e.key === ' ') {
+      e.preventDefault()
+    }
+  }
+
   useEffect(() => {
     if (selectedRow) {
       setTargetKeys(selectedRow.permissions)
@@ -141,7 +157,11 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
               message: 'Please input your roleName!',
             },
           ]}>
-          <Input disabled={type === 'update'} />
+          <Input
+            value={spaceValue}
+            onChange={handleInputChange}
+            onKeyPress={handleKeyPress}
+            disabled={type === 'update'} />
         </MyFormItem>
 
         <MyFormItem name="description" label="描述">

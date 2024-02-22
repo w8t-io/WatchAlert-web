@@ -41,6 +41,22 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
     setSeverityValue(e.target.value)
   }
 
+  // 禁止输入空格
+  const [spaceValue, setSpaceValue] = useState('')
+
+  const handleInputChange = (e) => {
+    // 移除输入值中的空格
+    const newValue = e.target.value.replace(/\s/g, '')
+    setSpaceValue(newValue)
+  }
+
+  const handleKeyPress = (e) => {
+    // 阻止空格键的默认行为
+    if (e.key === ' ') {
+      e.preventDefault()
+    }
+  }
+
   useEffect(() => {
     if (selectedRow) {
       form.setFieldsValue({
@@ -201,7 +217,11 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
                 },
               ]}
             >
-              <Input disabled={type === 'update'} />
+              <Input
+                value={spaceValue}
+                onChange={handleInputChange}
+                onKeyPress={handleKeyPress}
+                disabled={type === 'update'} />
             </MyFormItem>
 
             <MyFormItem

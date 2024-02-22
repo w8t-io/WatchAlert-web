@@ -18,6 +18,22 @@ const MyFormItem = ({ name, ...props }) => {
 const DutyManageCreateModal = ({ visible, onClose, handleList }) => {
   const [form] = Form.useForm()
 
+  // 禁止输入空格
+  const [spaceValue, setSpaceValue] = useState('')
+
+  const handleInputChange = (e) => {
+    // 移除输入值中的空格
+    const newValue = e.target.value.replace(/\s/g, '')
+    setSpaceValue(newValue)
+  }
+
+  const handleKeyPress = (e) => {
+    // 阻止空格键的默认行为
+    if (e.key === ' ') {
+      e.preventDefault()
+    }
+  }
+
   const handleCreate = async (data) => {
     axios.post(`http://${backendIP}/api/w8t/dutyManage/dutyManageCreate`, data)
       .then((res) => {
@@ -49,7 +65,10 @@ const DutyManageCreateModal = ({ visible, onClose, handleList }) => {
             },
           ]}
         >
-          <Input />
+          <Input
+            value={spaceValue}
+            onChange={handleInputChange}
+            onKeyPress={handleKeyPress} />
         </MyFormItem>
 
         <MyFormItem name="description" label="描述">
