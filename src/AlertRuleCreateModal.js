@@ -23,7 +23,7 @@ const MyFormItem = ({ name, ...props }) => {
   return <Form.Item name={concatName} {...props} />
 }
 
-const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
+const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList, ruleGroupId }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
   const [selectedType, setSelectedType] = useState() // 数据源类型
@@ -70,13 +70,14 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
     if (type === 'create') {
       const newData = {
         ...values,
-        noticeGroup: noticeLabels
+        noticeGroup: noticeLabels,
+        ruleGroupId: ruleGroupId,
       }
       axios.post(`http://${backendIP}/api/w8t/rule/ruleCreate`, newData)
         .then((res) => {
           if (res.status === 200) {
             message.success("创建成功")
-            handleList()
+            handleList(ruleGroupId)
           }
         })
         .catch(() => {
@@ -94,7 +95,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList 
         .then((res) => {
           if (res.status === 200) {
             message.success("更新成功")
-            handleList()
+            handleList(ruleGroupId)
           }
         })
         .catch(() => {

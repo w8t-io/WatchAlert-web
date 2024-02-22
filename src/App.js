@@ -13,6 +13,7 @@ import User from './User'
 import UserRole from './UserRole'
 import DutyManage from './DutyManage'
 import NoticeTemplate from './NoticeTemplate'
+import AlertRuleGroup from './AlertRuleGroup'
 
 class App extends React.Component {
   render () {
@@ -22,7 +23,8 @@ class App extends React.Component {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/alertRules" element={<AlertRules />} />
+          <Route path="/alertRuleGroup" element={<AlertRuleGroup />} />
+          <Route path="/alertRuleGroup/:id/alertRules" element={<AlertRules />} />
           <Route path="/silenceRules" element={<SilenceRules />} />
           <Route path="/alertCurEvent" element={<AlertCurEvent />} />
           <Route path="/alertHisEvent" element={<AlertHisEvent />} />

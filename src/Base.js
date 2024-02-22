@@ -5,7 +5,8 @@ import {
   PieChartOutlined,
   NotificationOutlined,
   CalendarOutlined,
-  HomeOutlined
+  HomeOutlined,
+  LeftOutlined
 } from '@ant-design/icons'
 import { Layout, Menu, theme, Avatar, Button, Popover, Spin } from 'antd'
 import Auth from './Auth'
@@ -79,7 +80,7 @@ function Base (props) {
         navigate('/')
         break
       case '2':
-        navigate('/alertRules')
+        navigate('/alertRuleGroup')
         break
       case '3':
         navigate('/silenceRules')
@@ -120,6 +121,10 @@ function Base (props) {
         <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />
       </Spin>
     )
+  }
+
+  const goBackPage = () => {
+    window.history.back()
   }
 
   return (
@@ -202,7 +207,12 @@ function Base (props) {
                 marginRight: 'auto',
               }}
             >
-              {props.name}
+              <div style={{ height: '2px' }}>
+                <Button type="text" shape="circle" icon={<LeftOutlined />} onClick={goBackPage} />
+              </div>
+              <div style={{ marginLeft: '30px' }}>
+                {props.name}
+              </div>
             </div>
 
             {userInfo !== null ? (
