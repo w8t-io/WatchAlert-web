@@ -79,34 +79,34 @@ function Base (props) {
       case '1':
         navigate('/')
         break
-      case '2':
+      case '2-1':
         navigate('/alertRuleGroup')
         break
-      case '3':
+      case '2-2':
         navigate('/silenceRules')
         break
-      case '4':
+      case '2-3':
         navigate('/alertCurEvent')
         break
-      case '5':
+      case '2-4':
         navigate('/alertHisEvent')
         break
-      case '6':
+      case '3-1':
         navigate('/noticeObjects')
         break
-      case '7':
+      case '3-2':
         navigate('/noticeTemplate')
         break
-      case '9':
+      case '4-1':
         navigate('/dutyManage')
         break
-      case '10':
+      case '5-1':
         navigate('/user')
         break
-      case '11':
+      case '5-2':
         navigate('/userRole')
         break
-      case '12':
+      case '6':
         navigate('/datasource')
         break
       default:
@@ -157,31 +157,31 @@ function Base (props) {
 
           <Menu.Item key="1" onClick={() => handleMenuClick('1')} icon={<HomeOutlined />}>首页</Menu.Item>
 
-          <SubMenu key="sub1" icon={<BellOutlined />} title="告警管理">
-            <Menu.Item key="2" onClick={() => handleMenuClick('2')}>告警规则</Menu.Item>
-            <Menu.Item key="3" onClick={() => handleMenuClick('3')}>静默规则</Menu.Item>
-            <Menu.Item key="4" onClick={() => handleMenuClick('4')}>当前告警</Menu.Item>
-            <Menu.Item key="5" onClick={() => handleMenuClick('5')}>历史告警</Menu.Item>
+          <SubMenu key="2" icon={<BellOutlined />} title="告警管理">
+            <Menu.Item key="2-1" onClick={() => handleMenuClick('2-1')}>告警规则</Menu.Item>
+            <Menu.Item key="2-2" onClick={() => handleMenuClick('2-2')}>静默规则</Menu.Item>
+            <Menu.Item key="2-3" onClick={() => handleMenuClick('2-3')}>当前告警</Menu.Item>
+            <Menu.Item key="2-4" onClick={() => handleMenuClick('2-4')}>历史告警</Menu.Item>
           </SubMenu>
 
-          <SubMenu key="sub2" icon={<NotificationOutlined />} title="告警通知">
-            <Menu.Item key="6" onClick={() => handleMenuClick('6')}>通知对象</Menu.Item>
-            <Menu.Item key="7" onClick={() => handleMenuClick('7')}>通知模版</Menu.Item>
+          <SubMenu key="3" icon={<NotificationOutlined />} title="告警通知">
+            <Menu.Item key="3-1" onClick={() => handleMenuClick('3-1')}>通知对象</Menu.Item>
+            <Menu.Item key="3-2" onClick={() => handleMenuClick('3-2')}>通知模版</Menu.Item>
           </SubMenu>
 
-          <SubMenu key="sub3" icon={<CalendarOutlined />} title="值班管理">
-            <Menu.Item key="9" onClick={() => handleMenuClick('9')}>值班日程</Menu.Item>
+          <SubMenu key="4" icon={<CalendarOutlined />} title="值班管理">
+            <Menu.Item key="4-1" onClick={() => handleMenuClick('4-1')}>值班日程</Menu.Item>
           </SubMenu>
 
 
           {userInfo !== null && userInfo.role === 'admin' ? (
-            <SubMenu key="sub4" icon={<UserOutlined />} title="人员组织">
-              <Menu.Item key="10" onClick={() => handleMenuClick('10')}>用户管理</Menu.Item>
-              <Menu.Item key="11" onClick={() => handleMenuClick('11')}>角色管理</Menu.Item>
+            <SubMenu key="5" icon={<UserOutlined />} title="人员组织">
+              <Menu.Item key="5-1" onClick={() => handleMenuClick('5-1')}>用户管理</Menu.Item>
+              <Menu.Item key="5-2" onClick={() => handleMenuClick('5-2')}>角色管理</Menu.Item>
             </SubMenu>
           ) : null}
 
-          <Menu.Item key="12" onClick={() => handleMenuClick('12')} icon={<PieChartOutlined />}>数据源</Menu.Item>
+          <Menu.Item key="6" onClick={() => handleMenuClick('6')} icon={<PieChartOutlined />}>数据源</Menu.Item>
         </Menu>
 
       </Sider>
