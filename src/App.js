@@ -14,6 +14,8 @@ import UserRole from './UserRole'
 import DutyManage from './DutyManage'
 import NoticeTemplate from './NoticeTemplate'
 import AlertRuleGroup from './AlertRuleGroup'
+import RuleTemplateGroup from './RuleTemplateGroup'
+import RuleTemplate from './RuleTemplate'
 
 class App extends React.Component {
   render () {
@@ -28,6 +30,8 @@ class App extends React.Component {
           <Route path="/silenceRules" element={<SilenceRules />} />
           <Route path="/alertCurEvent" element={<AlertCurEvent />} />
           <Route path="/alertHisEvent" element={<AlertHisEvent />} />
+          <Route path="/ruleTemplateGroup" element={<RuleTemplateGroup />} />
+          <Route path="/ruleTemplateGroup/:ruleGroupName/ruleTemplate" element={<RuleTemplate />} />
           <Route path="/noticeObjects" element={<NoticeObjects />} />
           <Route path="/noticeTemplate" element={<NoticeTemplate />} />
           <Route path="/dutyManage" element={<DutyManage />} />

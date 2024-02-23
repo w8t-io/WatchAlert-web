@@ -91,6 +91,9 @@ function Base (props) {
       case '2-4':
         navigate('/alertHisEvent')
         break
+      case '2-5':
+        navigate('/ruleTemplateGroup')
+        break
       case '3-1':
         navigate('/noticeObjects')
         break
@@ -162,6 +165,7 @@ function Base (props) {
             <Menu.Item key="2-2" onClick={() => handleMenuClick('2-2')}>静默规则</Menu.Item>
             <Menu.Item key="2-3" onClick={() => handleMenuClick('2-3')}>当前告警</Menu.Item>
             <Menu.Item key="2-4" onClick={() => handleMenuClick('2-4')}>历史告警</Menu.Item>
+            <Menu.Item key="2-5" onClick={() => handleMenuClick('2-5')}>规则模版</Menu.Item>
           </SubMenu>
 
           <SubMenu key="3" icon={<NotificationOutlined />} title="告警通知">
