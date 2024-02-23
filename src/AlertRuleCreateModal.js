@@ -371,7 +371,10 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
             </MyFormItem>
           </div>
 
-          <MyFormItem name="annotations" label="告警事件">
+          <MyFormItem
+            name="annotations"
+            label="告警详情"
+            tooltip="获取 Label 变量, 示例: ${job}, ${instance}。凡是 Target 中的变量均可通过`${}`获取。">
             <Input />
           </MyFormItem>
         </div>

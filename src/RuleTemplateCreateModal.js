@@ -213,7 +213,7 @@ const RuleTemplateCreateModal = ({ visible, onClose, selectedRow, type, handleLi
             </MyFormItem>
           </div>
 
-          <MyFormItem name="annotations" label="告警事件">
+          <MyFormItem name="annotations" label="告警详情">
             <Input />
           </MyFormItem>
         </div>
