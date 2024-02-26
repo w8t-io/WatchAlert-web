@@ -11,4 +11,5 @@ RUN yarn config set registry https://registry.npmmirror.com && \
 
 EXPOSE 3000
 
-CMD [ "REACT_APP_BACKEND_IP=backend:9001","yarn", "start" ]
+# 如果需要指定后端服务端口号，例如：REACT_APP_BACKEND_PORT=9002 yarn start。
+CMD [ "yarn", "start" ]
