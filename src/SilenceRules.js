@@ -26,11 +26,13 @@ class SilenceRules extends React.Component {
         title: '告警指纹',
         dataIndex: 'fingerprint',
         key: 'fingerprint',
+        width: 200,
       },
       {
         title: '数据源类型',
         dataIndex: 'datasource_type',
         key: 'datasource_type',
+        width: 150,
       },
       {
         title: '创建人',
@@ -41,6 +43,7 @@ class SilenceRules extends React.Component {
         title: '更新时间',
         dataIndex: 'update_at',
         key: 'update_at',
+        width: 200,
         render: (text) => {
           const date = new Date(text * 1000)
           return date.toLocaleString()
@@ -55,6 +58,7 @@ class SilenceRules extends React.Component {
         title: '静默开始时间',
         dataIndex: 'starts_at',
         key: 'starts_at',
+        width: 200,
         render: (text) => {
           const date = new Date(text * 1000)
           return date.toLocaleString()
@@ -64,6 +68,7 @@ class SilenceRules extends React.Component {
         title: '静默结束时间',
         dataIndex: 'ends_at',
         key: 'ends_at',
+        width: 200,
         render: (text) => {
           const date = new Date(text * 1000)
           return date.toLocaleString()
@@ -73,6 +78,7 @@ class SilenceRules extends React.Component {
         title: '操作',
         dataIndex: 'operation',
         fixed: 'right',
+        width: 150,
         render: (_, record) =>
           this.state.list.length >= 1 ? (
             <div>

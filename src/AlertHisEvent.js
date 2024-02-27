@@ -22,7 +22,7 @@ class AlertHisEvent extends React.Component {
         title: '指纹',
         dataIndex: 'fingerprint',
         key: 'fingerprint',
-        width: 160,
+        width: 200,
       },
       {
         title: '数据源',

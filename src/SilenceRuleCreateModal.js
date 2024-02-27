@@ -56,8 +56,8 @@ const SilenceRuleCreateModal = ({ visible, onClose, selectedRow, type, handleLis
   // 获取当前告警
   const handleSearchCurAlert = async () => {
     try {
-      const res = await axios.get(`http://${backendIP}/api/w8s/event/curEvent?dsType=${dataSourceType}`)
-      const options = res.data.data.map((item) => ({ label: item.rule_name, value: item.fingerprint }))
+      const res = await axios.get(`http://${backendIP}/api/w8t/event/curEvent?dsType=${dataSourceType}`)
+      const options = res.data.data.map((item) => ({ label: item.fingerprint, value: item.fingerprint }))
       setAlertFingerprint(options)
     } catch (error) {
       console.error("Error fetching duty users:", error)

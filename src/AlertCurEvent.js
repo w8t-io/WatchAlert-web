@@ -33,7 +33,7 @@ class AlertCurEvent extends React.Component {
         width: 250,
         render: (text, record) => (
           <span>
-            <div>{record.datasource_id[0]}</div>
+            <div>{record.datasource_id}</div>
           </span>
         ),
       },
