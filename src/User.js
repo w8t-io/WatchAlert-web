@@ -74,6 +74,7 @@ class User extends React.Component {
             <div>
               <Button type="link"
                 onClick={() => this.setState({ changeVisible: true, selectedUserId: record.userid, selectedUsername: record.username })}
+                disabled={record.username === 'admin'}
               >
                 重置密码
               </Button>
@@ -95,7 +96,7 @@ class User extends React.Component {
   }
 
 
-  async componentDidMount () {
+  async componentDidMount() {
     this.handleList()
   }
 
@@ -138,7 +139,7 @@ class User extends React.Component {
     })
   };
 
-  render () {
+  render() {
 
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 
