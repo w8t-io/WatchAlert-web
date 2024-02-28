@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Form, Input, Modal } from 'antd'
+import { Button, Checkbox, Form, Input, Modal, message } from 'antd'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import backendIP from './config'
@@ -70,7 +70,7 @@ const Login = () => {
       localStorage.setItem('Authorization', token)
       navigate('/') // 登录成功，跳转到首页
     } catch (error) {
-      console.error(error)
+      message.error("用户不存在或密码错误")
     }
   }
 
@@ -200,7 +200,7 @@ const Login = () => {
                     message: 'Please confirm your password!',
                   },
                   ({ getFieldValue }) => ({
-                    validator (_, value) {
+                    validator(_, value) {
                       if (!value || getFieldValue('password') === value) {
                         return Promise.resolve()
                       }
