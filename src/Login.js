@@ -221,10 +221,6 @@ const Login = () => {
 
           </Modal>
 
-          <div>
-            Default User: prom Pass: 123
-          </div>
-
           <Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button">
               Log in

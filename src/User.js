@@ -74,7 +74,6 @@ class User extends React.Component {
             <div>
               <Button type="link"
                 onClick={() => this.setState({ changeVisible: true, selectedUserId: record.userid, selectedUsername: record.username })}
-                disabled={record.username === 'admin'}
               >
                 重置密码
               </Button>
