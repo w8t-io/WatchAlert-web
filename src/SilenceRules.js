@@ -107,12 +107,12 @@ class SilenceRules extends React.Component {
 
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.handleList()
   }
 
   // 删除
-  async handleDelete (_, record) {
+  async handleDelete(_, record) {
     axios.post(`http://${backendIP}/api/w8t/silence/silenceDelete?id=${record.id}`)
       .then((res) => {
         if (res.status === 200) {
@@ -141,7 +141,7 @@ class SilenceRules extends React.Component {
     })
   };
 
-  render () {
+  render() {
 
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 
@@ -156,74 +156,72 @@ class SilenceRules extends React.Component {
     }
 
     return (
-      <Base name='静默规则'>
-        <div>
-          <div style={{ display: 'flex' }}>
-            <Button type="primary" onClick={() => this.setState({ visible: true })}>
-              创建
-            </Button>
+      <div>
+        <div style={{ display: 'flex' }}>
+          <Button type="primary" onClick={() => this.setState({ visible: true })}>
+            创建
+          </Button>
 
-            <SilenceRuleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
+          <SilenceRuleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
-            <SilenceRuleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
+          <SilenceRuleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '10px',
-              width: '1000px'
-            }}>
-              <Select
-                placeholder="数据源类型"
-                style={{
-                  // flex: 1,
-                  width: 150
-                }}
-                allowClear
-                options={[
-                  {
-                    value: 'Prometheus',
-                    label: 'Prometheus',
-                  },
-                  {
-                    value: 'Ali-SLS',
-                    label: 'Ali-SLS',
-                  },
-                ]}
-              />
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+            width: '1000px'
+          }}>
+            <Select
+              placeholder="数据源类型"
+              style={{
+                // flex: 1,
+                width: 150
+              }}
+              allowClear
+              options={[
+                {
+                  value: 'Prometheus',
+                  label: 'Prometheus',
+                },
+                {
+                  value: 'Ali-SLS',
+                  label: 'Ali-SLS',
+                },
+              ]}
+            />
 
-              <Search
-                allowClear
-                placeholder="输入搜索关键字"
-                onSearch={onSearch}
-                enterButton
-                style={{ width: 300 }} />
-            </div>
-
-            <div style={{ marginLeft: 'auto' }}>
-              <Dropdown.Button
-                menu={{
-                  items,
-                  onClick: onMenuClick,
-                }}>
-                更多操作
-              </Dropdown.Button>
-            </div>
+            <Search
+              allowClear
+              placeholder="输入搜索关键字"
+              onSearch={onSearch}
+              enterButton
+              style={{ width: 300 }} />
           </div>
 
-          <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
-            <Table
-              columns={this.state.columns}
-              dataSource={this.state.list}
-              scroll={{
-                x: 1500,
-                y: 'calc(60vh - 64px - 40px)'
-              }}
-            />
+          <div style={{ marginLeft: 'auto' }}>
+            <Dropdown.Button
+              menu={{
+                items,
+                onClick: onMenuClick,
+              }}>
+              更多操作
+            </Dropdown.Button>
           </div>
         </div>
-      </Base>
+
+        <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
+          <Table
+            columns={this.state.columns}
+            dataSource={this.state.list}
+            scroll={{
+              x: 1500,
+              y: 'calc(60vh - 64px - 40px)'
+            }}
+          />
+        </div>
+      </div>
     )
 
   }

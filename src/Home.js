@@ -55,17 +55,15 @@ const Home = () => {
   }
 
   return (
-    <Base name='首页'>
-      <ReactECharts
-        option={option}
-        style={{ height: 500 }}
-        onChartReady={onChartReady}
-        onEvents={{
-          'click': onChartClick,
-          'legendselectchanged': onChartLegendselectchanged
-        }}
-      />
-    </Base>
+    <ReactECharts
+      option={option}
+      style={{ height: 500 }}
+      onChartReady={onChartReady}
+      onEvents={{
+        'click': onChartClick,
+        'legendselectchanged': onChartLegendselectchanged
+      }}
+    />
   )
 }
 

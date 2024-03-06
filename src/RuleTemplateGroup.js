@@ -65,7 +65,7 @@ class RuleTemplateGroup extends React.Component {
   }
 
   // 删除
-  async handleDelete (_, record) {
+  async handleDelete(_, record) {
     axios.post(`http://${backendIP}/api/w8t/ruleTmplGroup/ruleTmplGroupDelete?tmplGroupName=${record.name}`)
       .then((res) => {
         if (res.status === 200) {
@@ -78,7 +78,7 @@ class RuleTemplateGroup extends React.Component {
       })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.handleList()
   }
 
@@ -98,7 +98,7 @@ class RuleTemplateGroup extends React.Component {
     })
   }
 
-  render () {
+  render() {
 
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 
@@ -106,42 +106,40 @@ class RuleTemplateGroup extends React.Component {
     }
 
     return (
-      <Base name='规则模版'>
-        <div>
-          <div style={{ display: 'flex' }}>
-            <Button type="primary" onClick={() => this.setState({ visible: true })}>
-              创建
-            </Button>
+      <div>
+        <div style={{ display: 'flex' }}>
+          <Button type="primary" onClick={() => this.setState({ visible: true })}>
+            创建
+          </Button>
 
-            <RuleTemplateGroupCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
+          <RuleTemplateGroupCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
-            <RuleTemplateGroupCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
+          <RuleTemplateGroupCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '10px',
-              width: '1000px'
-            }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+            width: '1000px'
+          }}>
 
-              <Search
-                allowClear
-                placeholder="输入搜索关键字"
-                onSearch={onSearch}
-                enterButton
-                style={{ width: 300 }} />
-            </div>
-          </div>
-
-          <div style={{ overflowX: 'auto', marginTop: 10 }}>
-            <Table
-              columns={this.state.columns}
-              dataSource={this.state.list}
-            />
+            <Search
+              allowClear
+              placeholder="输入搜索关键字"
+              onSearch={onSearch}
+              enterButton
+              style={{ width: 300 }} />
           </div>
         </div>
-      </Base>
+
+        <div style={{ overflowX: 'auto', marginTop: 10 }}>
+          <Table
+            columns={this.state.columns}
+            dataSource={this.state.list}
+          />
+        </div>
+      </div>
     )
 
   }

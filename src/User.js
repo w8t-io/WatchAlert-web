@@ -143,66 +143,64 @@ class User extends React.Component {
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 
     return (
-      <Base name='用户管理'>
-        <div>
-          <div style={{ display: 'flex' }}>
+      <div>
+        <div style={{ display: 'flex' }}>
 
-            <Button type="primary" onClick={() => this.setState({ visible: true })}>
-              创建
-            </Button>
+          <Button type="primary" onClick={() => this.setState({ visible: true })}>
+            创建
+          </Button>
 
-            <UserCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
+          <UserCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
-            <UserCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
+          <UserCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
-            <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '10px',
-              width: '1000px'
-            }}>
-              <Select
-                placeholder="状态"
-                style={{
-                  // flex: 1,
-                  width: 150
-                }}
-                allowClear
-                options={[
-                  {
-                    value: 'true',
-                    label: '启用',
-                  },
-                  {
-                    value: 'false',
-                    label: '禁用',
-                  },
-                ]}
-              />
-
-              <Search
-                allowClear
-                placeholder="输入搜索关键字"
-                onSearch={onSearch}
-                enterButton
-                style={{ width: 300 }} />
-            </div>
-
-          </div>
-
-          <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
-            <Table
-              columns={this.state.columns}
-              dataSource={this.state.list}
-              scroll={{
-                x: 1500,
-                y: 'calc(60vh - 64px - 40px)'
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '10px',
+            width: '1000px'
+          }}>
+            <Select
+              placeholder="状态"
+              style={{
+                // flex: 1,
+                width: 150
               }}
+              allowClear
+              options={[
+                {
+                  value: 'true',
+                  label: '启用',
+                },
+                {
+                  value: 'false',
+                  label: '禁用',
+                },
+              ]}
             />
+
+            <Search
+              allowClear
+              placeholder="输入搜索关键字"
+              onSearch={onSearch}
+              enterButton
+              style={{ width: 300 }} />
           </div>
+
         </div>
-      </Base>
+
+        <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
+          <Table
+            columns={this.state.columns}
+            dataSource={this.state.list}
+            scroll={{
+              x: 1500,
+              y: 'calc(60vh - 64px - 40px)'
+            }}
+          />
+        </div>
+      </div>
     )
 
   }

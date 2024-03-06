@@ -249,14 +249,13 @@ function Base(props) {
               margin: '16px 16px 0',
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
-
             }}
           >
             <div
               className="site-layout-background"
               style={{ padding: 24, textAlign: 'center' }}
             >
-              {props.children}
+              {<props.children />}
             </div>
           </Content>
         </Layout>
@@ -266,7 +265,7 @@ function Base(props) {
             <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />
           </a>
         </div>
-        <Footer style={{ textAlign: 'center', padding: '1px' }}>WatchAlert ©2024 Created by Cairry</Footer>
+        <Footer style={{ textAlign: 'center', padding: '8px' }}>WatchAlert ©2024 Created by Cairry</Footer>
 
       </Layout>
     </Layout>
