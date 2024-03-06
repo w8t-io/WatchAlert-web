@@ -5,7 +5,10 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import backendIP from './config'
 const MyFormItemContext = React.createContext([])
 
-function toArr (str) {
+const { Option } = Select;
+const { Item } = Form;
+
+function toArr(str) {
   return Array.isArray(str) ? str : [str]
 }
 
@@ -59,6 +62,7 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
 
   useEffect(() => {
     if (selectedRow) {
+      console.log(selectedRow)
       form.setFieldsValue({
         annotations: selectedRow.annotations,
         datasourceId: selectedRow.datasourceId,
@@ -71,9 +75,12 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
         noticeGroup: selectedRow.noticeGroup,
         noticeId: selectedRow.noticeId,
         repeatNoticeInterval: selectedRow.repeatNoticeInterval,
-        ruleConfig: selectedRow.ruleConfig,
         ruleId: selectedRow.ruleId,
-        ruleName: selectedRow.ruleName
+        ruleName: selectedRow.ruleName,
+        prometheusConfig: selectedRow.prometheusConfig,
+        severity: selectedRow.severity,
+        alicloudSLSConfig: selectedRow.alicloudSLSConfig,
+        lokiConfig: selectedRow.lokiConfig,
       })
       setSelectedType(selectedRow.datasourceType)
     }
@@ -270,6 +277,14 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
                     value: 'Prometheus',
                     label: 'Prometheus',
                   },
+                  {
+                    value: 'AliCloudSLS',
+                    label: '阿里云SLS'
+                  },
+                  {
+                    value: 'Loki',
+                    label: 'Loki'
+                  },
                 ]}
                 // value={selectedType}
                 onChange={handleGetDatasourceData}
@@ -303,26 +318,184 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
 
           </div>
 
-          <MyFormItemGroup prefix={['ruleConfig']}>
-            <MyFormItem name="promQL" label="PromQL">
-              <Input />
-            </MyFormItem>
+          {selectedType === 'Prometheus' &&
+            <MyFormItemGroup prefix={['prometheusConfig']}>
+              <MyFormItem name="promQL" label="PromQL">
+                <Input />
+              </MyFormItem>
+            </MyFormItemGroup>
+          }
 
-            <MyFormItem name="severity" label="告警等级"
-              rules={[
-                {
-                  required: true,
-                },
-              ]}>
-              <Radio.Group onChange={onChange} value={severityValue}>
-                <Radio value={0}>P0级告警</Radio>
-                <Radio value={1}>P1级告警</Radio>
-                <Radio value={2}>P2级告警</Radio>
-              </Radio.Group>
-            </MyFormItem>
+          <MyFormItem name="severity" label="告警等级"
+            rules={[
+              {
+                required: true,
+              },
+            ]}>
+            <Radio.Group onChange={onChange} value={severityValue}>
+              <Radio value={0}>P0级告警</Radio>
+              <Radio value={1}>P1级告警</Radio>
+              <Radio value={2}>P2级告警</Radio>
+            </Radio.Group>
+          </MyFormItem>
 
+          {selectedType === 'AliCloudSLS' &&
+            <MyFormItemGroup prefix={['alicloudSLSConfig']}>
 
-          </MyFormItemGroup>
+              <div style={{ display: 'flex' }}>
+                <MyFormItem
+                  name="project"
+                  label="Project"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  style={{
+                    marginRight: '10px',
+                    width: '500px',
+                  }}>
+                  <Input />
+                </MyFormItem>
+                <MyFormItem
+                  name="logstore"
+                  label="Logstore"
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                  style={{
+                    width: '500px',
+                  }}>
+                  <Input />
+                </MyFormItem>
+              </div>
+
+              <MyFormItem
+                name="logQL"
+                label="LogQL"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}>
+                <Input />
+              </MyFormItem>
+
+              <div style={{ display: 'flex' }}>
+                <MyFormItem
+                  name="logScope"
+                  label="查询区间"
+                  style={{
+                    width: '500px',
+                  }}
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    style={{ width: '97%' }}
+                    addonAfter={'分钟'}
+                    placeholder="10"
+                    min={1}
+                  />
+                </MyFormItem>
+
+                <MyFormItemGroup prefix={['evalCondition']}>
+
+                  <MyFormItem name="type" label="判断条件">
+                    <Select showSearch style={{ marginRight: 8, width: '127px' }} placeholder="数据条数">
+                      <Option value="count">数据条数</Option>
+                    </Select>
+                  </MyFormItem>
+
+                  <MyFormItem name="operator" label=" ">
+                    <Select showSearch style={{ marginRight: 8, width: '127px' }} placeholder=">">
+                      <Option value=">">{'>'}</Option>
+                      <Option value=">=">{'>='}</Option>
+                      <Option value="<">{'<'}</Option>
+                      <Option value="==">{'=='}</Option>
+                      <Option value="!=">{'!='}</Option>
+                    </Select>
+                  </MyFormItem>
+
+                  <MyFormItem name='value' label=" ">
+                    <InputNumber style={{ width: '100px' }} min={1} placeholder="0" />
+                  </MyFormItem>
+
+                </MyFormItemGroup>
+
+              </div>
+
+            </MyFormItemGroup>
+          }
+
+          {selectedType === 'Loki' &&
+            <MyFormItemGroup prefix={['lokiConfig']}>
+
+              <MyFormItem
+                name="logQL"
+                label="LogQL"
+                rules={[
+                  {
+                    required: true,
+                  },
+                ]}>
+                <Input />
+              </MyFormItem>
+
+              <div style={{ display: 'flex' }}>
+                <MyFormItem
+                  name="logScope"
+                  label="查询区间"
+                  style={{
+                    width: '500px',
+                  }}
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                >
+                  <InputNumber
+                    style={{ width: '97%' }}
+                    addonAfter={'分钟'}
+                    placeholder="10"
+                    min={1}
+                  />
+                </MyFormItem>
+
+                <MyFormItemGroup prefix={['evalCondition']}>
+
+                  <MyFormItem name="type" label="判断条件">
+                    <Select showSearch style={{ marginRight: 8, width: '127px' }} placeholder="数据条数">
+                      <Option value="count">数据条数</Option>
+                    </Select>
+                  </MyFormItem>
+
+                  <MyFormItem name="operator" label=" ">
+                    <Select showSearch style={{ marginRight: 8, width: '127px' }} placeholder=">">
+                      <Option value=">">{'>'}</Option>
+                      <Option value=">=">{'>='}</Option>
+                      <Option value="<">{'<'}</Option>
+                      <Option value="==">{'=='}</Option>
+                      <Option value="!=">{'!='}</Option>
+                    </Select>
+                  </MyFormItem>
+
+                  <MyFormItem name='value' label=" ">
+                    <InputNumber style={{ width: '100px' }} min={1} placeholder="0" />
+                  </MyFormItem>
+
+                </MyFormItemGroup>
+
+              </div>
+
+            </MyFormItemGroup>
+          }
 
           <div style={{ display: 'flex' }}>
             <MyFormItem
@@ -345,38 +518,43 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
               />
             </MyFormItem>
 
-            <MyFormItem
-              name="forDuration"
-              label="持续时间"
-              style={{
-                width: '500px',
-              }}
-              rules={[
-                {
-                  required: true,
-                },
-              ]}
-            >
-              <InputNumber
-                style={{ width: '100%' }}
-                addonAfter={<span>秒</span>}
-                placeholder="60"
-                min={1}
+            {selectedType === 'Prometheus' &&
+              <MyFormItem
+                name="forDuration"
+                label="持续时间"
+                style={{
+                  width: '500px',
+                }}
                 rules={[
                   {
                     required: true,
                   },
                 ]}
-              />
-            </MyFormItem>
+              >
+                <InputNumber
+                  style={{ width: '100%' }}
+                  addonAfter={<span>秒</span>}
+                  placeholder="60"
+                  min={1}
+                  rules={[
+                    {
+                      required: true,
+                    },
+                  ]}
+                />
+              </MyFormItem>
+            }
           </div>
 
-          <MyFormItem
-            name="annotations"
-            label="告警详情"
-            tooltip="获取 Label 变量, 示例: ${job}, ${instance}。凡是 Target 中的变量均可通过`${}`获取。">
-            <Input />
-          </MyFormItem>
+          {
+            selectedType === "Prometheus" &&
+            <MyFormItem
+              name="annotations"
+              label="告警详情"
+              tooltip="获取 Label 变量, 示例: ${job}, ${instance}。凡是 Target 中的变量均可通过`${}`获取。">
+              <Input />
+            </MyFormItem>
+          }
         </div>
 
         <Divider />
@@ -521,8 +699,8 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
         <Button type="primary" htmlType="submit">
           Submit
         </Button>
-      </Form>
-    </Modal>
+      </Form >
+    </Modal >
   )
 }
 

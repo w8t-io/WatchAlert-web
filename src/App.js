@@ -18,7 +18,7 @@ import RuleTemplateGroup from './RuleTemplateGroup'
 import RuleTemplate from './RuleTemplate'
 
 class App extends React.Component {
-  render () {
+  render() {
     return (
       <BrowserRouter>
         {/* 路由 */}
@@ -44,7 +44,7 @@ class App extends React.Component {
   }
 }
 
-export default function AppWithHelmet () {
+export default function AppWithHelmet() {
   return (
     <React.Fragment>
       <Helmet>

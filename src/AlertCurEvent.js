@@ -1,9 +1,10 @@
-import { Select, Input, Table, Button, Popconfirm, Dropdown, Tag } from 'antd'
+import { Select, Input, Table, Button, Popconfirm, message, Tag } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import SilenceRuleCreateModal from './SilenceRuleCreateModal'
 import backendIP from './config'
 import Base from './Base'
+import { CopyOutlined } from '@ant-design/icons'
 const { Search } = Input
 
 class AlertCurEvent extends React.Component {
@@ -55,7 +56,7 @@ class AlertCurEvent extends React.Component {
         width: 200,
         render: (text, record) => (
           <span>
-            {Object.entries(record.metric).map(([key, value]) => (
+            {record && record.metric && Object.entries(record.metric).map(([key, value]) => (
               <Tag color="processing" key={key}>{`${key}: ${value}`}</Tag>
             ))}
           </span>
@@ -66,6 +67,25 @@ class AlertCurEvent extends React.Component {
         dataIndex: 'annotations',
         key: 'annotations',
         width: 200,
+        render: (text, record) => (
+          <span>
+            {/* {record.annotations && record.annotations.substring(0, 100)}...... */}
+            <span>
+              {record.annotations && (
+                <span>
+                  {record.annotations.substring(0, 100)}......
+                  <CopyOutlined
+                    style={{ marginLeft: 8 }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(record.annotations);
+                      message.success('已复制到剪贴板');
+                    }}
+                  />
+                </span>
+              )}
+            </span>
+          </span>
+        )
       },
       {
         title: '触发时间',
@@ -92,7 +112,7 @@ class AlertCurEvent extends React.Component {
     ]
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     this.handleList()
   }
 
@@ -119,7 +139,7 @@ class AlertCurEvent extends React.Component {
   };
 
 
-  render () {
+  render() {
 
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 

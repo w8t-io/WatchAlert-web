@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom'
 const { Header, Content, Footer, Sider } = Layout
 const { SubMenu } = Menu
 
-function Base (props) {
+function Base(props) {
   // 鉴权
   Auth()
 
