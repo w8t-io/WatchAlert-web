@@ -5,7 +5,7 @@ import backendIP from './config'
 
 const MyFormItemContext = React.createContext([])
 
-function toArr (str) {
+function toArr(str) {
   return Array.isArray(str) ? str : [str]
 }
 
@@ -24,6 +24,7 @@ const MyFormItem = ({ name, ...props }) => {
 const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
   const [form] = Form.useForm()
   const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
+  const [selectedType, setSelectedType] = useState(null) // 数据源类型
 
   // 禁止输入空格
   const [spaceValue, setSpaceValue] = useState('')
@@ -43,6 +44,7 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
 
   useEffect(() => {
     if (selectedRow) {
+      setSelectedType(selectedRow.type)
       form.setFieldsValue({
         name: selectedRow.name,
         type: selectedRow.type,
@@ -50,6 +52,9 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
           url: selectedRow.http.url,
           timeout: selectedRow.http.timeout
         },
+        alicloudEndpoint: selectedRow.alicloudEndpoint,
+        alicloudAk: selectedRow.alicloudAk,
+        alicloudSk: selectedRow.alicloudSk,
         description: selectedRow.description,
         enabled: selectedRow.enabled
       })
@@ -57,6 +62,7 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
   }, [selectedRow, form])
 
   const handleCreate = async (data) => {
+    console.log(data)
     axios.post(`http://${backendIP}/api/w8t/datasource/dataSourceCreate`, data)
       .then((res) => {
         if (res.status === 200) {
@@ -101,6 +107,10 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
 
   }
 
+  const handleGetDatasourceData = async (data) => {
+    setSelectedType(data)
+  }
+
   return (
     <Modal visible={visible} onCancel={onClose} footer={null}>
       <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
@@ -128,43 +138,85 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
             style={{
               flex: 1,
             }}
+            onChange={handleGetDatasourceData}
             options={[
               {
                 value: 'Prometheus',
                 label: 'Prometheus',
               },
+              {
+                value: 'AliCloudSLS',
+                label: '阿里云SLS'
+              },
+              {
+                value: 'Loki',
+                label: 'Loki',
+              },
             ]}
           />
         </MyFormItem>
 
-        <MyFormItemGroup prefix={['http']}>
-          <MyFormItem name="url" label="URL"
-            rules={[
-              {
-                required: true,
-              },
-              {
-                pattern: /^(http|https):\/\//,
-                message: '输入正确的URL格式',
-              },
-            ]}>
-            <Input />
-          </MyFormItem>
+        {selectedType === 'Prometheus' || selectedType === 'Loki' &&
+          <MyFormItemGroup prefix={['http']}>
+            <MyFormItem name="url" label="URL"
+              rules={[
+                {
+                  required: true,
+                },
+                {
+                  pattern: /^(http|https):\/\//,
+                  message: '输入正确的URL格式',
+                },
+              ]}>
+              <Input />
+            </MyFormItem>
 
-          <MyFormItem name="timeout" label="Timeout"
-            rules={[
-              {
-                required: true,
-              },
-            ]}>
-            <InputNumber
-              style={{ width: '100%' }}
-              addonAfter={<span>秒</span>}
-              placeholder="10"
-              min={1}
-            />
-          </MyFormItem>
-        </MyFormItemGroup>
+            <MyFormItem name="timeout" label="Timeout"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}>
+              <InputNumber
+                style={{ width: '100%' }}
+                addonAfter={<span>秒</span>}
+                placeholder="10"
+                min={1}
+              />
+            </MyFormItem>
+          </MyFormItemGroup>
+        }
+
+        {selectedType === 'AliCloudSLS' &&
+          <div>
+            <MyFormItem name="alicloudEndpoint" label="Endpoint"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}>
+              <Input />
+            </MyFormItem>
+
+            <MyFormItem name="alicloudAk" label="AccessKeyId"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}>
+              <Input />
+            </MyFormItem>
+
+            <MyFormItem name="alicloudSk" label="AccessKeySecret"
+              rules={[
+                {
+                  required: true,
+                },
+              ]}>
+              <Input />
+            </MyFormItem>
+          </div>
+        }
 
         <MyFormItem name="description" label="描述">
           <Input />

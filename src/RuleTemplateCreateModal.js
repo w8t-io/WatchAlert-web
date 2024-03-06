@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import backendIP from './config'
 const MyFormItemContext = React.createContext([])
 
-function toArr (str) {
+function toArr(str) {
   return Array.isArray(str) ? str : [str]
 }
 

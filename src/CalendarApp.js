@@ -2,7 +2,9 @@ import { Calendar, Modal, Divider, Button, DatePicker, Select, Space } from 'ant
 import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import CreateCalendar from './CreateCalendar'
+import CalendarAppUpdateModal from './CalendarAppUpdateModal.js'
 import backendIP from './config'
+import moment from 'moment';
 
 export const fetchDutyData = async (dutyId) => {
   try {
@@ -20,9 +22,11 @@ export const fetchDutyData = async (dutyId) => {
 const CalendarApp = ({ visible, onClose, name, dutyId }) => {
   const [dutyData, setDutyData] = useState([])
   const [createCalendarModal, setCreateCalendarModal] = useState()
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
-    async function fetchData () {
+    async function fetchData() {
       if (visible) {
         try {
           const data = await fetchDutyData(dutyId)
@@ -36,9 +40,6 @@ const CalendarApp = ({ visible, onClose, name, dutyId }) => {
     fetchData()
   }, [visible])
 
-  const onPanelChange = (value, mode) => {
-  }
-
   const dateCellRender = (value) => {
     const matchingDutyData = dutyData.find((item) => {
       const itemDate = new Date(item.time)
@@ -50,9 +51,14 @@ const CalendarApp = ({ visible, onClose, name, dutyId }) => {
     })
 
     if (matchingDutyData) {
-      return <div style={
-        { marginTop: '20px', textAlign: 'center' }
-      }>{matchingDutyData.username}</div>
+      return (
+        <div
+          style={{ marginTop: '20px', textAlign: 'center', cursor: 'pointer' }}
+          onClick={handleClick}
+        >
+          {matchingDutyData.username}
+        </div>
+      );
     }
 
     return null
@@ -62,6 +68,23 @@ const CalendarApp = ({ visible, onClose, name, dutyId }) => {
     setCreateCalendarModal(false)
   }
 
+  const handleClick = (record) => {
+    const m = record.month();
+    const month = m + 1
+    const year = record.year();
+
+    setSelectedDate(`${year}-${month.toString()}-${record.date().toString()}`);
+    setModalVisible(true);
+  };
+
+  const handleUpdateModalClose = () => {
+    setModalVisible(false)
+  }
+
+  const restartCalendarModal = () => {
+    setCreateCalendarModal(false)
+    setCreateCalendarModal(true)
+  }
 
   return (
     <Modal
@@ -69,7 +92,7 @@ const CalendarApp = ({ visible, onClose, name, dutyId }) => {
       onCancel={onClose}
       footer={null}
       width={1000}
-      bodyStyle={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }} // 设置弹窗内容的样式
+      styles={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }} // 设置弹窗内容的样式
     >
       <div style={{ textAlign: 'center' }}>
         <h3>日程表名称：{name}</h3>
@@ -83,8 +106,10 @@ const CalendarApp = ({ visible, onClose, name, dutyId }) => {
 
       <Divider />
       <div style={{ display: 'flex' }}>
-        <Calendar onPanelChange={onPanelChange} dateCellRender={dateCellRender} />
+        <Calendar onChange={handleClick} cellRender={dateCellRender} />
       </div>
+
+      <CalendarAppUpdateModal visible={modalVisible} onClose={handleUpdateModalClose} time={selectedDate} dutyId={dutyId} date={selectedDate}></CalendarAppUpdateModal>
 
     </Modal>
   )

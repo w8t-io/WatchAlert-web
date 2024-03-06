@@ -1,9 +1,10 @@
-import { Select, Input, Table, Button, Popconfirm, Dropdown, Tag } from 'antd'
+import { Select, Input, Table, Button, Popconfirm, message, Tag } from 'antd'
 import axios from 'axios'
 import React from 'react'
 import SilenceRuleCreateModal from './SilenceRuleCreateModal'
 import backendIP from './config'
 import Base from './Base'
+import { CopyOutlined } from '@ant-design/icons'
 const { Search } = Input
 
 class AlertCurEvent extends React.Component {
@@ -55,7 +56,7 @@ class AlertCurEvent extends React.Component {
         width: 200,
         render: (text, record) => (
           <span>
-            {Object.entries(record.metric).map(([key, value]) => (
+            {record && record.metric && Object.entries(record.metric).map(([key, value]) => (
               <Tag color="processing" key={key}>{`${key}: ${value}`}</Tag>
             ))}
           </span>
@@ -66,6 +67,25 @@ class AlertCurEvent extends React.Component {
         dataIndex: 'annotations',
         key: 'annotations',
         width: 200,
+        render: (text, record) => (
+          <span>
+            {/* {record.annotations && record.annotations.substring(0, 100)}...... */}
+            <span>
+              {record.annotations && (
+                <span>
+                  {record.annotations.substring(0, 100)}......
+                  <CopyOutlined
+                    style={{ marginLeft: 8 }}
+                    onClick={() => {
+                      navigator.clipboard.writeText(record.annotations);
+                      message.success('已复制到剪贴板');
+                    }}
+                  />
+                </span>
+              )}
+            </span>
+          </span>
+        )
       },
       {
         title: '触发时间',
@@ -92,7 +112,7 @@ class AlertCurEvent extends React.Component {
     ]
   }
 
-  async componentDidMount () {
+  async componentDidMount() {
     this.handleList()
   }
 
@@ -119,85 +139,83 @@ class AlertCurEvent extends React.Component {
   };
 
 
-  render () {
+  render() {
 
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 
     return (
-      <Base name='当前告警'>
-        <div>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '10px',
-            width: '500px'
-          }}>
-            <Select
-              placeholder="数据源类型"
-              style={{
-                flex: 1,
-                width: 200
-              }}
-              allowClear
-              options={[
-                {
-                  value: 'Prometheus',
-                  label: 'Prometheus',
-                },
-                {
-                  value: 'Ali-SLS',
-                  label: 'Ali-SLS',
-                },
-              ]}
-            />
+      <div>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '10px',
+          width: '500px'
+        }}>
+          <Select
+            placeholder="数据源类型"
+            style={{
+              flex: 1,
+              width: 200
+            }}
+            allowClear
+            options={[
+              {
+                value: 'Prometheus',
+                label: 'Prometheus',
+              },
+              {
+                value: 'Ali-SLS',
+                label: 'Ali-SLS',
+              },
+            ]}
+          />
 
-            <Select
-              placeholder="告警等级"
-              style={{
-                flex: 1,
-                width: 150
-              }}
-              allowClear
-              options={[
-                {
-                  value: '0',
-                  label: 'P0级告警',
-                },
-                {
-                  value: '1',
-                  label: 'P1级告警',
-                },
-                {
-                  value: '2',
-                  label: 'P2级告警',
-                },
-              ]}
-            />
+          <Select
+            placeholder="告警等级"
+            style={{
+              flex: 1,
+              width: 150
+            }}
+            allowClear
+            options={[
+              {
+                value: '0',
+                label: 'P0级告警',
+              },
+              {
+                value: '1',
+                label: 'P1级告警',
+              },
+              {
+                value: '2',
+                label: 'P2级告警',
+              },
+            ]}
+          />
 
-            <Search
-              allowClear
-              placeholder="输入搜索关键字"
-              onSearch={onSearch}
-              enterButton
-              style={{ width: 300 }} />
+          <Search
+            allowClear
+            placeholder="输入搜索关键字"
+            onSearch={onSearch}
+            enterButton
+            style={{ width: 300 }} />
 
-          </div>
-
-          <SilenceRuleCreateModal visible={this.state.silenceVisible} onClose={this.handleSilenceModalClose} selectedRow={this.state.selectedRow} />
-
-          <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
-            <Table
-              columns={this.state.columns}
-              dataSource={this.state.list}
-              scroll={{
-                x: 1500,
-                y: 'calc(60vh - 64px - 40px)'
-              }}
-            />
-          </div>
         </div>
-      </Base>
+
+        <SilenceRuleCreateModal visible={this.state.silenceVisible} onClose={this.handleSilenceModalClose} selectedRow={this.state.selectedRow} />
+
+        <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
+          <Table
+            columns={this.state.columns}
+            dataSource={this.state.list}
+            scroll={{
+              x: 1500,
+              y: 'calc(60vh - 64px - 40px)'
+            }}
+          />
+        </div>
+      </div>
     )
 
   }
