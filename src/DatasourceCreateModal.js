@@ -156,7 +156,7 @@ const DatasourceCreateModal = ({ visible, onClose, selectedRow, type, handleList
           />
         </MyFormItem>
 
-        {selectedType === 'Prometheus' || selectedType === 'Loki' &&
+        {selectedType !== 'AliCloudSLS' &&
           <MyFormItemGroup prefix={['http']}>
             <MyFormItem name="url" label="URL"
               rules={[
