@@ -2,21 +2,21 @@ import React from 'react'
 import { Helmet } from 'react-helmet'
 import Login from './Login'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Datasources from './Datasources'
+import Datasources from './datasources/Datasources'
 import Home from './Home'
-import AlertRules from './AlertRules'
-import SilenceRules from './SilenceRules'
-import NoticeObjects from './NoticeObjects'
-import AlertCurEvent from './AlertCurEvent'
-import AlertHisEvent from './AlertHisEvent'
-import User from './User'
-import UserRole from './UserRole'
-import DutyManage from './DutyManage'
-import NoticeTemplate from './NoticeTemplate'
-import AlertRuleGroup from './AlertRuleGroup'
-import RuleTemplateGroup from './RuleTemplateGroup'
-import RuleTemplate from './RuleTemplate'
-import Base from './Base'
+import AlertRules from './alert/AlertRules'
+import SilenceRules from './silence/SilenceRules'
+import NoticeObjects from './notice/NoticeObjects'
+import AlertCurEvent from './alert/AlertCurEvent'
+import AlertHisEvent from './alert/AlertHisEvent'
+import User from './members/User'
+import UserRole from './members/UserRole'
+import DutyManage from './duty/DutyManage'
+import NoticeTemplate from './notice/NoticeTemplate'
+import AlertRuleGroup from './alert/AlertRuleGroup'
+import RuleTemplateGroup from './alert/RuleTemplateGroup'
+import RuleTemplate from './alert/RuleTemplate'
+import Base from './utils/Base'
 
 class App extends React.Component {
   render() {
@@ -24,7 +24,7 @@ class App extends React.Component {
       <BrowserRouter>
         {/* 路由 */}
         <Routes>
-          <Route path="/" element={<Base name="首页" children={Home} />} />
+          <Route path="/" element={<Base name="仪表盘" children={Home} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/alertRuleGroup" element={<Base name="告警规则组" children={AlertRuleGroup} />} />
           <Route path="/alertRuleGroup/:id/alertRules" element={<Base name="告警规则" children={AlertRules} />} />
