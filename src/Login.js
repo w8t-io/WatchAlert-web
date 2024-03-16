@@ -3,8 +3,8 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, Modal, message } from 'antd'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
-import backendIP from './config'
-import WatchAlertLogo from './WatchAlert.png'
+import backendIP from './utils/config'
+import WatchAlertLogo from './img/WatchAlert.png'
 
 // 创建 Axios 实例
 const axiosInstance = axios.create({

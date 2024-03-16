@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ReactECharts from 'echarts-for-react'
-import Base from './Base'
+import Base from './utils/Base'
 
 const Home = () => {
   const option = {
