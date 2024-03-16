@@ -53,6 +53,12 @@ class DutyManage extends React.Component {
         dataIndex: 'description',
         key: 'description',
         width: 'auto',
+        render: (text) => {
+          if (!text) {
+            return '-'
+          }
+          return text
+        }
       },
       {
         title: '创建人',

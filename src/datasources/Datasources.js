@@ -40,7 +40,13 @@ class Datasources extends React.Component {
         title: '描述',
         dataIndex: 'description',
         key: 'description',
-        width: 'auto'
+        width: 'auto',
+        render: (text) => {
+          if (!text) {
+            return '-'
+          }
+          return text
+        }
       },
       {
         title: '状态',

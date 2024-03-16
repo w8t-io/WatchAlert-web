@@ -29,12 +29,24 @@ class User extends React.Component {
         dataIndex: 'email',
         key: 'email',
         width: 40,
+        render: (text) => {
+          if (!text) {
+            return '-'
+          }
+          return text
+        }
       },
       {
         title: '手机号',
         dataIndex: 'phone',
         key: 'phone',
         width: 40,
+        render: (text) => {
+          if (!text) {
+            return '-'
+          }
+          return text
+        }
       },
       {
         title: '创建人',

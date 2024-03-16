@@ -38,6 +38,12 @@ class RuleTemplateGroup extends React.Component {
         title: '描述',
         dataIndex: 'description',
         key: 'description',
+        render: (text) => {
+          if (!text) {
+            return '-'
+          }
+          return text
+        }
       },
       {
         title: '操作',

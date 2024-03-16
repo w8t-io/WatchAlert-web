@@ -53,6 +53,12 @@ class SilenceRules extends React.Component {
         title: '评论',
         dataIndex: 'comment',
         key: 'comment',
+        render: (text) => {
+          if (!text) {
+            return '-'
+          }
+          return text
+        }
       },
       {
         title: '静默开始时间',
