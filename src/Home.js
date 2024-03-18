@@ -173,7 +173,7 @@ const Home = () => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', height: '32vh' }}>
         <div style={{ width: '450px', height: '250px', marginRight: '10px' }}>
           <Divider>规则总数</Divider>
           <ReactECharts
@@ -199,7 +199,7 @@ const Home = () => {
       </div >
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <div style={{ width: '700px', height: '300px', overflowY: 'auto' }}>
+        <div style={{ width: '100vh', height: '350px', overflowY: 'auto' }}>
           <Divider>最近告警列表</Divider>
           <List
             bordered
@@ -219,7 +219,7 @@ const Home = () => {
           />
         </div>
 
-        <div style={{ width: '450px', height: '350px', overflowY: 'auto' }} >
+        <div style={{ width: '65vh', height: '350px', overflowY: 'auto' }} >
           <Divider>告警分布</Divider>
           <ReactECharts
             option={alarmDistributionOption}
