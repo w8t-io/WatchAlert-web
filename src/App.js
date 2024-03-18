@@ -24,7 +24,7 @@ class App extends React.Component {
       <BrowserRouter>
         {/* 路由 */}
         <Routes>
-          <Route path="/" element={<Base name="首页" children={Home} />} />
+          <Route path="/" element={<Base name="仪表盘" children={Home} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/alertRuleGroup" element={<Base name="告警规则组" children={AlertRuleGroup} />} />
           <Route path="/alertRuleGroup/:id/alertRules" element={<Base name="告警规则" children={AlertRules} />} />

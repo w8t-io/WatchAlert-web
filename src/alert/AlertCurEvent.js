@@ -44,7 +44,7 @@ class AlertCurEvent extends React.Component {
         width: 100,
         render: (text) => (
           <span>
-            P{text}
+            {text}
           </span>
         ),
       },
@@ -214,7 +214,7 @@ class AlertCurEvent extends React.Component {
             dataSource={this.state.list}
             scroll={{
               x: 1500,
-              y: 'calc(60vh - 64px - 40px)'
+              y: 'calc(65vh - 65px - 40px)'
             }}
           />
         </div>

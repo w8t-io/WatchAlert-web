@@ -43,7 +43,7 @@ class NoticeObjects extends React.Component {
         title: '通知类型',
         dataIndex: 'noticeType',
         key: 'noticeType',
-        width: 'auto',
+        width: 100,
         render: (text, record) => {
           if (record.noticeType === 'FeiShu') {
             return '飞书'
@@ -57,7 +57,7 @@ class NoticeObjects extends React.Component {
         title: '值班ID',
         dataIndex: 'dutyId',
         key: 'dutyId',
-        width: 'auto',
+        width: 250,
         render: (text) => {
           if (!text) {
             return '-'
@@ -68,7 +68,7 @@ class NoticeObjects extends React.Component {
       {
         title: '操作',
         dataIndex: 'operation',
-        width: 'auto',
+        width: 150,
         render: (_, record) =>
           this.state.list.length >= 1 ? (
             <div>
@@ -166,6 +166,10 @@ class NoticeObjects extends React.Component {
           <Table
             columns={this.state.columns}
             dataSource={this.state.list}
+            scroll={{
+              x: 1000,
+              y: 'calc(65vh - 65px - 40px)'
+            }}
           />
         </div>
       </div>

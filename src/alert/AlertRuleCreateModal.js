@@ -333,9 +333,9 @@ const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList,
               },
             ]}>
             <Radio.Group onChange={onChange} value={severityValue}>
-              <Radio value={0}>P0级告警</Radio>
-              <Radio value={1}>P1级告警</Radio>
-              <Radio value={2}>P2级告警</Radio>
+              <Radio value={'P0'}>P0级告警</Radio>
+              <Radio value={'P1'}>P1级告警</Radio>
+              <Radio value={'P2'}>P2级告警</Radio>
             </Radio.Group>
           </MyFormItem>
 

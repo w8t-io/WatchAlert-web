@@ -214,7 +214,7 @@ class Datasources extends React.Component {
             pagination={this.state.pagination}
             scroll={{
               x: 1000,
-              y: 'calc(60vh - 64px - 40px)'
+              y: 'calc(65vh - 65px - 40px)'
             }}
             onChange={pagination => {
               this.setState(

@@ -29,18 +29,13 @@ class AlertHisEvent extends React.Component {
         title: '数据源',
         dataIndex: 'datasource_id',
         key: 'datasource_id',
-        width: 'auto',
+        width: 250,
       },
       {
         title: '告警等级',
         dataIndex: 'severity',
         key: 'severity',
         width: 100,
-        render: (text) => (
-          <span>
-            P{text}
-          </span>
-        ),
       },
       {
         title: '事件标签',
@@ -55,7 +50,7 @@ class AlertHisEvent extends React.Component {
         title: '事件详情',
         dataIndex: 'annotations',
         key: 'annotations',
-        width: 'auto',
+        width: 300,
         render: (text, record) => (
           <span>
             {/* {record.annotations && record.annotations.substring(0, 100)}...... */}
@@ -80,7 +75,7 @@ class AlertHisEvent extends React.Component {
         title: '触发时间',
         dataIndex: 'first_trigger_time',
         key: 'first_trigger_time',
-        width: 150,
+        width: 180,
         render: (text) => {
           const date = new Date(text * 1000)
           return date.toLocaleString()
@@ -90,7 +85,7 @@ class AlertHisEvent extends React.Component {
         title: '恢复时间',
         dataIndex: 'recover_time',
         key: 'recover_time',
-        width: 150,
+        width: 180,
         render: (text) => {
           const date = new Date(text * 1000)
           return date.toLocaleString()
@@ -238,8 +233,8 @@ class AlertHisEvent extends React.Component {
             columns={this.state.columns}
             dataSource={this.state.list}
             scroll={{
-              x: 1500,
-              y: 'calc(60vh - 64px - 40px)'
+              x: 1700,
+              y: 'calc(65vh - 65px - 40px)'
             }}
           />
         </div>

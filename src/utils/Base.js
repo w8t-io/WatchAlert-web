@@ -5,7 +5,7 @@ import {
   PieChartOutlined,
   NotificationOutlined,
   CalendarOutlined,
-  HomeOutlined,
+  DashboardOutlined,
   LeftOutlined
 } from '@ant-design/icons'
 import { Layout, Menu, theme, Avatar, Button, Popover, Spin } from 'antd'
@@ -158,7 +158,7 @@ function Base(props) {
           selectedKeys={[selectedMenuKey]}
         >
 
-          <Menu.Item key="1" onClick={() => handleMenuClick('1')} icon={<HomeOutlined />}>首页</Menu.Item>
+          <Menu.Item key="1" onClick={() => handleMenuClick('1')} icon={<DashboardOutlined />}>仪表盘</Menu.Item>
 
           <SubMenu key="2" icon={<BellOutlined />} title="告警管理">
             <Menu.Item key="2-1" onClick={() => handleMenuClick('2-1')}>告警规则</Menu.Item>

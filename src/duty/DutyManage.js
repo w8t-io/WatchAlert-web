@@ -175,6 +175,10 @@ class DutyManage extends React.Component {
           <Table
             columns={this.state.columns}
             dataSource={this.state.list}
+            scroll={{
+              x: 1000,
+              y: 'calc(65vh - 65px - 40px)'
+            }}
           />
         </div>
       </div>

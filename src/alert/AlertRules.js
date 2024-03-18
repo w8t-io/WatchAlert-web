@@ -211,7 +211,7 @@ const AlertRules = () => {
           dataSource={list}
           scroll={{
             x: 1500,
-            y: 'calc(60vh - 64px - 40px)',
+            y: 'calc(65vh - 65px - 40px)',
           }}
         />
       </div>
