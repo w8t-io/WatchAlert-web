@@ -12,6 +12,11 @@ class AlertHisEvent extends React.Component {
   state = {
     visible: false,
     list: [],
+    pagination: {
+      current: 1,
+      pageSize: 10,
+      total: 0,
+    },
     columns: [
       {
         title: '规则名称',
@@ -95,18 +100,20 @@ class AlertHisEvent extends React.Component {
   }
 
 
-  async handleList() {
-
-    const res = await axios.get(`http://${backendIP}/api/w8t/event/hisEvent`)
-    console.log(res.data.data)
+  async handleList(pageIndex, pageSize) {
+    const res = await axios.get(`http://${backendIP}/api/w8t/event/hisEvent?pageIndex=${pageIndex}&pageSize=${pageSize}`)
     this.setState({
-      list: res.data.data
+      list: res.data.data.List,
+      pagination: {
+        ...this.state.pagination,
+        current: res.data.data.PageIndex,
+        total: res.data.data.TotalCount,
+      }
     })
-
   }
 
   componentDidMount() {
-    this.handleList()
+    this.handleList(this.state.pagination.current, this.state.pagination.pageSize)
   }
 
   showMoreTags = (tags, record, visibleCount = 5) => {
@@ -159,6 +166,19 @@ class AlertHisEvent extends React.Component {
     this.setState({ visible: false })
   };
 
+  handlePageChange = (page) => {
+    this.setState(
+      this.pagination = {
+        ...this.pagination,
+        current: page.current,
+        pageSize: page.pageSize,
+      }
+    )
+    this.handleList(page.current, page.pageSize)
+  };
+
+  handleShowTotal = (total, range) =>
+    `第 ${range[0]} - ${range[1]} 条 共 ${total} 条`;
 
   render() {
 
@@ -232,6 +252,13 @@ class AlertHisEvent extends React.Component {
           <Table
             columns={this.state.columns}
             dataSource={this.state.list}
+            pagination={{
+              current: this.state.pagination.current ?? 1,
+              pageSize: this.state.pagination.pageSize ?? 10,
+              total: this.state.pagination?.total ?? 0,
+              showTotal: this.handleShowTotal,
+            }}
+            onChange={this.handlePageChange}
             scroll={{
               x: 1700,
               y: 'calc(65vh - 65px - 40px)'

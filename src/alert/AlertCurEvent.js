@@ -65,7 +65,7 @@ class AlertCurEvent extends React.Component {
         title: '事件详情',
         dataIndex: 'annotations',
         key: 'annotations',
-        width: 'auto',
+        width: 300,
         render: (text, record) => (
           <span>
             {/* {record.annotations && record.annotations.substring(0, 100)}...... */}
@@ -90,7 +90,7 @@ class AlertCurEvent extends React.Component {
         title: '触发时间',
         dataIndex: 'first_trigger_time',
         key: 'first_trigger_time',
-        width: 150,
+        width: 180,
         render: (text) => {
           const date = new Date(text * 1000)
           return date.toLocaleString()
