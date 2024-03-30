@@ -16,7 +16,6 @@ import { Login } from "../utils/Login";
 import Error from "../utils/Error"
 import { ComponentsContent } from '../components';
 
-
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
     {
