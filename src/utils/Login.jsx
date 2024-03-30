@@ -105,7 +105,7 @@ export const Login = () => {
                 <Sider width="50%" style={siderStyle}>
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center', marginTop: '-80vh', marginLeft: '30px' }}>
-                            <MyIcon width="35px" height="35px" />
+                            <MyIcon className="custom-svg" width="35px" height="35px" />
                             <span style={{ marginLeft: '10px', fontSize: '18px' }}>AlertCloud</span>
                             <div style={{ marginTop: '70vh' }}>
                                 <span style={{ marginLeft: '10px', fontSize: '55px' }}>
