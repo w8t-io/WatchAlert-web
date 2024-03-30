@@ -128,9 +128,11 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
                     </MyFormItem>
                 </div>
 
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </div>
             </Form>
         </Modal>
     )

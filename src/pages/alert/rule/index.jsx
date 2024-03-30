@@ -124,13 +124,12 @@ export const AlertRules = () => {
     }
 
     return (
+        <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Button type="primary" onClick={() => setVisible(true)}> 创建 </Button>
+            </div>
 
-        <div>
             <div style={{ display: 'flex' }}>
-                <Button type="primary" onClick={() => setVisible(true)}>
-                    创建
-                </Button>
-
                 <AlertRuleCreateModal
                     visible={visible}
                     onClose={handleModalClose}
@@ -158,7 +157,7 @@ export const AlertRules = () => {
                     }}
                 >
                 </div>
-            </div>
+            </div >
 
             <div style={{ overflowX: 'auto', marginTop: 10, height: '71vh' }}>
                 <Table
@@ -170,7 +169,6 @@ export const AlertRules = () => {
                     }}
                 />
             </div>
-        </div>
-
+        </>
     )
 }

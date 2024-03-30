@@ -120,27 +120,25 @@ export const AlertRuleGroup = ({ }) => {
 
     return (
         <>
-            <div>
-                <div style={{ display: 'flex' }}>
-                    <Button type="primary" onClick={() => setCreateModalVisible(true)} >
-                        创建
-                    </Button>
-                </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', borderRight: '100vh' }}>
+                <Button type="primary" onClick={() => setCreateModalVisible(true)} style={{ marginLeft: 'auto' }}>
+                    创建
+                </Button>
+            </div>
 
-                <AlertRuleGroupCreateModal visible={createModalVisible} onClose={handleModalClose} type='create' handleList={handleList} />
+            <AlertRuleGroupCreateModal visible={createModalVisible} onClose={handleModalClose} type='create' handleList={handleList} />
 
-                <AlertRuleGroupCreateModal visible={updateModalVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type='update' handleList={handleList} />
+            <AlertRuleGroupCreateModal visible={updateModalVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type='update' handleList={handleList} />
 
-                <div style={{ overflowX: 'auto', marginTop: 10, height: '64vh' }}>
-                    <Table
-                        columns={columns}
-                        dataSource={list}
-                        scroll={{
-                            x: 1000,
-                            y: 'calc(64vh - 64px - 40px)'
-                        }}
-                    />
-                </div>
+            <div style={{ overflowX: 'auto', marginTop: 10, height: '64vh' }}>
+                <Table
+                    columns={columns}
+                    dataSource={list}
+                    scroll={{
+                        x: 1000,
+                        y: 'calc(64vh - 64px - 40px)'
+                    }}
+                />
             </div>
         </>
     );

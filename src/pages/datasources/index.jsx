@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Table, Tag, Popconfirm, Select, message } from 'antd';
+import { Button, Input, Table, Tag, Popconfirm } from 'antd';
 import { CreateDatasourceModal } from './DatasourceCreateModal';
 import { deleteDatasource, getDatasourceList } from '../../api/datasource';
-import { ComponentsContent } from '../../components';
 
 export const Datasources = () => {
+    const { Search } = Input
     const [selectedRow, setSelectedRow] = useState(null);
     const [updateVisible, setUpdateVisible] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -106,17 +106,26 @@ export const Datasources = () => {
     };
 
     return (
-        <div>
-            <div style={{ display: 'flex' }}>
-                <Button type="primary" onClick={() => setVisible(true)}>
-                    创建
-                </Button>
-
-                <CreateDatasourceModal visible={visible} onClose={handleModalClose} type='create' handleList={handleList} />
-
-                <CreateDatasourceModal visible={updateVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type="update" handleList={handleList} />
-
+        <>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                    <Search
+                        allowClear
+                        placeholder="输入搜索关键字"
+                        enterButton
+                        style={{ width: 300 }}
+                    />
+                </div>
+                <div>
+                    <Button type="primary" onClick={() => setVisible(true)}>
+                        创建
+                    </Button>
+                </div>
             </div>
+
+            <CreateDatasourceModal visible={visible} onClose={handleModalClose} type='create' handleList={handleList} />
+
+            <CreateDatasourceModal visible={updateVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type="update" handleList={handleList} />
 
             <div style={{ overflowX: 'auto', marginTop: 10, height: '71vh' }}>
                 <Table
@@ -129,6 +138,6 @@ export const Datasources = () => {
                 />
             </div>
 
-        </div>
+        </>
     );
 };

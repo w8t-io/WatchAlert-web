@@ -261,13 +261,12 @@ export const AlertHisEvent = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 gap: '10px',
-                width: '1000px'
+                width: '100vh'
             }}>
                 <Select
                     placeholder="数据源类型"
                     style={{
                         flex: 1,
-                        width: 200
                     }}
                     allowClear
                     // value={selectedDataSource}
@@ -296,7 +295,6 @@ export const AlertHisEvent = () => {
                     placeholder="告警等级"
                     style={{
                         flex: 1,
-                        width: 150
                     }}
                     allowClear
                     onChange={handleSeverityChange}
@@ -316,7 +314,7 @@ export const AlertHisEvent = () => {
                     ]}
                 />
 
-                <Space direction="vertical" style={{ width: '300vh' }}>
+                <Space direction="vertical">
                     <RangePicker
                         showTime={{
                             format: 'HH:mm:ss',

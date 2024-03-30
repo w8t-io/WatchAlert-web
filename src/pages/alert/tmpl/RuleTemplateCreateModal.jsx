@@ -216,9 +216,11 @@ const RuleTemplateCreateModal = ({ visible, onClose, selectedRow, type, handleLi
                 </div>
 
                 {type === 'create' &&
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </div>
                 }
                 {type === 'view' && ' 注意: 模版不支持修改! 只能应用到创建告警规则中。'}
             </Form>

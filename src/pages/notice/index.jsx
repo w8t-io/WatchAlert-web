@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Popconfirm, message } from 'antd';
+import { Button, Table, Popconfirm, message, Input } from 'antd';
 import { CreateNoticeObjectModal } from './NoticeObjectCreateModal';
 import { deleteNotice, getNoticeList } from '../../api/notice';
-import { ComponentsContent } from '../../components';
 
 export const NoticeObjects = () => {
+    const { Search } = Input
     const [selectedRow, setSelectedRow] = useState(null);
     const [updateVisible, setUpdateVisible] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -116,18 +116,21 @@ export const NoticeObjects = () => {
     };
 
     return (
-
-        <div>
-            <div style={{ display: 'flex' }}>
-                <Button type="primary" onClick={() => setVisible(true)}>
-                    创建
-                </Button>
-
-                <CreateNoticeObjectModal visible={visible} onClose={handleModalClose} type='create' handleList={handleList} />
-
-                <CreateNoticeObjectModal visible={updateVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type='update' handleList={handleList} />
-
+        <>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                    <Search allowClear placeholder="输入搜索关键字" enterButton style={{ width: 300 }} />
+                </div>
+                <div>
+                    <Button type="primary" onClick={() => setVisible(true)}>
+                        创建
+                    </Button>
+                </div>
             </div>
+
+            <CreateNoticeObjectModal visible={visible} onClose={handleModalClose} type='create' handleList={handleList} />
+
+            <CreateNoticeObjectModal visible={updateVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type='update' handleList={handleList} />
 
             <div style={{ overflowX: 'auto', marginTop: 10, height: '71vh' }}>
                 <Table
@@ -139,6 +142,6 @@ export const NoticeObjects = () => {
                     }}
                 />
             </div>
-        </div>
+        </>
     );
 };

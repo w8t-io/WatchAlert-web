@@ -100,12 +100,25 @@ class RuleTemplateGroup extends React.Component {
         const onSearch = (value, _e, info) => console.log(info?.source, value)
 
         return (
-            <div>
-                <div style={{ display: 'flex' }}>
-                    <Button type="primary" onClick={() => this.setState({ visible: true })}>
-                        创建
-                    </Button>
+            <>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div>
+                        <Search
+                            allowClear
+                            placeholder="输入搜索关键字"
+                            onSearch={onSearch}
+                            enterButton
+                            style={{ width: 300 }}
+                        />
+                    </div>
+                    <div>
+                        <Button type="primary" onClick={() => this.setState({ visible: true })}>
+                            创建
+                        </Button>
+                    </div>
+                </div>
 
+                <div >
                     <RuleTemplateGroupCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
 
                     <RuleTemplateGroupCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
@@ -117,13 +130,6 @@ class RuleTemplateGroup extends React.Component {
                         gap: '10px',
                         width: '1000px'
                     }}>
-
-                        <Search
-                            allowClear
-                            placeholder="输入搜索关键字"
-                            onSearch={onSearch}
-                            enterButton
-                            style={{ width: 300 }} />
                     </div>
                 </div>
 
@@ -133,7 +139,7 @@ class RuleTemplateGroup extends React.Component {
                         dataSource={this.state.list}
                     />
                 </div>
-            </div>
+            </>
         )
 
     }

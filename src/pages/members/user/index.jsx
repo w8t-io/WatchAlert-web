@@ -146,25 +146,9 @@ class User extends React.Component {
         const onSearch = (value, _e, info) => console.log(info?.source, value)
 
         return (
-            <div>
-                <div style={{ display: 'flex' }}>
-
-                    <Button type="primary" onClick={() => this.setState({ visible: true })}>
-                        创建
-                    </Button>
-
-                    <UserCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
-
-                    <UserCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
-
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: '10px',
-                        width: '1000px'
-                    }}>
-
+            <>
+                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <div>
                         <Search
                             allowClear
                             placeholder="输入搜索关键字"
@@ -172,8 +156,16 @@ class User extends React.Component {
                             enterButton
                             style={{ width: 300 }} />
                     </div>
-
+                    <div>
+                        <Button type="primary" onClick={() => this.setState({ visible: true })}>
+                            创建
+                        </Button>
+                    </div>
                 </div>
+
+                <UserCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
+
+                <UserCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
                 <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
                     <Table
@@ -185,7 +177,7 @@ class User extends React.Component {
                         }}
                     />
                 </div>
-            </div>
+            </>
         )
 
     }

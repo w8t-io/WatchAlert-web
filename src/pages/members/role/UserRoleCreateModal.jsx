@@ -169,9 +169,11 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
                     />
                 </MyFormItem>
 
-                <Button type="primary" htmlType="submit">
-                    Submit
-                </Button>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button type="primary" htmlType="submit">
+                        Submit
+                    </Button>
+                </div>
             </Form>
         </Modal>
     )
