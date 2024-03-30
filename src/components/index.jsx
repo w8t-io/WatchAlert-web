@@ -247,8 +247,8 @@ export const ComponentsContent = (props) => {
                     </Content>
                 </Layout>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1vh' }}>
-                    <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '3vh' }}>
+                    <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
                         <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />
                     </a>
                 </div>
