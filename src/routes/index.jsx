@@ -17,6 +17,7 @@ import Error from "../utils/Error"
 import { ComponentsContent } from '../components';
 
 
+// eslint-disable-next-line import/no-anonymous-default-export
 export default [
     {
         path: '/',
@@ -29,12 +30,10 @@ export default [
     {
         path: '/alertRuleGroup',
         element: <ComponentsContent name="告警规则组" c={<AlertRuleGroup />} />,
-        children: [
-            {
-                path: ':id/alertRules',
-                element: <ComponentsContent name="告警规则" c={<AlertRules />} />
-            }
-        ]
+    },
+    {
+        path: '/alertRuleGroup/:id/rules',
+        element: <ComponentsContent name="告警规则" c={<AlertRules />} />
     },
     {
         path: '/silenceRules',
@@ -51,12 +50,10 @@ export default [
     {
         path: '/ruleTemplateGroup',
         element: <ComponentsContent name="规则模版组" c={<RuleTemplateGroup />} />,
-        children: [
-            {
-                path: ':ruleGroupName/ruleTemplate',
-                element: <ComponentsContent name="告警模版" c={<RuleTemplate />} />
-            }
-        ]
+    },
+    {
+        path: '/ruleTemplateGroup/:ruleGroupName/templates',
+        element: <ComponentsContent name="告警模版" c={<RuleTemplate />} />
     },
     {
         path: '/noticeObjects',

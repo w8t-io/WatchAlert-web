@@ -1,5 +1,4 @@
-import { Modal, Form, Input, Button, Radio, Select, InputNumber, message } from 'antd'
-import axios from 'axios'
+import { Modal, Form, Input, Button, Radio, Select, InputNumber } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { createRuleTmpl } from '../../../api/ruleTmpl'
 

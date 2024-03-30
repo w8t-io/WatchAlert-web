@@ -1,5 +1,4 @@
-import { Button, Input, Table, Popconfirm, Dropdown, message } from 'antd'
-import axios from 'axios'
+import { Button, Input, Table, Popconfirm } from 'antd'
 import React from 'react'
 import RuleTemplateGroupCreateModal from './RuleTemplateGroupCreateModal'
 import { Link } from 'react-router-dom'
@@ -23,7 +22,7 @@ class RuleTemplateGroup extends React.Component {
                 render: (text, record) => (
                     <div>
                         <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <Link to={`/ruleTemplateGroup/${record.name}/ruleTemplate`}>{text}</Link>
+                            <Link to={`/ruleTemplateGroup/${record.name}/templates`}>{text}</Link>
                         </div>
                     </div>
                 ),

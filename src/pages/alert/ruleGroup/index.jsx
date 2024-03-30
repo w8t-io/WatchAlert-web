@@ -19,7 +19,7 @@ export const AlertRuleGroup = ({ }) => {
             render: (text, record) => (
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Link to={`/home/watchalert/alert/ruleGroup/${record.id}/rules`}>{text}</Link>
+                        <Link to={`/alertRuleGroup/${record.id}/rules`}>{text}</Link>
                         <CopyOutlined
                             style={{ marginLeft: '5px', cursor: 'pointer' }}
                             onClick={() => handleCopy(text)}
@@ -55,6 +55,7 @@ export const AlertRuleGroup = ({ }) => {
             title: '操作',
             dataIndex: 'operation',
             width: 150,
+            fixed: 'right',
             render: (_, record) =>
                 list.length >= 1 ? (
                     <div>

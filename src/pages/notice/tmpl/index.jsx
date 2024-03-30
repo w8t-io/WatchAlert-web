@@ -1,5 +1,4 @@
-import { Button, Input, Table, Select, Popconfirm, Dropdown, message } from 'antd'
-import axios from 'axios'
+import { Button, Input, Table, Popconfirm } from 'antd'
 import React from 'react'
 import NoticeTemplateCreateModal from './NoticeTemplateCreateModal'
 import { getNoticeTmplList, deleteNoticeTmpl } from '../../../api/noticeTmpl'
@@ -43,6 +42,7 @@ class NoticeTemplate extends React.Component {
                 title: '操作',
                 dataIndex: 'operation',
                 width: 150,
+                fixed: 'right',
                 render: (_, record) =>
                     this.state.list.length >= 1 ? (
                         <div>

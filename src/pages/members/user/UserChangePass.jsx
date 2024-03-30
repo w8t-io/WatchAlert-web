@@ -1,5 +1,4 @@
-import { Modal, Form, Input, Button, message } from 'antd'
-import axios from 'axios'
+import { Modal, Form, Input, Button } from 'antd'
 import React from 'react'
 import { changeUserPass } from '../../../api/user'
 
