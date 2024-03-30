@@ -1,11 +1,14 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './App'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.jsx';
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN.js';
 
-
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+ReactDOM.createRoot(document.getElementById('root')).render(
+    <BrowserRouter>
+        <ConfigProvider componentSize='middle' locale={zhCN}>
+            <App />
+        </ConfigProvider>
+    </BrowserRouter>
+);
