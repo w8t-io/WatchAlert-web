@@ -12,7 +12,7 @@ const getPort = function () {
 }
 const backendIP = curUrl + ":" + getPort()
 axios.defaults.timeout = 100000;
-axios.defaults.baseURL = backendIP;
+axios.defaults.baseURL = 'http://' + backendIP;
 // axios.defaults.baseURL = 'http://127.0.0.1:9001/;
 
 /**
