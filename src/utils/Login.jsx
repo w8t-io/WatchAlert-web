@@ -73,8 +73,10 @@ export const Login = () => {
         try {
             const response = await loginUser(data)
             const token = response.data
-            localStorage.setItem('Authorization', token)
-            navigate('/') // 登录成功，跳转到首页
+            if (token) {
+                localStorage.setItem('Authorization', token)
+                navigate('/') // 登录成功，跳转到首页
+            }
         } catch (error) {
             console.error(error)
         }
