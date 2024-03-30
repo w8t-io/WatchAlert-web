@@ -1,5 +1,4 @@
-import { Modal, Form, Input, Button, Select, Switch, message } from 'antd'
-import axios from 'axios'
+import { Modal, Form, Input, Button, Select, Switch } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { registerUser, updateUser } from '../../../api/user'
 import { getRoleList } from '../../../api/role'

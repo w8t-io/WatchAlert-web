@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Button, Input, Table, Popconfirm, Dropdown, message } from 'antd'
-import axios from 'axios'
+import { Button, Input, Table, Popconfirm, message } from 'antd'
 import RuleTemplateCreateModal from './RuleTemplateCreateModal'
 import { useParams } from 'react-router-dom'
 import { deleteRuleTmpl, getRuleTmplList } from '../../../api/ruleTmpl'
@@ -78,7 +77,7 @@ const RuleTemplate = () => {
         }
         const res = await getRuleTmplList(params)
         console.log(res)
-        setList(res.data.data)
+        setList(res.data)
     }
 
     // 删除
@@ -97,12 +96,6 @@ const RuleTemplate = () => {
     const handleViewModalClose = () => {
         setViewVisible(false)
     }
-
-    const handleViewModalOpen = (record) => {
-        setViewVisible(true)
-        setSelectedRow(record)
-    }
-
 
     const handleModalClose = () => {
         setVisible(false)

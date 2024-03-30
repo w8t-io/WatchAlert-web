@@ -1,5 +1,5 @@
-import { Modal, Form, Input, Button, Transfer, message } from 'antd'
-import axios from 'axios'
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Modal, Form, Input, Button, Transfer } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { createRole, updateRole } from '../../../api/role'
 import { getPermissionsList } from '../../../api/permissions'
@@ -91,18 +91,17 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
 
     }
 
-    useEffect(() => {
-        // 模拟从后端获取数据的请求
-        const fetchData = async () => {
-            try {
-                const response = await getPermissionsList()
-                const data = response.data.data
-                formatData(data) // 格式化数据
-            } catch (error) {
-                console.error(error)
-            }
+    const fetchData = async () => {
+        try {
+            const response = await getPermissionsList()
+            const data = response.data.data
+            formatData(data) // 格式化数据
+        } catch (error) {
+            console.error(error)
         }
+    }
 
+    useEffect(() => {
         fetchData()
     }, [])
 

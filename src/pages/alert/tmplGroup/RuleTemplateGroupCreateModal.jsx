@@ -1,5 +1,4 @@
-import { Modal, Form, Input, Button, message, Select, Tooltip } from 'antd'
-import axios from 'axios'
+import { Modal, Form, Input, Button } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { createRuleTmplGroup } from '../../../api/ruleTmpl'
 

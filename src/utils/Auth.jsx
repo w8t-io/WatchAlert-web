@@ -1,23 +1,24 @@
-import axios from 'axios'
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useNavigate } from 'react-router-dom'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { message } from 'antd'
+import axios from 'axios';
 
 const Auth = () => {
     const navigate = useNavigate()
     const [errorCount, setErrorCount] = useState(0)
 
-    // 检查用户是否已经登录
-    // useEffect(() => {
-    //   const checkUser = async () => {
-    //     const token = localStorage.getItem('Authorization')
-    //     if (!token) {
-    //       navigate('/login') // 未登录，跳转到登录页面
-    //     }
-    //   }
+    const checkUser = async () => {
+        const token = localStorage.getItem('Authorization')
+        if (!token) {
+            navigate('/login') // 未登录，跳转到登录页面
+        }
+    }
 
-    //   checkUser()
-    // }, [navigate])
+    // 检查用户是否已经登录
+    useEffect(() => {
+        checkUser()
+    }, [checkUser])
 
     // 设置全局请求头
     const token = localStorage.getItem('Authorization')

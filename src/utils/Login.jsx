@@ -17,7 +17,7 @@ export const Login = () => {
         setIsModalVisible(false)
     }
 
-    useEffect(async () => {
+    const run = async () => {
         try {
             const params = {
                 username: 'admin'
@@ -29,6 +29,10 @@ export const Login = () => {
         } catch (error) {
             console.error(error)
         }
+    }
+
+    useEffect(() => {
+        run()
     }, [])
 
     // 检查用户是否已经登录

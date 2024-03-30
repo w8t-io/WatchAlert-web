@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { Table, Button, Popconfirm, message } from 'antd';
 import { CreateDutyModal } from './DutyManageCreateModal';
@@ -27,14 +28,13 @@ export const DutyManage = () => {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <a
                             style={{ cursor: 'pointer' }}
-                        // onClick={() => {
-                        //     (
-                        //         setSelectedId(text),
-                        //         setCalendarVisible(true),
-                        //         setCalendarName(record.name),
-                        //         setCalendarDutyId(record.id)
-                        //     )
-                        // }}
+                            onClick={() => {
+                                // 将所有状态更新放在一个函数中以确保顺序和组件更新
+                                setSelectedId(text);
+                                setCalendarVisible(true);
+                                setCalendarName(record.name);
+                                setCalendarDutyId(record.id);
+                            }}
                         >
                             {text}
                         </a>

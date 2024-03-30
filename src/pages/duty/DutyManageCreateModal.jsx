@@ -26,7 +26,7 @@ export const CreateDutyModal = ({ visible, onClose, handleList, selectedRow, typ
             form.setFieldsValue({
                 name: selectedRow.name,
                 description: selectedRow.description,
-                manager: selectedRow.manager.username,
+                // manager: selectedRow.manager.username,
             })
         }
     }, [selectedRow, form])

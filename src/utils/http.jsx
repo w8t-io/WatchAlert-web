@@ -1,7 +1,6 @@
 /**
  * 网络请求配置
  */
-import { message } from 'antd';
 import axios from 'axios';
 
 axios.defaults.timeout = 100000;

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { Divider, List, message, Spin } from 'antd';
+import { Divider, List } from 'antd';
 import { Line } from '@pansy/react-charts';
 import { getDashboardInfo } from '../api/other';
 
 export const Home = () => {
-    const [dashboardInfo, setDashboardInfo] = useState(null);
+    const [dashboardInfo, setDashboardInfo] = useState([]);
 
     const run = async () => {
         try {
@@ -221,7 +221,7 @@ export const Home = () => {
                     <Divider>告警分布</Divider>
                     <ReactECharts
                         option={alarmDistributionOption}
-                        style={{ marginTop: '-50px', height: '100%', width: '110%' }}
+                        style={{ marginTop: '-60px', height: '100%', width: '110%' }}
                         className="chart"
                     />
                 </div>

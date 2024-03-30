@@ -1,5 +1,4 @@
-import { Modal, Form, Input, Button, message } from 'antd'
-import axios from 'axios'
+import { Modal, Form, Input, Button } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { createNoticeTmpl, updateNoticeTmpl } from '../../../api/noticeTmpl'
 
