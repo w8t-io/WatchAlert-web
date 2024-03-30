@@ -165,12 +165,12 @@ export const ComponentsContent = (props) => {
                     </SubMenu>
 
 
-                    {/* {userInfo !== null && userInfo.role === 'admin' ? ( */}
-                    <SubMenu key="5" icon={<UserOutlined />} title="人员组织">
-                        <Menu.Item key="5-1" onClick={() => handleMenuClick('5-1')}>用户管理</Menu.Item>
-                        <Menu.Item key="5-2" onClick={() => handleMenuClick('5-2')}>角色管理</Menu.Item>
-                    </SubMenu>
-                    {/* // ) : null} */}
+                    {userInfo !== null && userInfo.role === 'admin' ? (
+                        <SubMenu key="5" icon={<UserOutlined />} title="人员组织">
+                            <Menu.Item key="5-1" onClick={() => handleMenuClick('5-1')}>用户管理</Menu.Item>
+                            <Menu.Item key="5-2" onClick={() => handleMenuClick('5-2')}>角色管理</Menu.Item>
+                        </SubMenu>
+                    ) : null}
 
                     <Menu.Item key="6" onClick={() => handleMenuClick('6')} icon={<PieChartOutlined />}>数据源</Menu.Item>
                 </Menu>
