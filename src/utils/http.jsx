@@ -2,9 +2,18 @@
  * 网络请求配置
  */
 import axios from 'axios';
-
+const curUrl = window.location.hostname
+const backendPort = process.env.REACT_APP_BACKEND_PORT
+const getPort = function () {
+    if (backendPort !== undefined) {
+        return backendPort
+    }
+    return 9001
+}
+const backendIP = curUrl + ":" + getPort()
 axios.defaults.timeout = 100000;
-axios.defaults.baseURL = 'http://127.0.0.1:9001/';
+axios.defaults.baseURL = backendIP;
+// axios.defaults.baseURL = 'http://127.0.0.1:9001/;
 
 /**
  * http request 拦截器
