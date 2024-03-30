@@ -52,7 +52,7 @@ export const AlertCurEvent = () => {
             title: '事件详情',
             dataIndex: 'annotations',
             key: 'annotations',
-            width: 'auto',
+            width: 300,
             render: (text, record) => (
                 <span>
                     {record.annotations && (

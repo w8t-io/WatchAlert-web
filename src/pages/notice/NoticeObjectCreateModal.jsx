@@ -298,10 +298,11 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
                         </div>
 
                     )}
-
-                <Button type="primary" htmlType="submit">
-                    提交
-                </Button>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button type="primary" htmlType="submit">
+                        提交
+                    </Button>
+                </div>
             </Form>
         </Modal>
     )

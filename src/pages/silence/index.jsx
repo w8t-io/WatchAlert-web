@@ -129,12 +129,14 @@ export const Silences = () => {
     };
 
     return (
-        <div>
-            <div style={{ display: 'flex' }}>
+        <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button type="primary" onClick={() => setVisible(true)}>
                     创建
                 </Button>
+            </div>
 
+            <div style={{ display: 'flex' }}>
                 <CreateSilenceModal visible={visible} onClose={handleModalClose} type='create' handleList={handleList} />
 
                 <CreateSilenceModal visible={updateVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type='update' handleList={handleList} />
@@ -161,6 +163,6 @@ export const Silences = () => {
                     }}
                 />
             </div>
-        </div>
+        </>
     );
 };

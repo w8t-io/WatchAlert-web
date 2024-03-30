@@ -107,28 +107,16 @@ class UserRole extends React.Component {
     render() {
 
         return (
-            <div>
-                <div style={{ display: 'flex' }}>
-
+            <>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Button type="primary" onClick={() => this.setState({ visible: true })}>
                         创建
                     </Button>
-
-                    <UserRoleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
-
-                    <UserRoleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
-
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: '10px',
-                        width: '1000px'
-                    }}>
-
-                    </div>
-
                 </div>
+
+                <UserRoleCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
+
+                <UserRoleCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
 
                 <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
                     <Table
@@ -140,7 +128,7 @@ class UserRole extends React.Component {
                         }}
                     />
                 </div>
-            </div>
+            </>
         )
 
     }

@@ -168,12 +168,12 @@ export const DutyManage = () => {
     }
 
     return (
-        <div>
-            <div style={{ display: 'flex' }}>
-
+        <>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Button type="primary" onClick={() => setVisible(true)}>
                     创建
-                </Button>
+                </Button>            </div>
+            <div style={{ display: 'flex' }}>
 
                 <CreateDutyModal visible={visible} onClose={handleModalClose} handleList={handleList} type="create" />
 
@@ -193,6 +193,6 @@ export const DutyManage = () => {
                     }}
                 />
             </div>
-        </div>
+        </>
     );
 };

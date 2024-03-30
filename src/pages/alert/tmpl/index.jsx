@@ -104,28 +104,21 @@ const RuleTemplate = () => {
     const onSearch = (value, _e, info) => console.log(info?.source, value)
 
     return (
-        <div>
-            <div style={{ display: 'flex' }}>
-                <Button type="primary" onClick={() => setVisible(true)}>
-                    创建
-                </Button>
-
-                <RuleTemplateCreateModal visible={visible} onClose={handleModalClose} type="create" handleList={handleList} ruleGroupName={ruleGroupName} />
-
-                <RuleTemplateCreateModal visible={viewVisible} onClose={handleViewModalClose} selectedRow={selectedRow} type='view' handleList={handleList} ruleGroupName={ruleGroupName} />
-
-                <div
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        gap: '10px',
-                        width: '1000px',
-                    }}
-                >
+        <>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
                     <Search allowClear placeholder="输入搜索关键字" onSearch={onSearch} enterButton style={{ width: 300 }} />
                 </div>
+                <div>
+                    <Button type="primary" onClick={() => setVisible(true)}>
+                        创建
+                    </Button>
+                </div>
             </div>
+
+            <RuleTemplateCreateModal visible={visible} onClose={handleModalClose} type="create" handleList={handleList} ruleGroupName={ruleGroupName} />
+
+            <RuleTemplateCreateModal visible={viewVisible} onClose={handleViewModalClose} selectedRow={selectedRow} type='view' handleList={handleList} ruleGroupName={ruleGroupName} />
 
             <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
                 <Table
@@ -136,7 +129,7 @@ const RuleTemplate = () => {
                         y: 'calc(65vh - 65px - 40px)'
                     }} />
             </div>
-        </div>
+        </>
     )
 }
 

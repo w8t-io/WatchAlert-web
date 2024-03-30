@@ -664,9 +664,11 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     </MyFormItem>
                 </div>
 
-                <Button type="primary" htmlType="submit">
-                    提交
-                </Button>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button type="primary" htmlType="submit">
+                        提交
+                    </Button>
+                </div>
             </Form >
         </Modal >
     )

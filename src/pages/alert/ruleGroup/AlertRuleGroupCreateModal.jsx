@@ -99,9 +99,11 @@ export const AlertRuleGroupCreateModal = ({ visible, onClose, selectedRow, type,
                     <Input />
                 </MyFormItem>
 
-                <Button type="primary" htmlType="submit">
-                    提交
-                </Button>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button type="primary" htmlType="submit">
+                        提交
+                    </Button>
+                </div>
             </Form>
         </Modal>
     )

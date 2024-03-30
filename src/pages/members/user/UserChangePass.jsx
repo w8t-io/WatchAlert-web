@@ -63,12 +63,13 @@ const UserChangePass = ({ visible, onClose, userid, username }) => {
                 >
                     <Input.Password />
                 </Form.Item>
-
-                <Form.Item wrapperCol={{ offset: 100, span: 16 }}>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Form.Item>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Form.Item wrapperCol={{ offset: 100, span: 16 }}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </div>
             </Form>
 
         </Modal>
