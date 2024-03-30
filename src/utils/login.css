@@ -2,7 +2,7 @@
     height: 100vh;
 }
 
-svg path {
+.custom-svg path {
     fill: white;
   }
 

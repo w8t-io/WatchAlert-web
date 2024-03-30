@@ -165,12 +165,12 @@ export const ComponentsContent = (props) => {
                     </SubMenu>
 
 
-                    {/* {userInfo !== null && userInfo.role === 'admin' ? ( */}
-                    <SubMenu key="5" icon={<UserOutlined />} title="人员组织">
-                        <Menu.Item key="5-1" onClick={() => handleMenuClick('5-1')}>用户管理</Menu.Item>
-                        <Menu.Item key="5-2" onClick={() => handleMenuClick('5-2')}>角色管理</Menu.Item>
-                    </SubMenu>
-                    {/* // ) : null} */}
+                    {userInfo !== null && userInfo.role === 'admin' ? (
+                        <SubMenu key="5" icon={<UserOutlined />} title="人员组织">
+                            <Menu.Item key="5-1" onClick={() => handleMenuClick('5-1')}>用户管理</Menu.Item>
+                            <Menu.Item key="5-2" onClick={() => handleMenuClick('5-2')}>角色管理</Menu.Item>
+                        </SubMenu>
+                    ) : null}
 
                     <Menu.Item key="6" onClick={() => handleMenuClick('6')} icon={<PieChartOutlined />}>数据源</Menu.Item>
                 </Menu>
@@ -247,8 +247,8 @@ export const ComponentsContent = (props) => {
                     </Content>
                 </Layout>
 
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1vh' }}>
-                    <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub">
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '3vh' }}>
+                    <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
                         <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />
                     </a>
                 </div>
