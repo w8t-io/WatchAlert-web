@@ -171,28 +171,31 @@ export const Home = () => {
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', height: '32vh' }}>
-                <div style={{ width: '450px', height: '250px', marginRight: '10px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', height: '35vh' }}>
+                <div style={{ width: '100vh', height: '250px', overflowY: 'auto' }}>
                     <Divider>规则总数</Divider>
                     <ReactECharts
                         option={allAlertRulesOption}
-                        style={{ marginTop: '-20px', height: '100%', width: '100%' }}
+                        style={{ marginTop: '-30px', height: '100%', width: '100%' }}
                         className="chart"
                     />
                 </div>
 
-                <div style={{ width: '450px', height: '250px', marginRight: '10px' }}>
+                <div style={{ width: '100vh', height: '250px', overflowY: 'auto' }}>
                     <Divider>当前告警总数</Divider>
                     <ReactECharts
                         option={curAlertsOption}
-                        style={{ marginTop: '-20px', height: '100%', width: '100%' }}
+                        style={{ marginTop: '-30px', height: '100%', width: '100%' }}
                         className="chart"
                     />
                 </div>
 
-                <div style={{ marginRight: '-20px', width: '600px', height: '200px' }}>
+                <div style={{ width: '120vh', height: '250px', overflowY: 'auto' }}>
                     <Divider>服务资源使用率</Divider>
-                    <Line {...config} />
+                    <Line
+                        style={{ marginTop: '-20px', height: '80%', width: '100%' }}
+                        {...config}
+                    />
                 </div>
             </div >
 

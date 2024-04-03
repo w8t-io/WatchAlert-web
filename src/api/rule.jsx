@@ -67,7 +67,10 @@ async function deleteRule(params) {
 
 async function getRuleGroupList(params) {
     try {
-        const res = await http('get', '/api/w8t/ruleGroup/ruleGroupList', params);
+        const headers = {
+            'TenantID': 'xxxxxxxxx'
+        }
+        const res = await http('get', '/api/w8t/ruleGroup/ruleGroupList', params, headers);
         return res;
     } catch (error) {
         message.open({

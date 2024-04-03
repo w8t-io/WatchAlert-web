@@ -15,12 +15,13 @@ import { Silences } from "../pages/silence";
 import { Login } from "../utils/Login";
 import Error from "../utils/Error"
 import { ComponentsContent } from '../components';
+import { Tenants } from "../pages/tenant";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
     {
         path: '/',
-        element: <ComponentsContent name="首页" c={<Home />} />,
+        element: <ComponentsContent name="仪表盘" c={<Home />} />,
     },
     {
         path: '/login',
@@ -73,6 +74,10 @@ export default [
     {
         path: '/userRole',
         element: <ComponentsContent name="角色管理" c={<UserRole />} />
+    },
+    {
+        path: '/tenants',
+        element: <ComponentsContent name="租户管理" c={<Tenants />} />
     },
     {
         path: '/datasource',

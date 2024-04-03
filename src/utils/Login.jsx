@@ -119,7 +119,7 @@ export const Login = () => {
                             </div>
                         </div>
                         <div style={copyrightStyle}>
-                            版权所有 © 2024 WatchAlert 保留所有权利。
+                            WatchAlert ©2024 Created by Cairry.Zu.
                         </div>
                     </div>
                 </Sider>
