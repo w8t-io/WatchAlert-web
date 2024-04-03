@@ -1,6 +1,6 @@
 import { createDutyManager, updateDutyManager } from '../../api/duty'
 import { getAllUsers } from '../../api/other'
-import { Modal, Form, Input, Button, message, Select } from 'antd'
+import { Modal, Form, Input, Button, Select } from 'antd'
 import React, { useState, useEffect } from 'react'
 const MyFormItemContext = React.createContext([])
 
@@ -26,7 +26,7 @@ export const CreateDutyModal = ({ visible, onClose, handleList, selectedRow, typ
             form.setFieldsValue({
                 name: selectedRow.name,
                 description: selectedRow.description,
-                // manager: selectedRow.manager.username,
+                manager: selectedRow.manager.username,
             })
         }
     }, [selectedRow, form])
@@ -99,8 +99,8 @@ export const CreateDutyModal = ({ visible, onClose, handleList, selectedRow, typ
         try {
             const res = await getAllUsers()
             const options = res.data.map((item) => ({
-                username: item.zh_name,
-                userid: item.source_user_id
+                username: item.username,
+                userid: item.userid
             }))
             setFilteredOptions(options)
         } catch (error) {

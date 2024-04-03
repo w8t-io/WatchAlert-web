@@ -53,15 +53,15 @@ export const DutyManage = () => {
             key: 'name',
             width: 50,
         },
-        // {
-        //     title: '负责人',
-        //     dataIndex: 'manager',
-        //     key: 'manager',
-        //     width: 30,
-        //     render: (text) => {
-        //         return <span>{text.username}</span>;
-        //     },
-        // },
+        {
+            title: '负责人',
+            dataIndex: 'manager',
+            key: 'manager',
+            width: 30,
+            render: (text) => {
+                return <span>{text.username}</span>;
+            },
+        },
         {
             title: '今日值班',
             dataIndex: 'curDutyUser',

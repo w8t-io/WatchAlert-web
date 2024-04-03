@@ -1,0 +1,7 @@
+.ant-select-selector {
+    border: none;
+}
+
+.ant-card:active {
+    transform: scale(0.98); /* 轻微缩小卡片 */
+  }
