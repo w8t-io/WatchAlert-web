@@ -75,7 +75,7 @@ export const Login = () => {
             const token = response.data
             if (token) {
                 localStorage.setItem('Authorization', token)
-                navigate('/') // 登录成功，跳转到首页
+                navigate('/')
             }
         } catch (error) {
             console.error(error)
@@ -119,7 +119,7 @@ export const Login = () => {
                             </div>
                         </div>
                         <div style={copyrightStyle}>
-                            WatchAlert ©2024 Created by Cairry.Zu.
+                            WatchAlert ©2024 Created by Cairry
                         </div>
                     </div>
                 </Sider>

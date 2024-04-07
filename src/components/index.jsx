@@ -5,12 +5,12 @@ import {
     Avatar, Button,
     Popover,
     Spin,
-    Divider,
-    Modal,
-    Card, Col,
-    Row,
-    Typography
+    Menu,
+    Typography,
+    Dropdown,
+    Space
 } from 'antd'
+import { DownOutlined } from '@ant-design/icons';
 import logoIcon from '../img/logo.jpeg'
 import githubIcon from '../img/github_logo.png'
 import { getUserInfo } from '../api/user'
@@ -18,32 +18,22 @@ import Auth from '../utils/Auth'
 import { getTenantList } from '../api/tenant'
 import './index.css';
 import { ComponentSider } from './sider'
+import { useNavigate } from 'react-router-dom'
 
 export const ComponentsContent = (props) => {
-    const { Text } = Typography;
     const { name, c } = props
+    const navigate = useNavigate()
     const { Header, Content, Footer } = Layout
     const [userInfo, setUserInfo] = useState(null)
     const [loading, setLoading] = useState(false)
     const [tenantList, setTenantList] = useState([])
-    const [tenantModal, setTenantModal] = useState(false)
 
     Auth()
 
     const handleLogout = () => {
-        // 清除LocalStorage中的Authorization值
-        localStorage.removeItem('Authorization')
-        window.location.reload()
+        localStorage.clear()
+        navigate('/login')
     }
-
-    const openTenantModal = () => {
-        fetchTenantList()
-        setTenantModal(true)
-    }
-
-    const closeTenantModal = () => [
-        setTenantModal(false)
-    ]
 
     const {
         token: { colorBgContainer, borderRadiusLG },
@@ -51,26 +41,15 @@ export const ComponentsContent = (props) => {
 
     const content = (
         <div>
-            <div>
-                <Button type="text" onClick={openTenantModal}>
-                    切换租户
-                </Button>
-            </div>
-            <Divider style={{ margin: '5px 0' }} />
-            <div>
-                <Button type="text" onClick={handleLogout}>
-                    退出登录
-                </Button>
-            </div>
+            <Button type="text" onClick={handleLogout}>
+                退出登录
+            </Button>
         </div>
     )
 
     const run = async () => {
         try {
-            const params = {
-                'Authorization': localStorage.getItem('Authorization')
-            }
-            const res = await getUserInfo(params)
+            const res = await getUserInfo()
             setUserInfo(res.data)
             setLoading(false)
         } catch (error) {
@@ -82,19 +61,25 @@ export const ComponentsContent = (props) => {
         return localStorage.getItem('TenantName')
     }
 
+    const getTenantIndex = () => {
+        return localStorage.getItem('TenantIndex')
+    }
+
     const fetchTenantList = async () => {
         try {
             const res = await getTenantList()
-            const opts = res.data.map((key) => (
+            const opts = res.data.map((key, index) => (
                 {
                     'label': key.name,
-                    'value': key.id
+                    'value': key.id,
+                    'index': index
                 }
             ))
             setTenantList(opts)
             if (getTenantName() === null) {
                 localStorage.setItem('TenantName', opts[0].label)
                 localStorage.setItem('TenantID', opts[0].value)
+                localStorage.setItem('TenantIndex', opts[0].index)
             }
         } catch (error) {
             console.error(error)
@@ -102,8 +87,8 @@ export const ComponentsContent = (props) => {
     }
 
     useEffect(() => {
-        run()
         fetchTenantList()
+        run()
     }, [])
 
     if (loading) {
@@ -115,46 +100,30 @@ export const ComponentsContent = (props) => {
     }
 
     const changeTenant = (c) => {
-        if (c.label) {
-            localStorage.setItem("TenantName", c.label)
+        localStorage.setItem("TenantIndex", c.key)
+        if (c.item.props.name) {
+            localStorage.setItem("TenantName", c.item.props.name)
         }
-        if (c.value) {
-            localStorage.setItem('TenantID', c.value)
+        if (c.item.props.value) {
+            localStorage.setItem('TenantID', c.item.props.value)
         }
-        setTenantModal(false)
         window.location.reload()
     }
 
-    const cardsStyle = {
-        boxShadow: '0 8px 16px rgba(0, 0, 0, 0.2)',
-    };
+    const items = tenantList
+
+    const menu = (
+        <Menu selectable defaultSelectedKeys={getTenantIndex()} onSelect={changeTenant}>
+            {items.map((item) => (
+                <Menu.Item key={item.index} name={item.label} value={item.value}>
+                    {item.label}
+                </Menu.Item>
+            ))}
+        </Menu>
+    );
 
     return (
         <>
-            <Modal title="租户列表"
-                open={tenantModal}
-                onCancel={closeTenantModal}
-                footer={null}>
-                <Text type="secondary">｜当前租户: {getTenantName()}</Text>
-                <Row gutter={16} style={{ marginTop: '30px' }}>
-                    {tenantList.map((key) => (
-                        <Col span={8} style={{ marginTop: '10px' }}>
-                            <Card
-                                bordered={false}
-                                style={cardsStyle}
-                                onClick={() => changeTenant(key)}
-                                className="card-interactive"
-                            >
-                                {key.label}
-                                <p style={{ fontSize: 10 }}>
-                                    <sup><small>{key.value}</small></sup>
-                                </p>
-                            </Card>
-                        </Col>
-                    ))}
-                </Row>
-            </Modal>
-
             <Layout style={{ height: '100vh', overflow: 'hidden', }}>
                 {/* 导航栏 */}
                 <div style={{
@@ -188,7 +157,14 @@ export const ComponentsContent = (props) => {
 
                             <div style={{ fontSize: 15, fontWeight: 'bold' }}>
                                 <div style={{ position: 'absolute', left: '100px', top: '12px' }}>
-                                    当前租户：{getTenantName()}
+                                    <Dropdown overlay={menu} trigger={['click']}>
+                                        <Typography.Link style={{ fontSize: 15, color: 'black' }}>
+                                            <Space>
+                                                多租户
+                                                <DownOutlined />
+                                            </Space>
+                                        </Typography.Link>
+                                    </Dropdown>
                                 </div>
                                 <div>
                                     {name}

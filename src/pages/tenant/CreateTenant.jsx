@@ -28,6 +28,7 @@ export const CreateTenant = ({ visible, onClose, selectedRow, type, handleList }
                 ruleNumber: selectedRow.ruleNumber,
                 dutyNumber: selectedRow.dutyNumber,
                 noticeNumber: selectedRow.noticeNumber,
+                removeProtection: selectedRow.removeProtection,
             })
         }
     }, [selectedRow, form])
@@ -118,7 +119,7 @@ export const CreateTenant = ({ visible, onClose, selectedRow, type, handleList }
                         name="description"
                         label="描述"
                         style={{
-                            width: '69vh',
+                            width: '472px',
                         }}
                         rules={[
                             {
@@ -204,10 +205,10 @@ export const CreateTenant = ({ visible, onClose, selectedRow, type, handleList }
                             />
                         </MyFormItem>
                     </div>
-
+                    <Divider />
                     <strong style={{ fontSize: '15px' }}>其他</strong>
                     <MyFormItem
-                        name="enabled"
+                        name="removeProtection"
                         label="删除保护"
                         tooltip="启用/禁用"
                         valuePropName="checked"
