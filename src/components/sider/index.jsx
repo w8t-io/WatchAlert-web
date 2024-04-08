@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { UserOutlined, BellOutlined, PieChartOutlined, NotificationOutlined, CalendarOutlined, DashboardOutlined, DeploymentUnitOutlined } from '@ant-design/icons';
+import {
+    UserOutlined,
+    BellOutlined,
+    PieChartOutlined,
+    NotificationOutlined,
+    CalendarOutlined,
+    DashboardOutlined,
+    DeploymentUnitOutlined,
+    AreaChartOutlined
+} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Menu, Layout } from 'antd';
 
@@ -26,7 +35,7 @@ export const ComponentSider = (props) => {
                         selectedKeys={[selectedMenuKey]}
                         onClick={handleMenuClick}
                     >
-                        <Menu.Item key='1' onClick={(e) => handleMenuClick(e.key, '/')} icon={<DashboardOutlined />}>仪表盘</Menu.Item >
+                        <Menu.Item key='1' onClick={(e) => handleMenuClick(e.key, '/')} icon={<AreaChartOutlined />}>监控分析</Menu.Item >
 
                         <SubMenu key='2' icon={<BellOutlined />} title='告警管理'>
                             <Menu.Item key='2-1' onClick={(e) => handleMenuClick(e.key, '/alertRuleGroup')}>告警规则</Menu.Item>
@@ -52,6 +61,8 @@ export const ComponentSider = (props) => {
                         <Menu.Item key='7' onClick={(e) => handleMenuClick(e.key, '/tenants')} icon={<DeploymentUnitOutlined />}>租户管理</Menu.Item>
 
                         <Menu.Item key='6' onClick={(e) => handleMenuClick(e.key, '/datasource')} icon={<PieChartOutlined />}>数据源</Menu.Item>
+                        <Menu.Item key='8' onClick={(e) => handleMenuClick(e.key, '/dashboard')} icon={<DashboardOutlined />}>仪表盘</Menu.Item >
+
                     </Menu>
                 </>
             );
@@ -64,8 +75,7 @@ export const ComponentSider = (props) => {
                         selectedKeys={[selectedMenuKey]}
                         onClick={handleMenuClick}
                     >
-                        <Menu.Item key='1' onClick={(e) => handleMenuClick(e.key, '/')} icon={<DashboardOutlined />}>仪表盘</Menu.Item >
-
+                        <Menu.Item key='1' onClick={(e) => handleMenuClick(e.key, '/')} icon={<AreaChartOutlined />}>监控分析</Menu.Item >
                         <SubMenu key='2' icon={<BellOutlined />} title='告警管理'>
                             <Menu.Item key='2-1' onClick={(e) => handleMenuClick(e.key, '/alertRuleGroup')}>告警规则</Menu.Item>
                             <Menu.Item key='2-2' onClick={(e) => handleMenuClick(e.key, '/silenceRules')}>静默规则</Menu.Item>
@@ -84,6 +94,8 @@ export const ComponentSider = (props) => {
                         </SubMenu>
 
                         <Menu.Item key='6' onClick={(e) => handleMenuClick(e.key, '/datasource')} icon={<PieChartOutlined />}>数据源</Menu.Item>
+                        <Menu.Item key='8' onClick={(e) => handleMenuClick(e.key, '/dashboard')} icon={<DashboardOutlined />}>仪表盘</Menu.Item >
+
                     </Menu>
                 </>
             );

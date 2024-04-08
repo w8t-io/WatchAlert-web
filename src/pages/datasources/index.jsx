@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Input, Table, Tag, Popconfirm } from 'antd';
 import { CreateDatasourceModal } from './DatasourceCreateModal';
-import { deleteDatasource, getDatasourceList } from '../../api/datasource';
+import { deleteDatasource, getDatasourceList, searchDatasource } from '../../api/datasource';
 
 export const Datasources = () => {
     const { Search } = Input
@@ -105,6 +105,19 @@ export const Datasources = () => {
         setUpdateVisible(true)
     };
 
+    const onSearch = async (value) => {
+        try {
+            const params = {
+                query: value,
+            }
+            const res = await searchDatasource(params)
+            setList(res.data)
+        } catch (error) {
+            console.error(error)
+        }
+        console.log(value)
+    }
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -114,6 +127,7 @@ export const Datasources = () => {
                         placeholder="输入搜索关键字"
                         enterButton
                         style={{ width: 300 }}
+                        onSearch={onSearch}
                     />
                 </div>
                 <div>
@@ -133,7 +147,7 @@ export const Datasources = () => {
                     columns={columns}
                     scroll={{
                         x: 1000,
-                        y: 'calc(71vh - 71px - 40px)'
+                        y: 'calc(65vh - 65px - 40px)'
                     }}
                 />
             </div>

@@ -16,12 +16,14 @@ import { Login } from "../utils/Login";
 import Error from "../utils/Error"
 import { ComponentsContent } from '../components';
 import { Tenants } from "../pages/tenant";
+import { GrafanaDashboardComponent } from "../pages/dashboards/dashboard";
+import { DashboardFolder } from "../pages/dashboards/folder";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
     {
         path: '/',
-        element: <ComponentsContent name="仪表盘" c={<Home />} />,
+        element: <ComponentsContent name="监控分析" c={<Home />} />,
     },
     {
         path: '/login',
@@ -82,6 +84,14 @@ export default [
     {
         path: '/datasource',
         element: <ComponentsContent name="数据源" c={<Datasources />} />
+    },
+    {
+        path: '/dashboard',
+        element: <ComponentsContent name="仪表盘" c={<DashboardFolder />} />
+    },
+    {
+        path: '/dashboard/:id/info',
+        element: <ComponentsContent name="仪表盘" c={<GrafanaDashboardComponent />} />
     },
     {
         path: '/*',
