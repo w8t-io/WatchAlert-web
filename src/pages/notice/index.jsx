@@ -138,7 +138,7 @@ export const NoticeObjects = () => {
                     dataSource={list}
                     scroll={{
                         x: 1500,
-                        y: 'calc(71vh - 71px - 40px)',
+                        y: 'calc(65vh - 65px - 40px)',
                     }}
                 />
             </div>

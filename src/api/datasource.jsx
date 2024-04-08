@@ -16,7 +16,24 @@ async function getDatasourceList(params) {
 
 async function searchDatasource(params) {
     try {
-        const res = await http('get', `/api/w8t/datasource/dataSourceSearch?dsType=${params.dsType}`);
+        const queryString = Object.keys(params)
+            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
+            .filter(Boolean)
+            .join('&');
+        const res = await http('get', `/api/w8t/datasource/dataSourceSearch?${queryString}`);
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '数据源搜索失败',
+        });
+        return error
+    }
+}
+
+async function getDatasource(params) {
+    try {
+        const res = await http('get', `/api/w8t/datasource/dataSourceGet?dsType=${params.dsType}`);
         return res;
     } catch (error) {
         message.open({
@@ -83,5 +100,6 @@ export {
     searchDatasource,
     createDatasource,
     updateDatasource,
-    deleteDatasource
+    deleteDatasource,
+    getDatasource
 }

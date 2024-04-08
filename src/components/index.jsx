@@ -10,7 +10,7 @@ import {
     Dropdown,
     Space
 } from 'antd'
-import { DownOutlined } from '@ant-design/icons';
+import { DownOutlined, LeftOutlined } from '@ant-design/icons';
 import logoIcon from '../img/logo.jpeg'
 import githubIcon from '../img/github_logo.png'
 import { getUserInfo } from '../api/user'
@@ -99,6 +99,10 @@ export const ComponentsContent = (props) => {
         )
     }
 
+    const goBackPage = () => {
+        window.history.back()
+    }
+
     const changeTenant = (c) => {
         localStorage.setItem("TenantIndex", c.key)
         if (c.item.props.name) {
@@ -166,9 +170,6 @@ export const ComponentsContent = (props) => {
                                         </Typography.Link>
                                     </Dropdown>
                                 </div>
-                                <div>
-                                    {name}
-                                </div>
                             </div>
 
                             <div style={{ position: 'absolute', top: '10px', right: '30px', bottom: '10px' }}>                            {userInfo !== null ? (
@@ -199,6 +200,10 @@ export const ComponentsContent = (props) => {
                                 borderRadius: '10px'
                             }}
                         >
+                            <div style={{ fontSize: 15, fontWeight: 'bold', marginLeft: '1%', justifyContent: 'center', marginTop: '20px' }}>
+                                <Button type="text" shape="circle" icon={<LeftOutlined />} onClick={goBackPage} />
+                                {name}
+                            </div>
                             <div
                                 className="site-layout-background"
                                 style={{ padding: 24, textAlign: 'center', height: '10px' }}

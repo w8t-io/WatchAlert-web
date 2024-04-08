@@ -128,7 +128,7 @@ export const Tenants = () => {
                     dataSource={list}
                     scroll={{
                         x: 1000,
-                        y: 'calc(64vh - 64px - 40px)'
+                        y: 'calc(65vh - 65px - 40px)'
                     }}
                 />
             </div>

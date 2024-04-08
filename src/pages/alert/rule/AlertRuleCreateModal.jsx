@@ -2,7 +2,7 @@ import { Modal, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, In
 import React, { useState, useEffect } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { createRule, updateRule } from '../../../api/rule'
-import { searchDatasource } from '../../../api/datasource'
+import { getDatasource, searchDatasource } from '../../../api/datasource'
 import { getNoticeList } from '../../../api/notice'
 const MyFormItemContext = React.createContext([])
 
@@ -109,7 +109,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
             const params = {
                 dsType: selectedType
             }
-            const res = await searchDatasource(params)
+            const res = await getDatasource(params)
             const newData = res.data.map((item) => ({
                 label: item.name,
                 value: item.id
