@@ -1,36 +1,38 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
-    UserOutlined,
-    BellOutlined,
-    PieChartOutlined,
-    NotificationOutlined,
-    CalendarOutlined,
-    DashboardOutlined,
-    LeftOutlined
-} from '@ant-design/icons'
-import { Layout, Menu, theme, Avatar, Button, Popover, Spin } from 'antd'
+    Layout,
+    theme,
+    Avatar, Button,
+    Popover,
+    Spin,
+    Menu,
+    Typography,
+    Dropdown,
+    Space
+} from 'antd'
+import { DownOutlined, LeftOutlined } from '@ant-design/icons';
 import logoIcon from '../img/logo.jpeg'
 import githubIcon from '../img/github_logo.png'
-import { useNavigate } from 'react-router-dom'
 import { getUserInfo } from '../api/user'
 import Auth from '../utils/Auth'
+import { getTenantList } from '../api/tenant'
+import './index.css';
+import { ComponentSider } from './sider'
+import { useNavigate } from 'react-router-dom'
 
 export const ComponentsContent = (props) => {
     const { name, c } = props
-    const { Header, Content, Footer, Sider } = Layout
-    const { SubMenu } = Menu
     const navigate = useNavigate()
+    const { Header, Content, Footer } = Layout
     const [userInfo, setUserInfo] = useState(null)
-    const [selectedMenuKey, setSelectedMenuKey] = useState('')
     const [loading, setLoading] = useState(false)
+    const [tenantList, setTenantList] = useState([])
 
     Auth()
 
-    // 退出
     const handleLogout = () => {
-        // 清除LocalStorage中的Authorization值
-        localStorage.removeItem('Authorization')
-        window.location.reload()
+        localStorage.clear()
+        navigate('/login')
     }
 
     const {
@@ -47,10 +49,7 @@ export const ComponentsContent = (props) => {
 
     const run = async () => {
         try {
-            const params = {
-                'Authorization': localStorage.getItem('Authorization')
-            }
-            const res = await getUserInfo(params)
+            const res = await getUserInfo()
             setUserInfo(res.data)
             setLoading(false)
         } catch (error) {
@@ -58,55 +57,40 @@ export const ComponentsContent = (props) => {
         }
     }
 
-    useEffect(() => {
-        run()
-    }, [])
+    const getTenantName = () => {
+        return localStorage.getItem('TenantName')
+    }
 
-    const handleMenuClick = (key) => {
-        setSelectedMenuKey(key)
-        switch (key) {
-            case '1':
-                navigate('/')
-                break
-            case '2-1':
-                navigate('/alertRuleGroup')
-                break
-            case '2-2':
-                navigate('/silenceRules')
-                break
-            case '2-3':
-                navigate('/alertCurEvent')
-                break
-            case '2-4':
-                navigate('/alertHisEvent')
-                break
-            case '2-5':
-                navigate('/ruleTemplateGroup')
-                break
-            case '3-1':
-                navigate('/noticeObjects')
-                break
-            case '3-2':
-                navigate('/noticeTemplate')
-                break
-            case '4-1':
-                navigate('/dutyManage')
-                break
-            case '5-1':
-                navigate('/user')
-                break
-            case '5-2':
-                navigate('/userRole')
-                break
-            case '6':
-                navigate('/datasource')
-                break
-            default:
-                break
+    const getTenantIndex = () => {
+        return localStorage.getItem('TenantIndex')
+    }
+
+    const fetchTenantList = async () => {
+        try {
+            const res = await getTenantList()
+            const opts = res.data.map((key, index) => (
+                {
+                    'label': key.name,
+                    'value': key.id,
+                    'index': index
+                }
+            ))
+            setTenantList(opts)
+            if (getTenantName() === null) {
+                localStorage.setItem('TenantName', opts[0].label)
+                localStorage.setItem('TenantID', opts[0].value)
+                localStorage.setItem('TenantIndex', opts[0].index)
+            }
+        } catch (error) {
+            console.error(error)
         }
     }
 
-    // 加载页
+    useEffect(() => {
+        fetchTenantList()
+        run()
+    }, [])
+
     if (loading) {
         return (
             <Spin tip="Loading...">
@@ -119,143 +103,126 @@ export const ComponentsContent = (props) => {
         window.history.back()
     }
 
+    const changeTenant = (c) => {
+        localStorage.setItem("TenantIndex", c.key)
+        if (c.item.props.name) {
+            localStorage.setItem("TenantName", c.item.props.name)
+        }
+        if (c.item.props.value) {
+            localStorage.setItem('TenantID', c.item.props.value)
+        }
+        window.location.reload()
+    }
+
+    const items = tenantList
+
+    const menu = (
+        <Menu selectable defaultSelectedKeys={getTenantIndex()} onSelect={changeTenant}>
+            {items.map((item) => (
+                <Menu.Item key={item.index} name={item.label} value={item.value}>
+                    {item.label}
+                </Menu.Item>
+            ))}
+        </Menu>
+    );
+
     return (
-        <Layout>
-            {/* 导航栏 */}
-            <Sider
-                style={{
-                    overflow: 'auto',
-                    height: '100vh',
-                    position: 'fixed',
-                    left: 0,
-                    top: 0,
-                    bottom: 0,
-                    background: 'white', // 将背景色调整为白色
-                }}
-            >
-                <div className="footer">
-                    <a target="_blank" title="Logo">
-                        <img src={logoIcon} alt="Logo" className="icon" style={{ width: '100%', height: '100%' }} />
-                    </a>
+        <>
+            <Layout style={{ height: '100vh', overflow: 'hidden', }}>
+                {/* 导航栏 */}
+                <div style={{
+                    marginLeft: '15px',
+                    marginTop: '89px',
+                }}>
+                    {<ComponentSider userInfo={userInfo} />}
                 </div>
 
-                <Menu
-                    theme="light"
-                    mode="inline"
-                    selectedKeys={[selectedMenuKey]}
-                >
-
-                    <Menu.Item key="1" onClick={() => handleMenuClick('1')} icon={<DashboardOutlined />}>仪表盘</Menu.Item>
-
-                    <SubMenu key="2" icon={<BellOutlined />} title="告警管理">
-                        <Menu.Item key="2-1" onClick={() => handleMenuClick('2-1')}>告警规则</Menu.Item>
-                        <Menu.Item key="2-2" onClick={() => handleMenuClick('2-2')}>静默规则</Menu.Item>
-                        <Menu.Item key="2-3" onClick={() => handleMenuClick('2-3')}>当前告警</Menu.Item>
-                        <Menu.Item key="2-4" onClick={() => handleMenuClick('2-4')}>历史告警</Menu.Item>
-                        <Menu.Item key="2-5" onClick={() => handleMenuClick('2-5')}>规则模版</Menu.Item>
-                    </SubMenu>
-
-                    <SubMenu key="3" icon={<NotificationOutlined />} title="告警通知">
-                        <Menu.Item key="3-1" onClick={() => handleMenuClick('3-1')}>通知对象</Menu.Item>
-                        <Menu.Item key="3-2" onClick={() => handleMenuClick('3-2')}>通知模版</Menu.Item>
-                    </SubMenu>
-
-                    <SubMenu key="4" icon={<CalendarOutlined />} title="值班管理">
-                        <Menu.Item key="4-1" onClick={() => handleMenuClick('4-1')}>值班日程</Menu.Item>
-                    </SubMenu>
-
-
-                    {userInfo !== null && userInfo.role === 'admin' ? (
-                        <SubMenu key="5" icon={<UserOutlined />} title="人员组织">
-                            <Menu.Item key="5-1" onClick={() => handleMenuClick('5-1')}>用户管理</Menu.Item>
-                            <Menu.Item key="5-2" onClick={() => handleMenuClick('5-2')}>角色管理</Menu.Item>
-                        </SubMenu>
-                    ) : null}
-
-                    <Menu.Item key="6" onClick={() => handleMenuClick('6')} icon={<PieChartOutlined />}>数据源</Menu.Item>
-                </Menu>
-            </Sider>
-
-            {/* 内容区 */}
-            <Layout className="site-layout" style={{ marginLeft: 200 }}>
-                {/* 右侧顶部 */}
-                <Layout style={{ padding: 0 }}>
-                    <Header
-                        style={{
-                            height: '9vh',
-                            margin: '16px 16px 0',
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                            display: 'flex',
-                            alignItems: 'center',
-                        }}
-                    >
-                        <div
+                {/* 内容区 */}
+                <Layout className="site-layout" >
+                    {/* 右侧顶部 */}
+                    <Layout style={{ marginLeft: '-216px', padding: 0, borderRadius: '12px', }}>
+                        <Header
                             style={{
-                                fontWeight: 'bold',
-                                fontSize: '20px',
-                                marginRight: 'auto',
-                            }}
-                        >
-                            <div style={{ height: '2px' }}>
-                                <Button type="text" shape="circle" icon={<LeftOutlined />} onClick={goBackPage} />
-                            </div>
-                            <div style={{ marginLeft: '30px' }}>
-                                {name}
-                            </div>
-                        </div>
+                                height: '60px',
+                                margin: '16px 16px 0',
+                                background: colorBgContainer,
+                                borderRadius: borderRadiusLG,
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}>
 
-                        {userInfo !== null ? (
-                            <div style={{ position: 'relative' }}>
-                                <Popover content={content} trigger="click" placement="bottom">
+                            <div style={{ marginTop: '25px', marginLeft: '-30px' }}>
+                                <div className="footer">
+                                    <a target="_blank" title="Logo">
+                                        <img src={logoIcon} alt="Logo" className="icon" style={{ width: '8%', height: '8%' }} />
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div style={{ fontSize: 15, fontWeight: 'bold' }}>
+                                <div style={{ position: 'absolute', left: '100px', top: '12px' }}>
+                                    <Dropdown overlay={menu} trigger={['click']}>
+                                        <Typography.Link style={{ fontSize: 15, color: 'black' }}>
+                                            <Space>
+                                                多租户
+                                                <DownOutlined />
+                                            </Space>
+                                        </Typography.Link>
+                                    </Dropdown>
+                                </div>
+                            </div>
+
+                            <div style={{ position: 'absolute', top: '10px', right: '30px', bottom: '10px' }}>                            {userInfo !== null ? (
+                                <Popover content={content} trigger="hover" placement="bottom">
                                     <Avatar
                                         style={{
                                             backgroundColor: '#7265e6',
                                             verticalAlign: 'middle',
-                                            marginLeft: '10px',
                                         }}
                                         size="large"
-                                        gap="5"
                                     >
                                         {userInfo.username}
-
                                     </Avatar>
                                 </Popover>
+                            ) : null}
                             </div>
-                        ) : null}
-                    </Header>
-                </Layout>
+                        </Header>
+                    </Layout>
 
-                {/* 右侧内容区 */}
-                <Layout>
-                    <Content
-                        style={{
-                            margin: '20px 10px 0',
-                            overflow: 'initial',
-                            height: '77vh',
-                            margin: '16px 16px 0',
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
-                    >
-                        <div
-                            className="site-layout-background"
-                            style={{ padding: 24, textAlign: 'center' }}
+                    {/* 右侧内容区 */}
+                    <Layout style={{ marginTop: '15px' }}>
+                        <Content
+                            style={{
+                                height: 'calc(100vh - 80px - 65px)',
+                                margin: '0px 16px 0',
+                                background: colorBgContainer,
+                                borderRadius: borderRadiusLG,
+                                borderRadius: '10px'
+                            }}
                         >
-                            {c}
-                        </div>
-                    </Content>
+                            <div style={{ fontSize: 15, fontWeight: 'bold', marginLeft: '1%', justifyContent: 'center', marginTop: '20px' }}>
+                                <Button type="text" shape="circle" icon={<LeftOutlined />} onClick={goBackPage} />
+                                {name}
+                            </div>
+                            <div
+                                className="site-layout-background"
+                                style={{ padding: 24, textAlign: 'center', height: '10px' }}
+                            >
+                                {c}
+                            </div>
+                        </Content>
+                    </Layout>
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1vh' }}>
+                        <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
+                            <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />
+                        </a>
+                    </div>
+                    <Footer style={{ textAlign: 'center', padding: '1vh' }}>WatchAlert ©2024 Created by Cairry</Footer>
+
                 </Layout>
-
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '3vh' }}>
-                    <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
-                        <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />
-                    </a>
-                </div>
-                <Footer style={{ textAlign: 'center', padding: '1vh' }}>WatchAlert ©2024 Created by Cairry</Footer>
-
-            </Layout>
-        </Layout>
+            </Layout >
+        </>
     )
 
 }

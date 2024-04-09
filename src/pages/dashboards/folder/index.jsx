@@ -1,50 +1,36 @@
-import { Button, Input, Table, Popconfirm, message } from 'antd'
+import { Button, Table, Popconfirm, Input } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { AlertRuleGroupCreateModal } from './AlertRuleGroupCreateModal'
-import { CopyOutlined } from '@ant-design/icons';
-import { deleteRuleGroup, getRuleGroupList } from '../../../api/rule'
+import { deleteRuleGroup } from '../../../api/rule'
+import { deleteDashboard, getDashboardList, searchDashboard } from '../../../api/dashboard';
+import CreateFolderModal from './create';
 
-export const AlertRuleGroup = ({ }) => {
+export const DashboardFolder = () => {
+    const { Search } = Input
     const [list, setList] = useState()
     const [selectedRow, setSelectedRow] = useState(null)
     const [createModalVisible, setCreateModalVisible] = useState(false)
     const [updateModalVisible, setUpdateModalVisible] = useState(false)
     const columns = [
         {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
-            width: 250,
-            render: (text, record) => (
-                <div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Link to={`/alertRuleGroup/${record.id}/rules`}>{text}</Link>
-                        <CopyOutlined
-                            style={{ marginLeft: '5px', cursor: 'pointer' }}
-                            onClick={() => handleCopy(text)}
-                        />
-                    </div>
-                </div>
-            ),
-        },
-        {
-            title: '规则组名称',
+            title: '名称',
             dataIndex: 'name',
             key: 'name',
-            width: 200,
-        },
-        {
-            title: '规则数',
-            dataIndex: 'number',
-            key: 'number',
-            width: 200,
+            width: 'auto',
+            render: (text, record) => (
+                < div >
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Link to={`/dashboard/${record.id}/info`}>{text}</Link>
+                    </div>
+                </div >
+            ),
         },
         {
             title: '描述',
             dataIndex: 'description',
             key: 'description',
-            render: (text, record, index) => {
+            width: 'auto',
+            render: (text) => {
                 if (!text) {
                     return '没有留下任何描述~';
                 }
@@ -78,15 +64,10 @@ export const AlertRuleGroup = ({ }) => {
         handleList()
     }, [])
 
-    const handleCopy = (text) => {
-        navigator.clipboard.writeText(text);
-        message.success('已复制到剪贴板');
-    };
 
     const handleList = async () => {
         try {
-            const res = await getRuleGroupList()
-            console.log(res)
+            const res = await getDashboardList()
             setList(res.data)
         } catch (error) {
             console.error(error)
@@ -98,7 +79,7 @@ export const AlertRuleGroup = ({ }) => {
             const params = {
                 id: record.id,
             }
-            await deleteRuleGroup(params)
+            await deleteDashboard(params)
             handleList()
         } catch (error) {
             console.error(error)
@@ -118,17 +99,52 @@ export const AlertRuleGroup = ({ }) => {
         setUpdateModalVisible(false)
     }
 
+    const onSearch = async (value) => {
+        try {
+            const params = {
+                query: value,
+            }
+            const res = await searchDashboard(params)
+            setList(res.data)
+        } catch (error) {
+            console.error(error)
+        }
+        console.log(value)
+    }
+
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderRight: '100vh' }}>
-                <Button type="primary" onClick={() => setCreateModalVisible(true)} style={{ marginLeft: 'auto' }}>
-                    创建
-                </Button>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                    <Search
+                        allowClear
+                        placeholder="输入搜索关键字"
+                        enterButton
+                        style={{ width: 300 }}
+                        onSearch={onSearch}
+                    />
+                </div>
+                <div>
+                    <Button type="primary" onClick={() => { setCreateModalVisible(true) }} >
+                        创建
+                    </Button>
+                </div>
             </div>
 
-            <AlertRuleGroupCreateModal visible={createModalVisible} onClose={handleModalClose} type='create' handleList={handleList} />
+            <CreateFolderModal
+                visible={createModalVisible}
+                onClose={handleModalClose}
+                type="create"
+                handleList={handleList}
+            />
 
-            <AlertRuleGroupCreateModal visible={updateModalVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type='update' handleList={handleList} />
+            <CreateFolderModal
+                visible={updateModalVisible}
+                onClose={handleUpdateModalClose}
+                selectedRow={selectedRow}
+                type="update"
+                handleList={handleList}
+            />
 
             <div style={{ overflowX: 'auto', marginTop: 10, height: '64vh' }}>
                 <Table

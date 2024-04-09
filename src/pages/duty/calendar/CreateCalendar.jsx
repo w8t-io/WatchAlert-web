@@ -36,8 +36,8 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
         try {
             const res = await getAllUsers()
             const options = res.data.map((item) => ({
-                username: item.zh_name,
-                userid: item.source_user_id
+                username: item.username,
+                userid: item.userid
             }))
             setFilteredOptions(options)
         } catch (error) {

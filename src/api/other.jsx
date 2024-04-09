@@ -3,7 +3,7 @@ import { message } from 'antd';
 
 async function getAllUsers(params) {
     try {
-        const res = await http('get', '/api/v1/user/getAllUser', params);
+        const res = await http('get', '/api/w8t/user/searchDutyUser', params);
         return res;
     } catch (error) {
         message.open({

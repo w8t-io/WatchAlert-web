@@ -83,9 +83,9 @@ async function deleteUser(params) {
     }
 }
 
-async function getUserInfo(params) {
+async function getUserInfo() {
     try {
-        const res = await http('get', `/api/system/userInfo`, params);
+        const res = await http('get', `/api/system/userInfo`);
         return res;
     } catch (error) {
         message.open({

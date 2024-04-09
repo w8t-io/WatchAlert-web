@@ -23,6 +23,7 @@ axios.interceptors.request.use(
         //@ts-ignore
         config.headers = {
             'Content-Type': 'application/json',
+            'TenantID': localStorage.getItem('TenantID'),
         };
         if (localStorage.getItem('Authorization')) {
             config.headers.Authorization = `Bearer ${localStorage.getItem('Authorization')}`;
@@ -65,7 +66,6 @@ export function get(url, params = {}) {
                 params: params,
             })
             .then((response) => {
-                landing(url, params, response.data);
                 resolve(response.data);
             })
             .catch((error) => {
@@ -137,8 +137,8 @@ export function put(url, data = {}) {
 }
 
 //统一接口处理，返回数据
-export default function (method, url, param?) {
-    let _data = '';
+// eslint-disable-next-line import/no-anonymous-default-export
+export default function (method, url, param) {
     return new Promise((resolve, reject) => {
         switch (method) {
             case 'get':
@@ -216,16 +216,3 @@ function msag(err) {
         }
     }
 }
-
-/**
- * 查看返回的数据
- * @param url
- * @param params
- * @param data
- */
-function landing(url, params, data) {
-    if (data.code === -1) {
-    }
-}
-
-

@@ -94,7 +94,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
     const fetchData = async () => {
         try {
             const response = await getPermissionsList()
-            const data = response.data.data
+            const data = response.data
             formatData(data) // 格式化数据
         } catch (error) {
             console.error(error)

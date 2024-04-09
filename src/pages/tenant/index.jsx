@@ -1,42 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Table, Tag, Popconfirm, message } from 'antd';
-import { CreateSilenceModal } from './SilenceRuleCreateModal'
-import { deleteSilence, getSilenceList } from '../../api/silence';
-import { ComponentsContent } from '../../components';
+import { Button, Table, Popconfirm } from 'antd';
+import { deleteSilence } from '../../api/silence';
+import { deleteTenant, getTenantList } from '../../api/tenant';
+import { CreateTenant } from './CreateTenant';
 
-export const Silences = () => {
+export const Tenants = () => {
     const [selectedRow, setSelectedRow] = useState(null);
     const [updateVisible, setUpdateVisible] = useState(false);
     const [visible, setVisible] = useState(false);
-    const [list, setList] = useState([]); // 初始化list为空数组
+    const [list, setList] = useState([]);
     const [columns] = useState([
         {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
-            width: 230,
-        },
-        {
-            title: '告警指纹',
-            dataIndex: 'fingerprint',
-            key: 'fingerprint',
+            title: '租户名称',
+            dataIndex: 'name',
+            key: 'name',
             width: 200,
-        },
-        {
-            title: '数据源类型',
-            dataIndex: 'datasource_type',
-            key: 'datasource_type',
-            width: 150,
         },
         {
             title: '创建人',
-            dataIndex: 'create_by',
-            key: 'create_by',
+            dataIndex: 'createBy',
+            key: 'createBy',
+            width: 150
         },
         {
-            title: '更新时间',
-            dataIndex: 'update_at',
-            key: 'update_at',
+            title: '负责人',
+            dataIndex: 'manager',
+            key: 'manager',
+            width: 150
+
+        },
+        {
+            title: '创建时间',
+            dataIndex: 'createAt',
+            key: 'createAt',
             width: 200,
             render: (text) => {
                 const date = new Date(text * 1000)
@@ -44,29 +40,16 @@ export const Silences = () => {
             },
         },
         {
-            title: '评论',
-            dataIndex: 'comment',
-            key: 'comment',
-        },
-        {
-            title: '静默开始时间',
-            dataIndex: 'starts_at',
-            key: 'starts_at',
-            width: 200,
+            title: '描述',
+            dataIndex: 'description',
+            key: 'description',
+            width: 300,
             render: (text) => {
-                const date = new Date(text * 1000)
-                return date.toLocaleString()
-            },
-        },
-        {
-            title: '静默结束时间',
-            dataIndex: 'ends_at',
-            key: 'ends_at',
-            width: 200,
-            render: (text) => {
-                const date = new Date(text * 1000)
-                return date.toLocaleString()
-            },
+                if (!text) {
+                    return '-'
+                }
+                return text
+            }
         },
         {
             title: '操作',
@@ -95,7 +78,7 @@ export const Silences = () => {
     // 获取所有数据
     const handleList = async () => {
         try {
-            const res = await getSilenceList()
+            const res = await getTenantList()
             setList(res.data);
         } catch (error) {
             console.error(error)
@@ -107,7 +90,7 @@ export const Silences = () => {
             const params = {
                 id: record.id,
             }
-            await deleteSilence(params)
+            await deleteTenant(params)
             handleList()
         } catch (error) {
             console.error(error)
@@ -136,29 +119,15 @@ export const Silences = () => {
                 </Button>
             </div>
 
-            <div style={{ display: 'flex' }}>
-                <CreateSilenceModal visible={visible} onClose={handleModalClose} type='create' handleList={handleList} />
-
-                <CreateSilenceModal visible={updateVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type='update' handleList={handleList} />
-
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '10px',
-                    width: '1000px'
-                }}>
-
-                </div>
-
-            </div>
+            <CreateTenant visible={visible} onClose={handleModalClose} type='create' handleList={handleList} />
+            <CreateTenant visible={updateVisible} selectedRow={selectedRow} onClose={handleUpdateModalClose} type='update' handleList={handleList} />
 
             <div style={{ overflowX: 'auto', marginTop: 10, height: '64vh' }}>
                 <Table
                     columns={columns}
                     dataSource={list}
                     scroll={{
-                        x: 1500,
+                        x: 1000,
                         y: 'calc(65vh - 65px - 40px)'
                     }}
                 />
