@@ -23,7 +23,7 @@ export const AuditLog = () => {
             title: '时间',
             dataIndex: 'createdAt',
             key: 'createdAt',
-            width: 300,
+            width: 200,
             render: (text) => {
                 const dateInMilliseconds = text * 1000;
                 return moment(dateInMilliseconds).format('YYYY-MM-DD HH:mm:ss');
@@ -33,25 +33,25 @@ export const AuditLog = () => {
             title: '用户名',
             dataIndex: 'username',
             key: 'username',
-            width: 300,
+            width: 'auto',
         },
         {
             title: '来源IP',
             dataIndex: 'ipAddress',
             key: 'ipAddress',
-            width: 300,
+            width: 'auto',
         },
         {
             title: '事件名称',
             dataIndex: 'auditType',
             key: 'auditType',
-            width: 300,
+            width: 'auto',
         },
         {
             title: '事件ID',
             dataIndex: 'id',
             key: 'id',
-            width: 300,
+            width: 'auto',
         },
         {
             title: '事件Body详情',
@@ -76,14 +76,25 @@ export const AuditLog = () => {
 
     const handleList = async (pageIndex, pageSize) => {
         try {
-            const res = await listAuditLog()
-            console.log(res)
+            const params = {
+                pageIndex: pageIndex,
+                pageSize: pageSize,
+            };
+
+            const filteredParams = {};
+            for (const key in params) {
+                if (params[key] !== undefined) {
+                    filteredParams[key] = params[key];
+                }
+            }
+
+            const res = await listAuditLog(params)
             setPagination({
                 ...pagination,
                 current: res.data.PageIndex,
                 total: res.data.TotalCount,
             });
-            setList(res.data);
+            setList(res.data.List);
         } catch (error) {
             message.error(error);
         }
@@ -198,6 +209,9 @@ export const AuditLog = () => {
                         showTotal: handleShowTotal,
                     }}
                     onChange={handlePageChange}
+                    scroll={{
+                        y: 'calc(65vh - 60px - 40px)'
+                    }}
                 />
             </div>
         </div>
