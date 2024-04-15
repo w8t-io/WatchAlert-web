@@ -172,7 +172,7 @@ export const ComponentsContent = (props) => {
                                 </div>
                             </div>
 
-                            <div style={{ position: 'absolute', top: '10px', right: '30px', bottom: '10px' }}>                            {userInfo !== null ? (
+                            <div style={{ position: 'absolute', top: '12px', right: '30px', bottom: '10px' }}>                            {userInfo !== null ? (
                                 <Popover content={content} trigger="hover" placement="bottom">
                                     <Avatar
                                         style={{

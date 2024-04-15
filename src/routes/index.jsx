@@ -18,6 +18,7 @@ import { ComponentsContent } from '../components';
 import { Tenants } from "../pages/tenant";
 import { GrafanaDashboardComponent } from "../pages/dashboards/dashboard";
 import { DashboardFolder } from "../pages/dashboards/folder";
+import { AuditLog } from "../pages/audit";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -92,6 +93,10 @@ export default [
     {
         path: '/dashboard/:id/info',
         element: <ComponentsContent name="仪表盘" c={<GrafanaDashboardComponent />} />
+    },
+    {
+        path: '/auditLog',
+        element: <ComponentsContent name="日志审计" c={<AuditLog />} />
     },
     {
         path: '/*',

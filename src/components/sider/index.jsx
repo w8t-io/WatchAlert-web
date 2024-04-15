@@ -7,7 +7,8 @@ import {
     CalendarOutlined,
     DashboardOutlined,
     DeploymentUnitOutlined,
-    AreaChartOutlined
+    AreaChartOutlined,
+    FileDoneOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Menu, Layout } from 'antd';
@@ -62,7 +63,7 @@ export const ComponentSider = (props) => {
 
                         <Menu.Item key='6' onClick={(e) => handleMenuClick(e.key, '/datasource')} icon={<PieChartOutlined />}>数据源</Menu.Item>
                         <Menu.Item key='8' onClick={(e) => handleMenuClick(e.key, '/dashboard')} icon={<DashboardOutlined />}>仪表盘</Menu.Item >
-
+                        <Menu.Item key='9' onClick={(e) => handleMenuClick(e.key, '/auditLog')} icon={<FileDoneOutlined />}>日志审计</Menu.Item >
                     </Menu>
                 </>
             );

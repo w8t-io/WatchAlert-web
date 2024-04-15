@@ -313,7 +313,12 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
                     {selectedType === 'Prometheus' &&
                         <MyFormItemGroup prefix={['prometheusConfig']}>
-                            <MyFormItem name="promQL" label="PromQL">
+                            <MyFormItem name="promQL" label="PromQL"
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
                                 <Input />
                             </MyFormItem>
                         </MyFormItemGroup>
