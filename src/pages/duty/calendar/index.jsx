@@ -17,7 +17,7 @@ export const fetchDutyData = async (dutyId) => {
     }
 }
 
-export const CalendarApp = ({ visible, onClose, name, dutyId }) => {
+export const CalendarApp = ({ visible, onClose, name, tenantId, dutyId }) => {
     const [dutyData, setDutyData] = useState([])
     const [createCalendarModal, setCreateCalendarModal] = useState(false)
     const [selectedDate, setSelectedDate] = useState(null);
@@ -115,7 +115,7 @@ export const CalendarApp = ({ visible, onClose, name, dutyId }) => {
 
 
 
-            <UpdateCalendarModal visible={modalVisible} onClose={handleUpdateModalClose} time={selectedDate} dutyId={dutyId} date={selectedDate} />
+            <UpdateCalendarModal visible={modalVisible} onClose={handleUpdateModalClose} time={selectedDate} tenantId={tenantId} dutyId={dutyId} date={selectedDate} />
 
         </Modal>
     )

@@ -5,9 +5,9 @@ import { CreateDutyModal } from './DutyManageCreateModal';
 import { CalendarApp } from './calendar';
 import { CopyOutlined } from '@ant-design/icons';
 import { deleteDutyManager, getDutyManagerList } from '../../api/duty';
-import { ComponentsContent } from '../../components';
 
 export const DutyManage = () => {
+    const [tenantId, setTenantId] = useState('')
     const [calendarDutyId, setCalendarDutyId] = useState('');
     const [calendarName, setCalendarName] = useState('');
     const [calendarVisible, setCalendarVisible] = useState(false);
@@ -34,6 +34,7 @@ export const DutyManage = () => {
                                 setCalendarVisible(true);
                                 setCalendarName(record.name);
                                 setCalendarDutyId(record.id);
+                                setTenantId(record.tenantId)
                             }}
                         >
                             {text}
@@ -179,7 +180,7 @@ export const DutyManage = () => {
 
                 <CreateDutyModal visible={updateVisible} onClose={handleUpdateModalClose} handleList={handleList} selectedRow={selectedRow} type="update" />
 
-                <CalendarApp visible={calendarVisible} onClose={handleCalendarModalClose} name={calendarName} dutyId={calendarDutyId} handleList={handleList} />
+                <CalendarApp visible={calendarVisible} onClose={handleCalendarModalClose} name={calendarName} tenantId={tenantId} dutyId={calendarDutyId} handleList={handleList} />
 
             </div>
 

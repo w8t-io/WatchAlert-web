@@ -4,6 +4,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons'
 import { createRule, updateRule } from '../../../api/rule'
 import { getDatasource, searchDatasource } from '../../../api/datasource'
 import { getNoticeList } from '../../../api/notice'
+import { getJaegerService } from '../../../api/other'
 const MyFormItemContext = React.createContext([])
 
 const { Option } = Select;
@@ -40,6 +41,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
     const [spaceValue, setSpaceValue] = useState('')
     // 告警等级
     const [severityValue, setSeverityValue] = useState(1)
+    const [jaegerServiceList, setJaegerServiceList] = useState([])
 
     useEffect(() => {
         handleGetDatasourceList(selectedType)
@@ -69,7 +71,13 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 lokiConfig: selectedRow.lokiConfig,
                 prometheusConfig: selectedRow.prometheusConfig,
                 severity: selectedRow.severity,
+                jaegerConfig: {
+                    service: selectedRow.jaegerConfig.service,
+                    tags: selectedRow.jaegerConfig.tags,
+                    scope: selectedRow.jaegerConfig.scope,
+                }
             })
+            setSelectedItems(selectedRow.datasourceId)
             setSelectedType(selectedRow.datasourceType)
             setNoticeLabels(selectedRow.noticeGroup)
         }
@@ -94,6 +102,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         try {
             const params = {
                 ...values,
+                tenantId: selectedRow.tenantId,
                 ruleId: selectedRow.ruleId,
                 noticeGroup: noticeLabels
             }
@@ -151,6 +160,19 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         }))
         // 将数据设置为选项对象数组
         setNoticeOptions(newData)
+    }
+
+    const handleGetJaegerService = async () => {
+        const params = {
+            id: selectedItems
+        }
+        const res = await getJaegerService(params)
+
+        const newData = res.data.data.map((item) => ({
+            label: item,
+            value: item
+        }))
+        setJaegerServiceList(newData)
     }
 
     // 数据源单/多选标签
@@ -273,6 +295,10 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                     {
                                         value: 'AliCloudSLS',
                                         label: '阿里云SLS'
+                                    },
+                                    {
+                                        value: 'Jaeger',
+                                        label: 'Jaeger'
                                     },
                                     {
                                         value: 'Loki',
@@ -418,6 +444,71 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         </MyFormItemGroup>
                     }
 
+                    {selectedType === 'Jaeger' &&
+                        <MyFormItemGroup prefix={['jaegerConfig']}>
+                            <div style={{ display: 'flex' }}>
+                                <MyFormItem name='service' label="应用服务"
+                                    style={{
+                                        marginRight: '10px',
+                                        width: '500px',
+                                    }}
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                >
+                                    <Select
+                                        allowClear
+                                        showSearch
+                                        placeholder="选择需查询链路的服务"
+                                        style={{
+                                            flex: 1,
+                                        }}
+                                        options={jaegerServiceList}
+                                        onClick={handleGetJaegerService}
+                                    />
+                                </MyFormItem>
+
+                                <MyFormItem name='tags' label="判断条件"
+                                    style={{
+                                        width: '500px',
+                                    }}
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                >
+                                    <Select showSearch style={{ width: '100%' }} placeholder="StatusCode = 5xx">
+                                        <Option value='%7B"http.status_code"%3A"5.%2A%3F"%7D'>{'StatusCode = 5xx'}</Option>
+                                    </Select>
+                                </MyFormItem>
+                            </div>
+
+                            <MyFormItem
+                                name="scope"
+                                label="查询区间"
+                                style={{
+                                    width: '380px',
+                                }}
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                            >
+                                <InputNumber
+                                    style={{ width: '98%' }}
+                                    addonAfter={'分钟'}
+                                    placeholder="10"
+                                    min={1}
+                                />
+                            </MyFormItem>
+
+                        </MyFormItemGroup>
+                    }
+
                     {selectedType === 'Loki' &&
                         <MyFormItemGroup prefix={['lokiConfig']}>
 
@@ -487,7 +578,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             name="evalInterval"
                             label="执行频率"
                             style={{
-                                width: '50%',
+                                width: '385px',
                             }}
                             rules={[
                                 {

@@ -3,7 +3,11 @@ import { message } from 'antd';
 
 async function listAuditLog(params) {
     try {
-        const res = await http('get', '/api/w8t/auditLog/listAuditLog');
+        const queryString = Object.keys(params)
+            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
+            .filter(Boolean)
+            .join('&');
+        const res = await http('get', `/api/w8t/auditLog/listAuditLog?${queryString}`);
         return res;
     } catch (error) {
         message.open({

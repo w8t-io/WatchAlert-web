@@ -3,7 +3,7 @@ import { getAllUsers } from '../../../api/other.jsx'
 import { Modal, Form, Button, message, Select } from 'antd'
 import React, { useState } from 'react'
 
-export const UpdateCalendarModal = ({ visible, onClose, time, dutyId, date }) => {
+export const UpdateCalendarModal = ({ visible, onClose, time, tenantId, dutyId, date }) => {
     const { Option } = Select
     const [selectedItems, setSelectedItems] = useState([])
     const [filteredOptions, setFilteredOptions] = useState([])
@@ -36,6 +36,7 @@ export const UpdateCalendarModal = ({ visible, onClose, time, dutyId, date }) =>
     const handleFormSubmit = async () => {
 
         const calendarData = {
+            tenantId: tenantId,
             dutyId: dutyId,
             time: date,
             userid: selectedItems.userid,

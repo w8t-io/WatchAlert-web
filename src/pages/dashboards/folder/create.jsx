@@ -59,6 +59,7 @@ const CreateFolderModal = ({ visible, onClose, selectedRow, type, handleList }) 
     const handleUpdate = async (data) => {
         const newData = {
             ...data,
+            tenantId: selectedRow.tenantId,
             id: selectedRow.id,
         }
         try {

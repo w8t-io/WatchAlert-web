@@ -95,6 +95,7 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
         try {
             const params = {
                 ...data,
+                tenantId: selectedRow.tenantId,
                 enableCard: isChecked ? "true" : "false",
                 uuid: selectedRow.uuid,
             }

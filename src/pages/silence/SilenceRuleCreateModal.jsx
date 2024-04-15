@@ -108,6 +108,7 @@ export const CreateSilenceModal = ({ visible, onClose, selectedRow, type, handle
         if (type === 'update') {
             const params = {
                 ...values,
+                tenantId: selectedRow.tenantId,
                 id: selectedRow.id,
                 create_by: selectedRow.create_by,
                 starts_at: startTimestamp,
