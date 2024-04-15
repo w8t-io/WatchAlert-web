@@ -140,6 +140,10 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                 label: '阿里云SLS'
                             },
                             {
+                                value: 'Jaeger',
+                                label: 'Jaeger'
+                            },
+                            {
                                 value: 'Loki',
                                 label: 'Loki',
                             },

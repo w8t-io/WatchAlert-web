@@ -27,7 +27,25 @@ async function getDashboardInfo() {
     }
 }
 
+async function getJaegerService(params) {
+    try {
+        const queryString = Object.keys(params)
+            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
+            .filter(Boolean)
+            .join('&');
+        const res = await http('get', `/api/w8t/c/getJaegerService?${queryString}`);
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '获取Jaeger服务列表失败',
+        });
+        return error
+    }
+}
+
 export {
     getAllUsers,
     getDashboardInfo,
+    getJaegerService
 }
