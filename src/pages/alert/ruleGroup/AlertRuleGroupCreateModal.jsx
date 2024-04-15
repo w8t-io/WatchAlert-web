@@ -71,6 +71,7 @@ export const AlertRuleGroupCreateModal = ({ visible, onClose, selectedRow, type,
         if (type === 'update') {
             const newValues = {
                 ...values,
+                tenantId: selectedRow.tenantId,
                 id: selectedRow.id
             }
             await handleUpdate(newValues)

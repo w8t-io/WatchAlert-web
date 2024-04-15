@@ -82,6 +82,7 @@ export const CreateDutyModal = ({ visible, onClose, handleList, selectedRow, typ
         if (type === 'update') {
             const newUpdateData = {
                 ...newData,
+                tenantId: selectedRow.tenantId,
                 id: selectedRow.id,
             }
             handleUpdate(newUpdateData)
