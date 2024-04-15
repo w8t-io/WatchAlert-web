@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Layout, Button, Checkbox, Form, Input } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined, GithubOutlined } from '@ant-design/icons';
 import { ReactComponent as MyIcon } from '../img/701986.svg'
 import { useNavigate } from 'react-router-dom'
+import githubIcon from '../img/github_logo.png'
 import { checkUser, loginUser, registerUser } from '../api/user'
 import './login.css'
 
@@ -124,12 +125,17 @@ export const Login = () => {
                     </div>
                 </Sider>
                 <Layout >
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: '3vh', marginRight: '20px' }}>
+                        <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
+                            <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '3.5vh', height: '3.5vh', marginRight: '5px' }} />
+                        </a>
+                    </div>
                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '40vh' }}>
                         <span style={{ marginLeft: '10px', fontSize: '30px', fontWeight: 'bold' }}>
                             Login System
                         </span>
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '-50px' }}>
                         <Form
                             style={{ width: '50vh', marginLeft: '25%' }}
                             name="normal_login"
