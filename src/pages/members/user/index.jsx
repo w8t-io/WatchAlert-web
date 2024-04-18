@@ -2,7 +2,7 @@ import { Select, Input, Table, Button, Popconfirm, message } from 'antd'
 import React from 'react'
 import UserCreateModal from './UserCreateModal'
 import UserChangePass from './UserChangePass'
-import { deleteUser, getUserList } from '../../../api/user'
+import { deleteUser, getUserList, searchUser } from '../../../api/user'
 const { Search } = Input
 
 class User extends React.Component {
@@ -141,9 +141,21 @@ class User extends React.Component {
         })
     };
 
-    render() {
+    onSearch = async (value) => {
+        try {
+            const params = {
+                query: value,
+            }
+            const res = await searchUser(params)
+            this.setState({
+                list: res.data,
+            })
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
-        const onSearch = (value, _e, info) => console.log(info?.source, value)
+    render() {
 
         return (
             <>
@@ -152,7 +164,7 @@ class User extends React.Component {
                         <Search
                             allowClear
                             placeholder="输入搜索关键字"
-                            onSearch={onSearch}
+                            onSearch={this.onSearch}
                             enterButton
                             style={{ width: 300 }} />
                     </div>

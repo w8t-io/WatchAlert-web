@@ -134,6 +134,19 @@ async function changeUserPass(query, params) {
     }
 }
 
+async function searchUser(params) {
+    try {
+        const res = await http('get', '/api/w8t/user/searchUser', params);
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '获取用户信息失败',
+        });
+        return error
+    }
+}
+
 export {
     getUserList,
     loginUser,
@@ -142,5 +155,6 @@ export {
     deleteUser,
     checkUser,
     getUserInfo,
-    changeUserPass
+    changeUserPass,
+    searchUser
 }

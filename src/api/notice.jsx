@@ -65,9 +65,23 @@ async function deleteNotice(params) {
     }
 }
 
+async function searchNotice(params) {
+    try {
+        const res = await http('get', '/api/w8t/notice/searchNotice', params);
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '搜索通知对象失败',
+        });
+        return error
+    }
+}
+
 export {
     getNoticeList,
     createNotice,
     updateNotice,
-    deleteNotice
+    deleteNotice,
+    searchNotice,
 }

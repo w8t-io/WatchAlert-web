@@ -2,6 +2,7 @@ import { Button, Input, Table, Popconfirm } from 'antd'
 import React from 'react'
 import NoticeTemplateCreateModal from './NoticeTemplateCreateModal'
 import { getNoticeTmplList, deleteNoticeTmpl } from '../../../api/noticeTmpl'
+import { searchNoticeTmpl } from '../../../api/noticeTmpl'
 const { Search } = Input
 
 class NoticeTemplate extends React.Component {
@@ -97,9 +98,21 @@ class NoticeTemplate extends React.Component {
         this.handleList()
     }
 
-    render() {
+    onSearch = async (value) => {
+        try {
+            const params = {
+                query: value,
+            }
+            const res = await searchNoticeTmpl(params)
+            this.setState({
+                list: res.data,
+            })
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
-        const onSearch = (value, _e, info) => console.log(info?.source, value)
+    render() {
 
         return (
             <>
@@ -108,7 +121,7 @@ class NoticeTemplate extends React.Component {
                         <Search
                             allowClear
                             placeholder="输入搜索关键字"
-                            onSearch={onSearch}
+                            onSearch={this.onSearch}
                             enterButton
                             style={{ width: 300 }} />                </div>
                     <div>

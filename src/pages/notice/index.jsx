@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Table, Popconfirm, message, Input } from 'antd';
 import { CreateNoticeObjectModal } from './NoticeObjectCreateModal';
-import { deleteNotice, getNoticeList } from '../../api/notice';
+import { deleteNotice, getNoticeList, searchNotice } from '../../api/notice';
 
 export const NoticeObjects = () => {
     const { Search } = Input
@@ -115,11 +115,23 @@ export const NoticeObjects = () => {
         setVisible(false);
     };
 
+    const onSearch = async (value) => {
+        try {
+            const params = {
+                query: value,
+            }
+            const res = await searchNotice(params)
+            setList(res.data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
-                    <Search allowClear placeholder="输入搜索关键字" enterButton style={{ width: 300 }} />
+                    <Search allowClear placeholder="输入搜索关键字" onSearch={onSearch} enterButton style={{ width: 300 }} />
                 </div>
                 <div>
                     <Button type="primary" onClick={() => setVisible(true)}>

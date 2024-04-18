@@ -69,9 +69,23 @@ async function deleteNoticeTmpl(params) {
     }
 }
 
+async function searchNoticeTmpl(params) {
+    try {
+        const res = await http('get', '/api/w8t/noticeTemplate/searchNoticeTmpl', params);
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '搜索通知模版失败',
+        });
+        return error
+    }
+}
+
 export {
     getNoticeTmplList,
     createNoticeTmpl,
     updateNoticeTmpl,
-    deleteNoticeTmpl
+    deleteNoticeTmpl,
+    searchNoticeTmpl
 }
