@@ -154,7 +154,7 @@ export const ComponentsContent = (props) => {
                             <div style={{ marginTop: '25px', marginLeft: '-30px' }}>
                                 <div className="footer">
                                     <a target="_blank" title="Logo">
-                                        <img src={logoIcon} alt="Logo" className="icon" style={{ width: '8%', height: '8%' }} />
+                                        <img src={logoIcon} alt="Logo" className="icon" style={{ width: '40%', height: '40%' }} />
                                     </a>
                                 </div>
                             </div>
