@@ -84,7 +84,8 @@ const RuleTemplate = () => {
     const handleDelete = async (_, record) => {
         try {
             const params = {
-                "ruleName": record.ruleName
+                ruleGroupName: record.ruleGroupName,
+                ruleName: record.ruleName,
             }
             await deleteRuleTmpl(params)
             handleList()

@@ -37,11 +37,8 @@ async function createRuleTmpl(params) {
 
 async function deleteRuleTmpl(params) {
     try {
-        const queryString = Object.keys(params)
-            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
-            .filter(Boolean)
-            .join('&');
-        const res = await http('post', `/api/w8t/ruleTmpl/ruleTmplDelete?${queryString}`);
+
+        const res = await http('post', `/api/w8t/ruleTmpl/ruleTmplDelete`, params);
         message.open({
             type: 'success',
             content: '规则模版删除成功',
