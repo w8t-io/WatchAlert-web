@@ -104,6 +104,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 ...values,
                 tenantId: selectedRow.tenantId,
                 ruleId: selectedRow.ruleId,
+                ruleGroupId: ruleGroupId,
                 noticeGroup: noticeLabels
             }
             await updateRule(params)
