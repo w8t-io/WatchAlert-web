@@ -127,7 +127,12 @@ export const CreateSilenceModal = ({ visible, onClose, selectedRow, type, handle
         <Modal visible={visible} onCancel={onClose} footer={null}>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
 
-                <MyFormItem name="datasource_type" label="数据源类型">
+                <MyFormItem name="datasource_type" label="数据源类型"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}>
                     <Select
                         placeholder="请选择数据源类型"
                         style={{
@@ -143,7 +148,12 @@ export const CreateSilenceModal = ({ visible, onClose, selectedRow, type, handle
                     />
                 </MyFormItem>
 
-                <MyFormItem name="fingerprint" label="告警指纹">
+                <MyFormItem name="fingerprint" label="告警指纹"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}>
                     <Select
                         showSearch
                         placeholder="请选择要静默的告警指纹ID"
@@ -155,7 +165,12 @@ export const CreateSilenceModal = ({ visible, onClose, selectedRow, type, handle
                     />
                 </MyFormItem>
 
-                <MyFormItem name="" label="时间选择器">
+                <MyFormItem name="" label="时间选择器"
+                    rules={[
+                        {
+                            required: true,
+                        },
+                    ]}>
                     <RangePicker
                         style={{ width: '470px' }}
                         showTime={{

@@ -1,5 +1,5 @@
 import { Modal, Form, Input, Button, Switch, InputNumber, Divider } from 'antd'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createTenant, updateTenant } from '../../api/tenant'
 
 const MyFormItemContext = React.createContext([])
@@ -17,6 +17,7 @@ const MyFormItem = ({ name, ...props }) => {
 
 export const CreateTenant = ({ visible, onClose, selectedRow, type, handleList }) => {
     const [form] = Form.useForm()
+    const [enabled, setEnabled] = useState(false)
 
     useEffect(() => {
         if (selectedRow) {
@@ -59,6 +60,7 @@ export const CreateTenant = ({ visible, onClose, selectedRow, type, handleList }
         if (type === 'create') {
             const params = {
                 ...values,
+                removeProtection: enabled,
             }
 
             await handleCreate(params)
@@ -213,7 +215,7 @@ export const CreateTenant = ({ visible, onClose, selectedRow, type, handleList }
                         tooltip="启用/禁用"
                         valuePropName="checked"
                     >
-                        <Switch />
+                        <Switch checked={enabled} onChange={setEnabled} />
                     </MyFormItem>
 
                     <div style={{ display: 'flex', justifyContent: 'flex-end' }}>

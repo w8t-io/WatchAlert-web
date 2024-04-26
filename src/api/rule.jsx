@@ -50,7 +50,7 @@ async function updateRule(params) {
 
 async function deleteRule(params) {
     try {
-        const res = await http('post', `/api/w8t/rule/ruleDelete?id=${params.id}`);
+        const res = await http('post', `/api/w8t/rule/ruleDelete`, params);
         message.open({
             type: 'success',
             content: '规则删除成功',

@@ -121,7 +121,7 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
     }
 
     return (
-        <Modal visible={visible} onCancel={onClose} footer={null} width={800} style={{ marginTop: '-10vh' }}>
+        <Modal visible={visible} onCancel={onClose} footer={null} width={800} style={{ marginTop: '2vh' }}>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
 
                 <div style={{ display: 'flex' }}>

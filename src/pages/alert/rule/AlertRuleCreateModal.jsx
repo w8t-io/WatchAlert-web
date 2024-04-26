@@ -117,9 +117,9 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
     const handleGetDatasourceList = async (selectedType) => {
         try {
             const params = {
-                dsType: selectedType
+                type: selectedType
             }
-            const res = await getDatasource(params)
+            const res = await searchDatasource(params)
             const newData = res.data.map((item) => ({
                 label: item.name,
                 value: item.id
@@ -636,7 +636,12 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         <MyFormItem
                             name="annotations"
                             label="告警详情"
-                            tooltip="获取 Label 变量, 示例: ${job}, ${instance}。凡是 Target 中的变量均可通过`${}`获取。">
+                            tooltip="获取 Label 变量, 示例: ${job}, ${instance}。凡是 Target 中的变量均可通过`${}`获取。"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}>
                             <Input />
                         </MyFormItem>
                     }

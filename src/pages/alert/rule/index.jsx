@@ -101,7 +101,8 @@ export const AlertRules = () => {
     const handleDelete = async (_, record) => {
         try {
             const params = {
-                id: record.ruleId
+                ruleId: record.ruleId,
+                ruleGroupId: record.ruleGroupId
             }
             await deleteRule(params)
             handleList(id)

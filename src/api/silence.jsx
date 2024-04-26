@@ -50,7 +50,7 @@ async function updateSilence(params) {
 
 async function deleteSilence(params) {
     try {
-        const res = await http('post', `/api/w8t/silence/silenceDelete?id=${params.id}`);
+        const res = await http('post', `/api/w8t/silence/silenceDelete`, params);
         message.open({
             type: 'success',
             content: '静默规则删除成功',

@@ -12,12 +12,12 @@ export const Home = () => {
             const res = await getDashboardInfo()
             setDashboardInfo(res.data);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     }
 
     useEffect(() => {
-        run()
+        run();
     }, []);
 
     // 所有规则数
@@ -171,36 +171,36 @@ export const Home = () => {
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', height: '35vh' }}>
-                <div style={{ width: '100vh', height: '250px', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', height: '30vh' }}>
+                <div style={{ width: '100vh', height: '35vh', overflowY: 'auto' }}>
                     <Divider>规则总数</Divider>
                     <ReactECharts
                         option={allAlertRulesOption}
-                        style={{ marginTop: '-30px', height: '100%', width: '100%' }}
+                        style={{ marginTop: '-30px', height: '90%', width: '100%' }}
                         className="chart"
                     />
                 </div>
 
-                <div style={{ width: '100vh', height: '250px', overflowY: 'auto' }}>
+                <div style={{ width: '100vh', height: '35vh', overflowY: 'auto' }}>
                     <Divider>当前告警总数</Divider>
                     <ReactECharts
                         option={curAlertsOption}
-                        style={{ marginTop: '-30px', height: '100%', width: '100%' }}
+                        style={{ marginTop: '-30px', height: '90%', width: '100%' }}
                         className="chart"
                     />
                 </div>
 
-                <div style={{ width: '120vh', height: '250px', overflowY: 'auto' }}>
+                <div style={{ width: '120vh', height: '35vh', overflowY: 'auto' }}>
                     <Divider>服务资源使用率</Divider>
                     <Line
-                        style={{ marginTop: '-20px', height: '80%', width: '100%' }}
+                        style={{ marginTop: '-30px', height: '80%', width: '100%' }}
                         {...config}
                     />
                 </div>
             </div >
 
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div style={{ width: '100vh', height: '350px', overflowY: 'auto' }}>
+                <div style={{ width: '100vh', height: '40vh', overflowY: 'auto' }}>
                     <Divider>最近告警列表</Divider>
                     <List
                         bordered
@@ -220,11 +220,11 @@ export const Home = () => {
                     />
                 </div>
 
-                <div style={{ width: '65vh', height: '350px', overflowY: 'auto' }} >
+                <div style={{ width: '70vh', height: '45vh', overflowY: 'auto' }} >
                     <Divider>告警分布</Divider>
                     <ReactECharts
                         option={alarmDistributionOption}
-                        style={{ marginTop: '-60px', height: '100%', width: '110%' }}
+                        style={{ marginTop: '-6vh', height: '95%', width: '110%' }}
                         className="chart"
                     />
                 </div>

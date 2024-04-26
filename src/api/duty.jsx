@@ -50,7 +50,7 @@ async function updateDutyManager(params) {
 
 async function deleteDutyManager(params) {
     try {
-        const res = await http('post', `/api/w8t/dutyManage/dutyManageDelete?id=${params.id}`);
+        const res = await http('post', `/api/w8t/dutyManage/dutyManageDelete`, params);
         message.open({
             type: 'success',
             content: '值班表删除成功',

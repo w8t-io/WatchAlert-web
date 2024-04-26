@@ -69,7 +69,7 @@ class RuleTemplateGroup extends React.Component {
 
     async handleDelete(_, record) {
         const params = {
-            "tmplGroupName": record.name
+            name: record.name
         }
         await deleteRuleTmplGroup(params)
         this.handleList()

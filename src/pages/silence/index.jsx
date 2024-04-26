@@ -105,6 +105,7 @@ export const Silences = () => {
     const handleDelete = async (_, record) => {
         try {
             const params = {
+                fingerprint: record.fingerprint,
                 id: record.id,
             }
             await deleteSilence(params)

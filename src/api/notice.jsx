@@ -50,7 +50,7 @@ async function updateNotice(params) {
 
 async function deleteNotice(params) {
     try {
-        const res = await http('post', `/api/w8t/notice/noticeDelete?uuid=${params.uuid}`);
+        const res = await http('post', `/api/w8t/notice/noticeDelete`, params);
         message.open({
             type: 'success',
             content: '通知对象删除成功',
