@@ -27,6 +27,7 @@ export const ComponentsContent = (props) => {
     const [userInfo, setUserInfo] = useState(null)
     const [loading, setLoading] = useState(false)
     const [tenantList, setTenantList] = useState([])
+    const [getTenantStatus, setTenantStatus] = useState(null);
 
     Auth()
 
@@ -81,6 +82,7 @@ export const ComponentsContent = (props) => {
                 localStorage.setItem('TenantID', opts[0].value)
                 localStorage.setItem('TenantIndex', opts[0].index)
             }
+            setTenantStatus(true);
         } catch (error) {
             console.error(error)
         }
@@ -91,7 +93,7 @@ export const ComponentsContent = (props) => {
         run()
     }, [])
 
-    if (loading) {
+    if (loading || !getTenantStatus) {
         return (
             <Spin tip="Loading...">
                 <div style={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }} />

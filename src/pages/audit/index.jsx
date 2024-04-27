@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Table, message, Button, Drawer, Select, Input } from 'antd';
-import dayjs from 'dayjs'
 import { listAuditLog, searchAuditLog } from '../../api/auditLog';
 import moment from 'moment';
 import JsonViewer from 'react-json-view';
@@ -14,7 +13,7 @@ export const AuditLog = () => {
     const [startTimestamp, setStartTimestamp] = useState(null)
     const [endTimestamp, setEndTimestamp] = useState(null)
     const [pagination, setPagination] = useState({
-        current: 1,
+        pageIndex: 1,
         pageSize: 10,
         total: 0,
     });
@@ -71,7 +70,7 @@ export const AuditLog = () => {
     ]
 
     useEffect(() => {
-        handleList(pagination.current, pagination.pageSize);
+        handleList(pagination.pageIndex, pagination.pageSize);
     }, [startTimestamp, endTimestamp]);
 
     const handleList = async (pageIndex, pageSize) => {
@@ -90,10 +89,11 @@ export const AuditLog = () => {
 
             const res = await listAuditLog(params)
             setPagination({
-                ...pagination,
-                current: res.data.PageIndex,
+                pageIndex: res.data.PageIndex,
+                pageSize: res.data.PageSize,
                 total: res.data.TotalCount,
             });
+
             setList(res.data.List);
         } catch (error) {
             message.error(error);
@@ -101,8 +101,8 @@ export const AuditLog = () => {
     };
 
     const handlePageChange = (page) => {
-        setPagination({ ...pagination, current: page.current, pageSize: page.pageSize });
-        handleList(page.current, page.pageSize)
+        setPagination({ ...pagination, pageIndex: page.pageIndex, pageSize: page.pageSize });
+        handleList(page.pageIndex, page.pageSize)
     };
 
     const handleShowTotal = (total, range) =>
@@ -124,12 +124,25 @@ export const AuditLog = () => {
 
     const onSearch = async (value) => {
         try {
+
+            console.log(pagination)
+
             const params = {
+                pageIndex: pagination.pageIndex,
+                pageSize: pagination.pageSize,
                 scope: scope,
                 query: value,
             }
+
             const res = await searchAuditLog(params)
-            setList(res.data)
+
+            setPagination({
+                pageIndex: res.data.PageIndex,
+                pageSize: res.data.PageSize,
+                total: res.data.TotalCount,
+            });
+
+            setList(res.data.List)
         } catch (error) {
             console.error(error)
         }
@@ -154,6 +167,7 @@ export const AuditLog = () => {
                     placeholder="时间范围"
                     style={{
                         flex: 1,
+                        marginRight: '10px'
                     }}
                     options={[
                         {
@@ -201,7 +215,7 @@ export const AuditLog = () => {
                     columns={columns}
                     dataSource={list}
                     pagination={{
-                        current: pagination.current ?? 1,
+                        pageIndex: pagination.pageIndex ?? 1,
                         pageSize: pagination.pageSize ?? 10,
                         total: pagination?.total ?? 0,
                         showQuickJumper: true,

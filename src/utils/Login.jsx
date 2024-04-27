@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Modal, Layout, Button, Checkbox, Form, Input } from 'antd';
-import { LockOutlined, UserOutlined, GithubOutlined } from '@ant-design/icons';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { ReactComponent as MyIcon } from '../img/701986.svg'
 import { useNavigate } from 'react-router-dom'
 import githubIcon from '../img/github_logo.png'

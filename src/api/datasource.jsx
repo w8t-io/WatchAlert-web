@@ -80,7 +80,7 @@ async function updateDatasource(params) {
 
 async function deleteDatasource(params) {
     try {
-        const res = await http('post', `/api/w8t/datasource/dataSourceDelete?id=${params.id}`);
+        const res = await http('post', `/api/w8t/datasource/dataSourceDelete`, params);
         message.open({
             type: 'success',
             content: '数据源删除成功',
