@@ -8,7 +8,7 @@ import {
     DashboardOutlined,
     DeploymentUnitOutlined,
     AreaChartOutlined,
-    // FileDoneOutlined,
+    FileDoneOutlined,
     // CloudSyncOutlined,
     // SafetyOutlined
 } from '@ant-design/icons';
@@ -73,7 +73,7 @@ export const ComponentSider = (props) => {
                         {/*    <Menu.Item key='11-1' onClick={(e) => handleMenuClick(e.key, '/user')}>事件大盘</Menu.Item>*/}
                         {/*    <Menu.Item key='11-2' onClick={(e) => handleMenuClick(e.key, '/userRole')}>事件中心</Menu.Item>*/}
                         {/*</SubMenu>*/}
-                        {/*<Menu.Item key='9' onClick={(e) => handleMenuClick(e.key, '/auditLog')} icon={<FileDoneOutlined />}>日志审计</Menu.Item >*/}
+                        <Menu.Item key='9' onClick={(e) => handleMenuClick(e.key, '/auditLog')} icon={<FileDoneOutlined />}>日志审计</Menu.Item >
                     </Menu>
                 </>
             );
