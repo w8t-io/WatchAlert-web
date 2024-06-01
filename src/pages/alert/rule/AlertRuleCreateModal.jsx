@@ -1,12 +1,15 @@
-import { Modal, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, InputNumber, message } from 'antd'
+import { Modal, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, InputNumber, Card,TimePicker } from 'antd'
 import React, { useState, useEffect } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { createRule, updateRule } from '../../../api/rule'
-import { getDatasource, searchDatasource } from '../../../api/datasource'
+import { searchDatasource } from '../../../api/datasource'
 import { getNoticeList } from '../../../api/notice'
 import { getJaegerService } from '../../../api/other'
-const MyFormItemContext = React.createContext([])
+import moment from 'moment';
+import './index.css'
 
+const format = 'HH:mm';
+const MyFormItemContext = React.createContext([])
 const { Option } = Select;
 
 function toArr(str) {
@@ -30,7 +33,7 @@ const MyFormItem = ({ name, ...props }) => {
 export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList, ruleGroupId }) => {
     const [form] = Form.useForm()
     const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
-    const [selectedType, setSelectedType] = useState() // 数据源类型
+    const [selectedType, setSelectedType] = useState(null) // 数据源类型
     const [datasourceOptions, setDatasourceOptions] = useState([])  // 数据源列表
     const [selectedItems, setSelectedItems] = useState([])  //选择数据源
     const [noticeLabels, setNoticeLabels] = useState([]) // notice Lable
@@ -42,12 +45,57 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
     // 告警等级
     const [severityValue, setSeverityValue] = useState(1)
     const [jaegerServiceList, setJaegerServiceList] = useState([])
+    const [selectedCard, setSelectedCard] = useState(null);
+    const [exprRule, setExprRule] = useState([{}])
+    // 初始化时间数据的状态
+    const [week,setWeek] = useState(null)
+    const [startTime, setStartTime] = useState(null);
+    const [endTime, setEndTime] = useState(null);
+    const weekOptions = [
+        {
+            label:'周一',
+            value:'Monday',
+        },
+        {
+            label:'周二',
+            value:'Tuesday',
+        },
+        {
+            label:'周三',
+            value:'Wednesday',
+        },
+        {
+            label:'周四',
+            value:'Thursday',
+        },
+        {
+            label:'周五',
+            value:'Friday',
+        },
+        {
+            label:'周六',
+            value:'Saturday',
+        },
+        {
+            label:'周日',
+            value:'Sunday',
+        },
+    ];
+
+    const handleCardClick = (index) => {
+        setSelectedType(index)
+        setSelectedCard(index);
+    };
 
     useEffect(() => {
         handleGetDatasourceList(selectedType)
     }, [selectedType])
 
     useEffect(() => {
+        if (selectedCard === null){
+            setSelectedCard(0)
+            setSelectedType(0)
+        }
         handleGetNoticeData()
     }, [])
 
@@ -75,20 +123,58 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     service: selectedRow.jaegerConfig.service,
                     tags: selectedRow.jaegerConfig.tags,
                     scope: selectedRow.jaegerConfig.scope,
+                },
+                effectiveTime: {
+                    week: selectedRow.effectiveTime.week,
+                    startTime: selectedRow.effectiveTime.startTime,
+                    endTime: selectedRow.effectiveTime.endTime,
                 }
             })
             setSelectedItems(selectedRow.datasourceId)
-            setSelectedType(selectedRow.datasourceType)
+            setWeek(selectedRow.effectiveTime.week)
+            setStartTime(selectedRow.effectiveTime.startTime)
+            setEndTime(selectedRow.effectiveTime.endTime)
+
+            let t = 0;
+            if (selectedRow.datasourceType === "Prometheus"){
+                t = 0
+            } else if (selectedRow.datasourceType === "Loki"){
+                t = 1
+            } else if (selectedRow.datasourceType === "AliCloudSLS"){
+                t = 2
+            } else if (selectedRow.datasourceType === "Jaeger"){
+                t = 3
+            }
+            setSelectedType(t)
             setNoticeLabels(selectedRow.noticeGroup)
+            setExprRule(selectedRow.prometheusConfig.rules)
         }
     }, [selectedRow, form])
 
     const handleCreateRule = async (values) => {
         try {
+            let t = "";
+            if (selectedType === 0){
+                t = "Prometheus"
+            } else if (selectedType === 1){
+                t = "Loki"
+            } else if (selectedType === 2){
+                t = "AliCloudSLS"
+            } else if (selectedType === 3){
+                t = "Jaeger"
+            }
+
             const params = {
                 ...values,
+                datasourceType: t,
                 noticeGroup: noticeLabels,
                 ruleGroupId: ruleGroupId,
+                effectiveTime: {
+                    week: week,
+                    startTime: startTime,
+                    endTime: endTime,
+                },
+                enabled: enabled
             }
 
             await createRule(params)
@@ -100,12 +186,29 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
     const handleUpdateRule = async (values) => {
         try {
+            let t = "";
+            if (selectedType === 0){
+                t = "Prometheus"
+            } else if (selectedType === 1){
+                t = "Loki"
+            } else if (selectedType === 2){
+                t = "AliCloudSLS"
+            } else if (selectedType === 3){
+                t = "Jaeger"
+            }
+
             const params = {
                 ...values,
+                datasourceType: t,
                 tenantId: selectedRow.tenantId,
                 ruleId: selectedRow.ruleId,
                 ruleGroupId: ruleGroupId,
-                noticeGroup: noticeLabels
+                noticeGroup: noticeLabels,
+                effectiveTime: {
+                    week: week,
+                    startTime: startTime,
+                    endTime: endTime,
+                }
             }
             await updateRule(params)
             handleList(ruleGroupId)
@@ -116,8 +219,19 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
     const handleGetDatasourceList = async (selectedType) => {
         try {
+            let t = "";
+            if (selectedType === 0){
+                t = "Prometheus"
+            } else if (selectedType === 1){
+                t = "Loki"
+            } else if (selectedType === 2){
+                t = "AliCloudSLS"
+            } else if (selectedType === 3){
+                t = "Jaeger"
+            }
+
             const params = {
-                type: selectedType
+                type: t
             }
             const res = await searchDatasource(params)
             const newData = res.data.map((item) => ({
@@ -214,6 +328,84 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         }
     }
 
+    const cards = [
+        {
+            imgSrc: 'https://console.flashcat.cloud/logos/large/prometheus.png',
+            text: 'Prometheus',
+        },
+        {
+            imgSrc: 'https://console.flashcat.cloud/logos/large/loki.svg',
+            text: 'Loki',
+        },
+        {
+            imgSrc: 'https://urlsnwww-1257117300.file.myqcloud.com/wp-content/uploads/1666109624574.png',
+            text: 'AliCloud sls',
+        },
+        {
+            imgSrc: 'https://assets-global.website-files.com/61e1d8dcf4a5e16aab73f6b4/6436e5b8fe5853f767c5a09a_a8yT7ufF-UQoyPgzgwSWyZXpaIrCaD_HwLL7wqBC3lp_DuVBM_34ZEnzKoGB2uSPI-zo1Hb1yLcN44IV8h7TKQlWBxbktSv3S_5r8eHEwpGeomDGUgJM4CQ0LkkxzwUvkviZS3mB-JAxmGRScBqe65w.png',
+            text: 'Jaeger',
+        }
+    ];
+
+    const addExprRule = () => {
+        setExprRule([...exprRule, { severity: '', expr: '' }])
+    }
+
+    const updateExprRule = (index, field, value) => {
+        const updatedExprRule = [...exprRule]
+        updatedExprRule[index][field] = value
+        setExprRule(updatedExprRule)
+    }
+
+    const removeExprRule = (index) => {
+        const updatedExprRule = [...exprRule]
+        updatedExprRule.splice(index, 1)
+        setExprRule(updatedExprRule)
+    }
+
+    const handleChange = (value) => {
+        setWeek(value)
+    };
+
+    // 时间选择器的事件处理程序
+    const handleStartTimeChange = (value) => {
+        const time = new Date(value);
+        const hours = time.getHours().toString().padStart(2, '0');
+        const minutes = time.getMinutes().toString().padStart(2, '0');
+        const seconds = (hours * 3600) + (minutes * 60);
+        setStartTime(seconds);
+    };
+
+    const handleEndTimeChange = (value) => {
+        const time = new Date(value);
+        const hours = time.getHours().toString().padStart(2, '0');
+        const minutes = time.getMinutes().toString().padStart(2, '0');
+        const seconds = (hours * 3600) + (minutes * 60);
+        setEndTime(seconds);
+    };
+
+    const [errors, setErrors] = useState([]);
+
+    const validateExpr = (expr) => {
+        const regex = /^(\s*(==|>=|<=|!=|>|<)\s*-?\d+(\.\d+)?\s*)$/;
+        return regex.test(expr);
+    };
+
+    const handleExprChange = (index, value) => {
+        const newErrors = [...errors];
+        if (validateExpr(value) || value === '') {
+            updateExprRule(index, 'expr', value);
+            newErrors[index] = '';
+        } else {
+            newErrors[index] = '请输入有效的表达式，例如："> 80"';
+        }
+        setErrors(newErrors);
+    };
+
+    const secondsToMoment = (seconds) => {
+        return moment.utc(seconds * 1000); // 将秒转换为毫秒，并使用 UTC 时间
+    };
+
     return (
         <Modal
             visible={visible}
@@ -266,62 +458,57 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 <Divider />
 
                 <div>
-                    <strong style={{ fontSize: '20px' }}>规则配置</strong>
+                    <strong style={{fontSize: '20px'}}>规则配置</strong>
 
-                    <div style={{ display: 'flex' }}>
+                    <div style={{display: 'flex'}}>
+                        <div>
+                            <p>数据源类型</p>
+                            <div style={{display: 'flex', gap: '10px'}}>
+                                {cards.map((card, index) => (
+                                    <Card
+                                        key={index}
+                                        style={{
+                                            height: 100,
+                                            width: 120,
+                                            position: 'relative',
+                                            cursor: 'pointer',
+                                            border: selectedCard === index ? '2px solid #1890ff' : '1px solid #d9d9d9'
+                                        }}
+                                        onClick={() => handleCardClick(index)}
+                                    >
+                                        <div style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: '100%',
+                                            marginTop: '-10px'
+                                        }}>
+                                            <img src={card.imgSrc}
+                                                 style={{height: '50px', width: '100px', objectFit: 'contain'}}
+                                                 alt={card.text}/>
+                                            <p style={{
+                                                fontSize: '12px',
+                                                textAlign: 'center',
+                                                marginTop: '5px'
+                                            }}>{card.text}</p>
+                                        </div>
+                                    </Card>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
 
+                    <div style={{marginTop: '15px'}}>
                         <MyFormItem
-                            name="datasourceType"
-                            label="数据源类型"
-                            style={{
-                                marginRight: '10px',
-                                width: '500px',
-                            }}
+                            name="datasourceId"
+                            label="关联数据源"
                             rules={[
                                 {
                                     required: true,
                                 },
                             ]}
                         >
-                            <Select
-                                placeholder="选择数据源类型"
-                                style={{
-                                    flex: 1,
-                                }}
-                                options={[
-                                    {
-                                        value: 'Prometheus',
-                                        label: 'Prometheus',
-                                    },
-                                    {
-                                        value: 'AliCloudSLS',
-                                        label: '阿里云SLS'
-                                    },
-                                    {
-                                        value: 'Jaeger',
-                                        label: 'Jaeger'
-                                    },
-                                    {
-                                        value: 'Loki',
-                                        label: 'Loki'
-                                    },
-                                ]}
-                                // value={selectedType}
-                                onChange={handleGetDatasourceData}
-                            />
-                        </MyFormItem>
-
-                        <MyFormItem
-                            name="datasourceId"
-                            label="关联数据源"
-                            style={{
-                                width: '500px',
-                            }}
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}>
                             <Select
                                 mode="multiple"
                                 placeholder="选择数据源"
@@ -332,29 +519,108 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                 }}
                                 tokenSeparators={[',']}
                                 options={datasourceOptions}
-
                             />
                         </MyFormItem>
-
                     </div>
 
-                    {selectedType === 'Prometheus' &&
-                        <MyFormItemGroup prefix={['prometheusConfig']}>
-                            <MyFormItem name="promQL" label="PromQL"
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}>
-                                <Input />
-                            </MyFormItem>
-                        </MyFormItemGroup>
+                    {selectedType === 0 &&
+                        <>
+                            <span>规则配置</span>
+                            <div className="rule-config-container">
+                                <MyFormItemGroup prefix={['prometheusConfig']}>
+                                    <MyFormItem name="promQL" label="PromQL" rules={[{required: true}]}>
+                                        <Input/>
+                                    </MyFormItem>
+
+                                    <MyFormItem name="" label="表达式" rules={[{required: !exprRule}]}>
+                                        {exprRule.map((label, index) => (
+                                            <div className="rule-item" key={index}>
+                                                <div className="rule-content">
+                                                    <MyFormItem
+                                                        name={['rules', index, 'severity']}
+                                                        rules={[{required: true, message: '请选择告警等级'}]}
+                                                    >
+                                                        <Select
+                                                            showSearch
+                                                            value={label.severity}
+                                                            onChange={(e) => updateExprRule(index, 'severity', e)}
+                                                            style={{width: '127px'}}
+                                                            placeholder="普通"
+                                                        >
+                                                            <Option value="P0">紧急</Option>
+                                                            <Option value="P1">告警</Option>
+                                                            <Option value="P2">普通</Option>
+                                                        </Select>
+                                                    </MyFormItem>
+
+                                                    <MyFormItem
+                                                        name={['rules', index, 'expr']}
+                                                        rules={[{ required: true, message: '请输入表达式' }]}
+                                                        validateStatus={errors[index] ? 'error' : ''}
+                                                        help={errors[index]}
+                                                    >
+                                                        <Input
+                                                            placeholder='> 80'
+                                                            value={label.expr}
+                                                            onChange={(e) => handleExprChange(index, e.target.value)}
+                                                            style={{ width: '68.3vh', marginLeft: '10px' }}
+                                                        />
+                                                    </MyFormItem>
+
+                                                    <Button onClick={() => removeExprRule(index)}
+                                                            style={{marginLeft: '10px'}}
+                                                            disabled={index === 0}>
+                                                        -
+                                                    </Button>
+                                                </div>
+                                        </div>
+                                    ))}
+                                    </MyFormItem>
+
+                                    <div className="duration-input">
+                                        <MyFormItem
+                                            name="forDuration"
+                                            label={"持续时间"}
+                                            rules={[{required: true}]}
+                                        >
+                                            <InputNumber
+                                                addonAfter="秒"
+                                                placeholder="60"
+                                                min={1}
+                                            />
+                                        </MyFormItem>
+                                    </div>
+
+                                   <div>
+                                       <MyFormItem
+                                           name="annotations"
+                                           label="告警详情"
+                                           tooltip="获取 Label 变量, 示例: ${job}, ${instance}。凡是 Target 中的变量均可通过`${}`获取。"
+                                           rules={[
+                                               {
+                                                   required: true,
+                                               },
+                                           ]}>
+                                           <Input/>
+                                       </MyFormItem>
+                                   </div>
+
+                                    <div className="action-buttons">
+                                        <Button type="link">数据预览</Button>
+                                        <Button type="link" onClick={addExprRule}>
+                                            + 添加规则条件
+                                        </Button>
+                                    </div>
+                                </MyFormItemGroup>
+
+                            </div>
+                        </>
                     }
 
-                    {selectedType === 'AliCloudSLS' &&
+                    {selectedType === 2 &&
                         <MyFormItemGroup prefix={['alicloudSLSConfig']}>
 
-                            <div style={{ display: 'flex' }}>
+                            <div style={{display: 'flex'}}>
                                 <MyFormItem
                                     name="project"
                                     label="Project"
@@ -367,7 +633,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                         marginRight: '10px',
                                         width: '500px',
                                     }}>
-                                    <Input />
+                                    <Input/>
                                 </MyFormItem>
                                 <MyFormItem
                                     name="logstore"
@@ -380,7 +646,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                     style={{
                                         width: '500px',
                                     }}>
-                                    <Input />
+                                    <Input/>
                                 </MyFormItem>
                             </div>
 
@@ -392,10 +658,10 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                         required: true,
                                     },
                                 ]}>
-                                <Input />
+                                <Input/>
                             </MyFormItem>
 
-                            <div style={{ display: 'flex' }}>
+                            <div style={{display: 'flex'}}>
                                 <MyFormItem
                                     name="logScope"
                                     label="查询区间"
@@ -409,7 +675,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                     ]}
                                 >
                                     <InputNumber
-                                        style={{ width: '97%' }}
+                                        style={{width: '97%'}}
                                         addonAfter={'分钟'}
                                         placeholder="10"
                                         min={1}
@@ -419,13 +685,14 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                 <MyFormItemGroup prefix={['evalCondition']}>
 
                                     <MyFormItem name="type" label="判断条件">
-                                        <Select showSearch style={{ marginRight: 8, width: '127px' }} placeholder="数据条数">
+                                        <Select showSearch style={{marginRight: 8, width: '127px'}}
+                                                placeholder="数据条数">
                                             <Option value="count">数据条数</Option>
                                         </Select>
                                     </MyFormItem>
 
                                     <MyFormItem name="operator" label=" ">
-                                        <Select showSearch style={{ marginRight: 8, width: '127px' }} placeholder=">">
+                                        <Select showSearch style={{marginRight: 8, width: '127px'}} placeholder=">">
                                             <Option value=">">{'>'}</Option>
                                             <Option value=">=">{'>='}</Option>
                                             <Option value="<">{'<'}</Option>
@@ -435,7 +702,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                     </MyFormItem>
 
                                     <MyFormItem name='value' label=" ">
-                                        <InputNumber style={{ width: '100px' }} min={1} placeholder="0" />
+                                        <InputNumber style={{width: '100px'}} min={1} placeholder="0"/>
                                     </MyFormItem>
 
                                 </MyFormItemGroup>
@@ -445,19 +712,19 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         </MyFormItemGroup>
                     }
 
-                    {selectedType === 'Jaeger' &&
+                    {selectedType === 3 &&
                         <MyFormItemGroup prefix={['jaegerConfig']}>
-                            <div style={{ display: 'flex' }}>
+                            <div style={{display: 'flex'}}>
                                 <MyFormItem name='service' label="应用服务"
-                                    style={{
-                                        marginRight: '10px',
-                                        width: '500px',
-                                    }}
-                                    rules={[
-                                        {
-                                            required: true,
-                                        },
-                                    ]}
+                                            style={{
+                                                marginRight: '10px',
+                                                width: '500px',
+                                            }}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                },
+                                            ]}
                                 >
                                     <Select
                                         allowClear
@@ -472,17 +739,18 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                 </MyFormItem>
 
                                 <MyFormItem name='tags' label="判断条件"
-                                    style={{
-                                        width: '500px',
-                                    }}
-                                    rules={[
-                                        {
-                                            required: true,
-                                        },
-                                    ]}
+                                            style={{
+                                                width: '500px',
+                                            }}
+                                            rules={[
+                                                {
+                                                    required: true,
+                                                },
+                                            ]}
                                 >
-                                    <Select showSearch style={{ width: '100%' }} placeholder="StatusCode = 5xx">
-                                        <Option value='%7B"http.status_code"%3A"5.%2A%3F"%7D'>{'StatusCode = 5xx'}</Option>
+                                    <Select showSearch style={{width: '100%'}} placeholder="StatusCode = 5xx">
+                                        <Option
+                                            value='%7B"http.status_code"%3A"5.%2A%3F"%7D'>{'StatusCode = 5xx'}</Option>
                                     </Select>
                                 </MyFormItem>
                             </div>
@@ -500,7 +768,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                 ]}
                             >
                                 <InputNumber
-                                    style={{ width: '98%' }}
+                                    style={{width: '98%'}}
                                     addonAfter={'分钟'}
                                     placeholder="10"
                                     min={1}
@@ -510,7 +778,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         </MyFormItemGroup>
                     }
 
-                    {selectedType === 'Loki' &&
+                    {selectedType === 1 &&
                         <MyFormItemGroup prefix={['lokiConfig']}>
 
                             <MyFormItem
@@ -521,10 +789,10 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                         required: true,
                                     },
                                 ]}>
-                                <Input />
+                                <Input/>
                             </MyFormItem>
 
-                            <div style={{ display: 'flex' }}>
+                            <div style={{display: 'flex'}}>
                                 <MyFormItem
                                     name="logScope"
                                     label="查询区间"
@@ -538,7 +806,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                     ]}
                                 >
                                     <InputNumber
-                                        style={{ width: '97%' }}
+                                        style={{width: '97%'}}
                                         addonAfter={'分钟'}
                                         placeholder="10"
                                         min={1}
@@ -548,13 +816,14 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                 <MyFormItemGroup prefix={['evalCondition']}>
 
                                     <MyFormItem name="type" label="判断条件">
-                                        <Select showSearch style={{ marginRight: 8, width: '127px' }} placeholder="数据条数">
+                                        <Select showSearch style={{marginRight: 8, width: '127px'}}
+                                                placeholder="数据条数">
                                             <Option value="count">数据条数</Option>
                                         </Select>
                                     </MyFormItem>
 
                                     <MyFormItem name="operator" label=" ">
-                                        <Select showSearch style={{ marginRight: 8, width: '127px' }} placeholder=">">
+                                        <Select showSearch style={{marginRight: 8, width: '127px'}} placeholder=">">
                                             <Option value=">">{'>'}</Option>
                                             <Option value=">=">{'>='}</Option>
                                             <Option value="<">{'<'}</Option>
@@ -564,7 +833,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                     </MyFormItem>
 
                                     <MyFormItem name='value' label=" ">
-                                        <InputNumber style={{ width: '100px' }} min={1} placeholder="0" />
+                                        <InputNumber style={{width: '100px'}} min={1} placeholder="0"/>
                                     </MyFormItem>
 
                                 </MyFormItemGroup>
@@ -574,12 +843,12 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         </MyFormItemGroup>
                     }
 
-                    <div style={{ display: 'flex' }}>
+                    <div style={{display: 'flex', marginTop: '20px'}}>
                         <MyFormItem
                             name="evalInterval"
                             label="执行频率"
                             style={{
-                                width: '385px',
+                                width: '100vh',
                             }}
                             rules={[
                                 {
@@ -588,71 +857,55 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             ]}
                         >
                             <InputNumber
-                                style={{ width: '97%' }}
+                                style={{width: '100%'}}
                                 addonAfter={<span>秒</span>}
                                 placeholder="10"
                                 min={1}
                             />
                         </MyFormItem>
 
-                        {selectedType === 'Prometheus' &&
-                            <MyFormItem
-                                name="forDuration"
-                                label="持续时间"
-                                style={{
-                                    width: '50%',
-                                }}
-                                rules={[
-                                    {
-                                        required: true,
-                                    },
-                                ]}
-                            >
-                                <InputNumber
-                                    style={{ width: '100%' }}
-                                    addonAfter={<span>秒</span>}
-                                    placeholder="60"
-                                    min={1}
-                                />
-                            </MyFormItem>
-                        }
                     </div>
 
-                    <MyFormItem name="severity" label="告警等级"
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}>
-                        <Radio.Group onChange={onChange} value={severityValue}>
-                            <Radio value={'P0'}>P0级告警</Radio>
-                            <Radio value={'P1'}>P1级告警</Radio>
-                            <Radio value={'P2'}>P2级告警</Radio>
-                        </Radio.Group>
+                    <MyFormItem
+                        name="effectiveTime"
+                        label="生效时间"
+                        style={{
+                            width: '96.5vh',
+                        }}
+                    >
+                        <div style={{display: 'flex', gap: '10px'}}>
+                            <Select
+                                mode="multiple"
+                                allowClear
+                                style={{
+                                    width: '100%',
+                                }}
+                                placeholder="请选择规则生效时间"
+                                value={week}
+                                onChange={handleChange}
+                                options={weekOptions}
+                            />
+                            <TimePicker
+                                placeholder={"开始"}
+                                format={format}
+                                onChange={handleStartTimeChange}
+                                value={secondsToMoment(startTime)}/>
+                            <TimePicker
+                                placeholder={"结束"}
+                                format={format}
+                                onChange={handleEndTimeChange}
+                                value={secondsToMoment(endTime)}/>
+                        </div>
                     </MyFormItem>
 
-                    {
-                        selectedType === "Prometheus" &&
-                        <MyFormItem
-                            name="annotations"
-                            label="告警详情"
-                            tooltip="获取 Label 变量, 示例: ${job}, ${instance}。凡是 Target 中的变量均可通过`${}`获取。"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}>
-                            <Input />
-                        </MyFormItem>
-                    }
                 </div>
 
-                <Divider />
+                <Divider/>
 
                 <div>
-                    <strong style={{ fontSize: '20px' }}>通知配置</strong>
+                    <strong style={{fontSize: '20px'}}>通知配置</strong>
 
-                    <div style={{ display: 'flex' }}>
+                    <div style={{display: 'flex'}}>
                         <MyFormItem
                             name="noticeId"
                             label="通知对象"
@@ -692,7 +945,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             ]}
                         >
                             <InputNumber
-                                style={{ width: '100%' }}
+                                style={{width: '100%'}}
                                 addonAfter={<span>分钟</span>}
                                 placeholder="60"
                                 min={1}
@@ -700,32 +953,36 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         </MyFormItem>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <MyFormItem style={{ marginBottom: '0', marginRight: '10px' }}>
+                    <div style={{display: 'flex', alignItems: 'center'}}>
+                        <MyFormItem style={{marginBottom: '0', marginRight: '10px'}}>
                             <span>分组通知</span>
                             <Tooltip title="根据 Metric 标签进行分组通知">
-                                <QuestionCircleOutlined style={{ color: '#1890ff', marginLeft: '4px' }} />
+                                <QuestionCircleOutlined style={{color: '#1890ff', marginLeft: '4px'}}/>
                             </Tooltip>
                         </MyFormItem>
-                        <Button onClick={addLabel} style={{ marginTop: '0' }}>
+                        <Button onClick={addLabel} style={{marginTop: '0'}}>
                             +
                         </Button>
                     </div>
                 </div>
 
-                <MyFormItemGroup prefix={['noticeGroup']} >
-                    {noticeLabels.length >= 1 ? (<div style={{ display: 'flex', }}>
-                        <label style={{ marginRight: '21vh' }} >* Key</label>
-                        <label style={{ marginRight: '20vh' }} >* Value</label>
-                        <label style={{ marginRight: '18vh' }} >* 通知对象</label>
+                <MyFormItemGroup prefix={['noticeGroup']}>
+                    {noticeLabels.length >= 1 ? (<div style={{display: 'flex',}}>
+                        <label style={{marginRight: '21vh'}}>* Key</label>
+                        <label style={{marginRight: '20vh'}}>* Value</label>
+                        <label style={{marginRight: '18vh'}}>* 通知对象</label>
                         <label>操作</label>
                     </div>) : null}
                     {noticeLabels.map((label, index) => (
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '10px' }}>
+                        <div style={{display: 'flex', alignItems: 'center', marginTop: '10px'}}>
                             <Input
                                 name={`[${index}].key`}
                                 placeholder="Key"
-                                style={{ marginRight: '10px', width: 'calc((100% / 3) - 20px)', height: '32px' }} // 减去marginRight和padding
+                                style={{
+                                    marginRight: '10px',
+                                    width: 'calc((100% / 3) - 20px)',
+                                    height: '32px'
+                                }} // 减去marginRight和padding
                                 value={label.key}
                                 onChange={(e) => updateLabel(index, 'key', e.target.value)}
                             />
@@ -733,7 +990,11 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             <Input
                                 name={`[${index}].value`}
                                 placeholder="Value"
-                                style={{ marginRight: '10px', width: 'calc((100% / 3) - 20px)', height: '32px' }} // 减去marginRight和padding
+                                style={{
+                                    marginRight: '10px',
+                                    width: 'calc((100% / 3) - 20px)',
+                                    height: '32px'
+                                }} // 减去marginRight和padding
                                 value={label.value}
                                 onChange={(e) => updateLabel(index, 'value', e.target.value)}
                             />
@@ -762,7 +1023,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         tooltip="启用/禁用"
                         valuePropName="checked"
                     >
-                        <Switch checked={enabled} onChange={setEnabled} />
+                        <Switch value={enabled} checked={enabled} onChange={(e)=>{setEnabled(e)}} />
                     </MyFormItem>
                 </div>
 

@@ -1,0 +1,29 @@
+.rule-config-container {
+    border: 1px solid #ccc;
+    padding: 16px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+.rule-item {
+    display: flex;
+    margin-bottom: 10px;
+}
+
+.rule-content {
+    display: flex;
+}
+
+.duration-input {
+    display: flex;
+    margin-top: -20px;
+    align-items: center;
+}
+
+.action-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: -15px;
+    margin-top: -10px;
+}

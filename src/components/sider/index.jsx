@@ -8,7 +8,9 @@ import {
     DashboardOutlined,
     DeploymentUnitOutlined,
     AreaChartOutlined,
-    FileDoneOutlined
+    FileDoneOutlined,
+    // CloudSyncOutlined,
+    // SafetyOutlined
 } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { Menu, Layout } from 'antd';
@@ -63,6 +65,14 @@ export const ComponentSider = (props) => {
 
                         <Menu.Item key='6' onClick={(e) => handleMenuClick(e.key, '/datasource')} icon={<PieChartOutlined />}>数据源</Menu.Item>
                         <Menu.Item key='8' onClick={(e) => handleMenuClick(e.key, '/dashboard')} icon={<DashboardOutlined />}>仪表盘</Menu.Item >
+                        {/*<SubMenu key='10' icon={<CloudSyncOutlined />} title='云拨测'>*/}
+                        {/*    <Menu.Item key='10-1' onClick={(e) => handleMenuClick(e.key, '/userRole')}>即时拨测</Menu.Item>*/}
+                        {/*    <Menu.Item key='10-2' onClick={(e) => handleMenuClick(e.key, '/user')}>拨测中心</Menu.Item>*/}
+                        {/*</SubMenu>*/}
+                        {/*<SubMenu key='11' icon={<SafetyOutlined />} title='智能洞察'>*/}
+                        {/*    <Menu.Item key='11-1' onClick={(e) => handleMenuClick(e.key, '/user')}>事件大盘</Menu.Item>*/}
+                        {/*    <Menu.Item key='11-2' onClick={(e) => handleMenuClick(e.key, '/userRole')}>事件中心</Menu.Item>*/}
+                        {/*</SubMenu>*/}
                         <Menu.Item key='9' onClick={(e) => handleMenuClick(e.key, '/auditLog')} icon={<FileDoneOutlined />}>日志审计</Menu.Item >
                     </Menu>
                 </>
