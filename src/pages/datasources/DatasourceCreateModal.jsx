@@ -55,6 +55,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                 alicloudEndpoint: selectedRow.alicloudEndpoint,
                 alicloudAk: selectedRow.alicloudAk,
                 alicloudSk: selectedRow.alicloudSk,
+                awsCloudwatch: selectedRow.awsCloudwatch,
                 description: selectedRow.description,
                 enabled: selectedRow.enabled
             })
@@ -147,31 +148,35 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                 value: 'Loki',
                                 label: 'Loki',
                             },
+                            {
+                                value: 'CloudWatch',
+                                label: 'CloudWatch'
+                            }
                         ]}
                     />
                 </MyFormItem>
 
-                {selectedType !== 'AliCloudSLS' &&
+                {(selectedType === 'Prometheus' || selectedType === 'Loki') &&
                     <MyFormItemGroup prefix={['http']}>
                         <MyFormItem name="url" label="URL"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                                {
-                                    pattern: /^(http|https):\/\//,
-                                    message: '输入正确的URL格式',
-                                },
-                            ]}>
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                        {
+                                            pattern: /^(http|https):\/\//,
+                                            message: '输入正确的URL格式',
+                                        },
+                                    ]}>
                             <Input />
                         </MyFormItem>
 
                         <MyFormItem name="timeout" label="Timeout"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}>
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}>
                             <InputNumber
                                 style={{ width: '100%' }}
                                 addonAfter={<span>秒</span>}
@@ -185,31 +190,64 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                 {selectedType === 'AliCloudSLS' &&
                     <div>
                         <MyFormItem name="alicloudEndpoint" label="Endpoint"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}>
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}>
                             <Input />
                         </MyFormItem>
 
                         <MyFormItem name="alicloudAk" label="AccessKeyId"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}>
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}>
                             <Input />
                         </MyFormItem>
 
                         <MyFormItem name="alicloudSk" label="AccessKeySecret"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}>
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}>
                             <Input />
                         </MyFormItem>
+                    </div>
+                }
+
+                {selectedType === 'CloudWatch' &&
+                    <div>
+                        <MyFormItemGroup prefix={['awsCloudwatch']}>
+                            <MyFormItem name="region" label="Region"
+                                        rules={[
+                                            {
+                                                required: true,
+                                            },
+                                        ]}>
+                                <Input />
+                            </MyFormItem>
+
+                            <MyFormItem name="accessKey" label="AccessKey"
+                                        rules={[
+                                            {
+                                                required: true,
+                                            },
+                                        ]}>
+                                <Input />
+                            </MyFormItem>
+
+                            <MyFormItem name="secretKey" label="SecretKey"
+                                        rules={[
+                                            {
+                                                required: true,
+                                            },
+                                        ]}>
+                                <Input />
+                            </MyFormItem>
+                        </MyFormItemGroup>
                     </div>
                 }
 
