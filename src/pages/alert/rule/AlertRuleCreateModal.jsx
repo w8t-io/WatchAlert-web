@@ -7,6 +7,14 @@ import { getNoticeList } from '../../../api/notice'
 import { getJaegerService } from '../../../api/other'
 import moment from 'moment';
 import './index.css'
+import {
+    getDimensions,
+    getMetricNames,
+    getMetricTypes,
+    getRdsClusters,
+    getRdsInstances,
+    getStatistics
+} from "../../../api/cloudwatch";
 
 const format = 'HH:mm';
 const MyFormItemContext = React.createContext([])
@@ -38,12 +46,12 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
     const [selectedItems, setSelectedItems] = useState([])  //选择数据源
     const [noticeLabels, setNoticeLabels] = useState([]) // notice Lable
     const [noticeOptions, setNoticeOptions] = useState([])  // 通知对象列表
-    // 在组件中定义一个状态来存储选择的通知对象值
-    const [selectedNotice, setSelectedNotice] = useState('')
     // 禁止输入空格
     const [spaceValue, setSpaceValue] = useState('')
+
     // 告警等级
     const [severityValue, setSeverityValue] = useState(1)
+
     const [jaegerServiceList, setJaegerServiceList] = useState([])
     const [selectedCard, setSelectedCard] = useState(null);
     const [exprRule, setExprRule] = useState([{}])
@@ -82,6 +90,15 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         },
     ];
 
+    const [metricTypeOptions,setMetricTypeOptions] = useState([])
+    const [selectMetricType,setSelectMetricType] = useState('')
+    const [metricNameOptions,setMetricNameOptions] = useState([])
+    const [statisticOptions,setStatisticOptions] = useState([])
+    const [cwExpr,setCwExpr] = useState('')
+    const [dimensionOptions,setDimensionOptions] = useState([])
+    const [selectDimension,setSelectDimension] = useState('')
+    const [endpointOptions,setEndpointOptions] = useState([])
+
     const handleCardClick = (index) => {
         setSelectedType(index)
         setSelectedCard(index);
@@ -98,6 +115,36 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         }
         handleGetNoticeData()
     }, [])
+
+
+    useEffect(() => {
+        handleGetNoticeData()
+        handleGetMetricTypes()
+        handleGetStatistics()
+    }, [])
+
+    useEffect(() => {
+        const params = {
+            metricType: selectMetricType
+        }
+        handleGetMetricNames(params)
+        handleGetDimensions(params)
+    }, [selectMetricType]);
+
+    useEffect(() => {
+        const params = {
+            datasourceId: selectedItems,
+        }
+
+        if (selectDimension === 'DBInstanceIdentifier'){
+            handleGetRdsInstances(params)
+        }
+
+        if (selectDimension === 'DBClusterIdentifier'){
+            handleGetRdsClusters(params)
+        }
+
+    }, [selectDimension]);
 
     useEffect(() => {
         if (selectedRow) {
@@ -128,7 +175,8 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     week: selectedRow.effectiveTime.week,
                     startTime: selectedRow.effectiveTime.startTime,
                     endTime: selectedRow.effectiveTime.endTime,
-                }
+                },
+                cloudwatchConfig: selectedRow.cloudwatchConfig,
             })
             setSelectedItems(selectedRow.datasourceId)
             setWeek(selectedRow.effectiveTime.week)
@@ -144,8 +192,12 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 t = 2
             } else if (selectedRow.datasourceType === "Jaeger"){
                 t = 3
+            } else if (selectedRow.datasourceType === "CloudWatch"){
+                t = 4
             }
+
             setSelectedType(t)
+            setSelectedCard(t)
             setNoticeLabels(selectedRow.noticeGroup)
             setExprRule(selectedRow.prometheusConfig.rules)
         }
@@ -153,16 +205,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
     const handleCreateRule = async (values) => {
         try {
-            let t = "";
-            if (selectedType === 0){
-                t = "Prometheus"
-            } else if (selectedType === 1){
-                t = "Loki"
-            } else if (selectedType === 2){
-                t = "AliCloudSLS"
-            } else if (selectedType === 3){
-                t = "Jaeger"
-            }
+            let t = getSelectedTypeName(selectedType)
 
             const params = {
                 ...values,
@@ -177,6 +220,14 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 enabled: enabled
             }
 
+            if (selectedType === 4) {
+                let letCwExpr = cwExpr
+                if (letCwExpr === '') {
+                    letCwExpr = ">"
+                }
+                params.cloudwatchConfig.expr = letCwExpr
+            }
+
             await createRule(params)
             handleList(ruleGroupId)
         } catch (error) {
@@ -186,16 +237,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
     const handleUpdateRule = async (values) => {
         try {
-            let t = "";
-            if (selectedType === 0){
-                t = "Prometheus"
-            } else if (selectedType === 1){
-                t = "Loki"
-            } else if (selectedType === 2){
-                t = "AliCloudSLS"
-            } else if (selectedType === 3){
-                t = "Jaeger"
-            }
+            let t = getSelectedTypeName(selectedType);
 
             const params = {
                 ...values,
@@ -210,6 +252,15 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     endTime: endTime,
                 }
             }
+
+            if (selectedType === 4) {
+                let letCwExpr = cwExpr
+                if (letCwExpr === '') {
+                    letCwExpr = ">"
+                }
+                params.cloudwatchConfig.expr = letCwExpr
+            }
+
             await updateRule(params)
             handleList(ruleGroupId)
         } catch (error) {
@@ -217,18 +268,26 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         }
     }
 
+    const getSelectedTypeName = (selectedType) =>{
+        let t = ""
+        if (selectedType === 0){
+            t = "Prometheus"
+        } else if (selectedType === 1){
+            t = "Loki"
+        } else if (selectedType === 2){
+            t = "AliCloudSLS"
+        } else if (selectedType === 3){
+            t = "Jaeger"
+        } else if (selectedType === 4){
+            t = "CloudWatch"
+        }
+
+        return t
+    }
+
     const handleGetDatasourceList = async (selectedType) => {
         try {
-            let t = "";
-            if (selectedType === 0){
-                t = "Prometheus"
-            } else if (selectedType === 1){
-                t = "Loki"
-            } else if (selectedType === 2){
-                t = "AliCloudSLS"
-            } else if (selectedType === 3){
-                t = "Jaeger"
-            }
+            let t = getSelectedTypeName(selectedType)
 
             const params = {
                 type: t
@@ -311,10 +370,6 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
     const handleSelectChange = (value) => {
     }
 
-    const onChange = (e) => {
-        setSeverityValue(e.target.value)
-    }
-
     const handleInputChange = (e) => {
         // 移除输入值中的空格
         const newValue = e.target.value.replace(/\s/g, '')
@@ -344,6 +399,10 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         {
             imgSrc: 'https://assets-global.website-files.com/61e1d8dcf4a5e16aab73f6b4/6436e5b8fe5853f767c5a09a_a8yT7ufF-UQoyPgzgwSWyZXpaIrCaD_HwLL7wqBC3lp_DuVBM_34ZEnzKoGB2uSPI-zo1Hb1yLcN44IV8h7TKQlWBxbktSv3S_5r8eHEwpGeomDGUgJM4CQ0LkkxzwUvkviZS3mB-JAxmGRScBqe65w.png',
             text: 'Jaeger',
+        },
+        {
+            imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUyYcSb419JTRt9roMB682vIBhG-H_OUuvNw&s',
+            text: 'CloudWatch',
         }
     ];
 
@@ -405,6 +464,103 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
     const secondsToMoment = (seconds) => {
         return moment.utc(seconds * 1000); // 将秒转换为毫秒，并使用 UTC 时间
     };
+
+    const handleGetMetricTypes = async() =>{
+        try{
+            const res = await getMetricTypes()
+            const ops = res.data.map((item) =>{
+                return {
+                    label: item,
+                    value: item,
+                }
+            })
+            setMetricTypeOptions(ops)
+        } catch (error){
+            console.error(error)
+        }
+    }
+
+    const handleGetMetricNames = async(params) =>{
+        try{
+            const res = await getMetricNames(params)
+            const ops = res.data.map((item) =>{
+                return {
+                    label: item,
+                    value: item,
+                }
+            })
+            setMetricNameOptions(ops)
+        } catch (error){
+            console.error(error)
+        }
+    }
+
+    const handleGetStatistics = async() =>{
+        try{
+            const res = await getStatistics()
+            const ops = res.data.map((item) =>{
+                return {
+                    label: item,
+                    value: item,
+                }
+            })
+            setStatisticOptions(ops)
+        } catch (error){
+            console.error(error)
+        }
+    }
+
+    const handleGetDimensions = async(params) =>{
+        try{
+            const res = await getDimensions(params)
+            const ops = res.data.map((item) =>{
+                return {
+                    label: item,
+                    value: item,
+                }
+            })
+            setDimensionOptions(ops)
+        } catch (error){
+            console.error(error)
+        }
+    }
+
+    const handleGetRdsInstances = async(params) =>{
+        try{
+            const res = await getRdsInstances(params)
+            const ops = res.data.map((item) =>{
+                return {
+                    label: item,
+                    value: item,
+                }
+            })
+            setEndpointOptions(ops)
+        } catch (error){
+            console.error(error)
+        }
+    }
+
+    const handleGetRdsClusters = async(params) =>{
+        try{
+            const res = await getRdsClusters(params)
+            if (res.data === null){
+                setEndpointOptions([])
+            }
+            const ops = res.data.map((item) =>{
+                return {
+                    label: item,
+                    value: item,
+                }
+            })
+            setEndpointOptions(ops)
+        } catch (error){
+            console.error(error)
+        }
+    }
+
+    const onChangeSeverity = (e) => {
+        setSeverityValue(e.target.value)
+    }
 
     return (
         <Modal
@@ -471,8 +627,9 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                             height: 100,
                                             width: 120,
                                             position: 'relative',
-                                            cursor: 'pointer',
-                                            border: selectedCard === index ? '2px solid #1890ff' : '1px solid #d9d9d9'
+                                            cursor: type === 'update' ? 'not-allowed' : 'pointer',
+                                            border: selectedCard === index ? '2px solid #1890ff' : '1px solid #d9d9d9',
+                                            pointerEvents: type === 'update' ? 'none' : 'auto',
                                         }}
                                         onClick={() => handleCardClick(index)}
                                     >
@@ -843,6 +1000,162 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         </MyFormItemGroup>
                     }
 
+                    {selectedType === 4 &&
+                        <MyFormItemGroup prefix={['cloudwatchConfig']}>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <MyFormItem
+                                    name="namespace"
+                                    label="指标类型"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                    style={{
+                                        width: '24%',
+                                    }}>
+                                    <Select
+                                        showSearch
+                                        placeholder="请选择指标类型"
+                                        options={metricTypeOptions}
+                                        onChange={setSelectMetricType}
+                                    />
+                                </MyFormItem>
+
+                                <MyFormItem
+                                    name="metricName"
+                                    label="指标名称"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                    style={{
+                                        width: '24%',
+                                    }}>
+                                    <Select
+                                        showSearch
+                                        placeholder="请选择指标名称"
+                                        options={metricNameOptions}
+                                    />
+                                </MyFormItem>
+
+                                <MyFormItem
+                                    name="statistic"
+                                    label="统计类型"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                    style={{
+                                        width: '24%',
+                                    }}>
+                                    <Select
+                                        placeholder="请选择统计类型"
+                                        options={statisticOptions}
+                                    />
+                                </MyFormItem>
+
+                                <MyFormItem
+                                    name="threshold"
+                                    label="表达式"
+                                    style={{
+                                        width: '24%',
+                                    }}
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}>
+                                    <InputNumber  placeholder="输入阈值, 如 80" addonBefore={
+                                        <Select onChange={setCwExpr} placeholder=">" value={cwExpr?cwExpr:'>'}>
+                                            <Option value=">">{'>'}</Option>
+                                            <Option value=">=">{'>='}</Option>
+                                            <Option value="<">{'<'}</Option>
+                                            <Option value="==">{'=='}</Option>
+                                            <Option value="!=">{'!='}</Option>
+                                        </Select>
+                                    }/>
+                                </MyFormItem>
+                            </div>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <MyFormItem
+                                    name="dimension"
+                                    label="端点类型"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                    style={{
+                                        width: '50%',
+                                    }}>
+                                    <Select
+                                        showSearch
+                                        placeholder="请选择端点类型"
+                                        options={dimensionOptions}
+                                        onChange={setSelectDimension}
+                                    />
+                                </MyFormItem>
+                                <MyFormItem
+                                    name="endpoints"
+                                    label="目标"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                    style={{
+                                        width: '50%',
+                                    }}>
+                                    <Select
+                                        showSearch
+                                        mode="multiple"
+                                        placeholder="请选择目标"
+                                        options={endpointOptions}
+                                        tokenSeparators={[',']}
+                                    />
+                                </MyFormItem>
+                            </div>
+                            <MyFormItem
+                                name="period"
+                                label="查询区间"
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                style={{
+                                    width: '50%',
+                                }}
+                            >
+                                <InputNumber
+                                    style={{ width: '97%' }}
+                                    addonAfter={<span>分</span>}
+                                    placeholder="10"
+                                    min={1}
+                                />
+                            </MyFormItem>
+                        </MyFormItemGroup>
+                    }
+
+                    {selectedType !==0 &&
+                        <MyFormItem
+                            name="severity" label="告警等级"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}>
+                            <Radio.Group onChange={onChangeSeverity} value={severityValue}>
+                                <Radio value={'P0'}>P0级告警</Radio>
+                                <Radio value={'P1'}>P1级告警</Radio>
+                                <Radio value={'P2'}>P2级告警</Radio>
+                            </Radio.Group>
+                        </MyFormItem>
+                    }
+
                     <div style={{display: 'flex', marginTop: '20px'}}>
                         <MyFormItem
                             name="evalInterval"
@@ -926,7 +1239,6 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                 }}
                                 allowClear
                                 placeholder="选择通知对象"
-                                value={selectedNotice} // 将选择的值与状态中的值进行绑定
                                 options={noticeOptions}
                                 onChange={handleSelectChange} // 使用onChange事件处理函数来捕获选择的值
                             />

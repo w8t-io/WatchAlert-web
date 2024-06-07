@@ -101,8 +101,8 @@ export const AuditLog = () => {
     };
 
     const handlePageChange = (page) => {
-        setPagination({ ...pagination, pageIndex: page.pageIndex, pageSize: page.pageSize });
-        handleList(page.pageIndex, page.pageSize)
+        setPagination({ ...pagination, pageIndex: page.current, pageSize: page.pageSize });
+        handleList(page.current, page.pageSize)
     };
 
     const handleShowTotal = (total, range) =>
