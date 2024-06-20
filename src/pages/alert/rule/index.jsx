@@ -1,15 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Input, Table, Select, Popconfirm, Dropdown, Tag, message } from 'antd'
+import { Button, Input, Table, Radio, Popconfirm, Dropdown, Tag, message } from 'antd'
 import { useParams } from 'react-router-dom'
 import { AlertRuleCreateModal } from './AlertRuleCreateModal'
 import { deleteRule, getRuleList } from '../../../api/rule'
 
 export const AlertRules = () => {
+    const { Search } = Input
     const [selectedRow, setSelectedRow] = useState(null)
     const [updateVisible, setUpdateVisible] = useState(false)
     const [visible, setVisible] = useState(false)
     const [list, setList] = useState([])
     const { id } = useParams()
+    const [selectRuleStatus, setSelectRuleStatus] = useState('all')
+    const [pagination, setPagination] = useState({
+        index: 1,
+        size: 10,
+        total: 0,
+    });
     const columns = [
         {
             title: '规则名称',
@@ -89,10 +96,20 @@ export const AlertRules = () => {
     const handleList = async (id) => {
         try {
             const params = {
+                index: pagination.index,
+                size: pagination.size,
+                status: selectRuleStatus,
                 ruleGroupId: id,
             }
             const res = await getRuleList(params)
-            setList(res.data)
+
+            setPagination({
+                index: res.data.index,
+                size: res.data.size,
+                total: res.data.total,
+            });
+
+            setList(res.data.list);
         } catch (error) {
             console.error(error)
         }
@@ -124,13 +141,71 @@ export const AlertRules = () => {
         setUpdateVisible(true)
     }
 
+    const onSearch = async (value) => {
+        try {
+            const params = {
+                index: pagination.index,
+                size: pagination.size,
+                ruleGroupId: id,
+                status: selectRuleStatus,
+                query: value,
+            }
+
+            const res = await getRuleList(params)
+
+            setPagination({
+                index: res.data.index,
+                size: res.data.size,
+                total: res.data.total,
+            });
+
+            setList(res.data.list);
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const changeStatus = async ({ target: { value } }) => {
+        setSelectRuleStatus(value)
+    }
+
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button type="primary" onClick={() => setVisible(true)}> 创建 </Button>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <div style={{ display: 'flex', gap: '10px' }}>
+                    <Radio.Group
+                        options={[
+                            {
+                                label: '全部',
+                                value: 'all',
+                            },
+                            {
+                                label: '开启',
+                                value: 'enabled',
+                            },
+                            {
+                                label: '禁用',
+                                value: 'disabled',
+                            }
+                        ]}
+                        defaultValue={selectRuleStatus}
+                        onChange={changeStatus}
+                        optionType="button"
+                    />
+
+                    <Search
+                        allowClear
+                        placeholder="输入搜索关键字"
+                        onSearch={onSearch}
+                        style={{width: 300}}
+                    />
+                </div>
+                <div>
+                    <Button type="primary" onClick={() => setVisible(true)}> 创建 </Button>
+                </div>
             </div>
 
-            <div style={{ display: 'flex' }}>
+            <div style={{display: 'flex'}}>
                 <AlertRuleCreateModal
                     visible={visible}
                     onClose={handleModalClose}
@@ -158,9 +233,9 @@ export const AlertRules = () => {
                     }}
                 >
                 </div>
-            </div >
+            </div>
 
-            <div style={{ overflowX: 'auto', marginTop: 10, height: '71vh' }}>
+            <div style={{overflowX: 'auto', marginTop: 10, height: '71vh'}}>
                 <Table
                     columns={columns}
                     dataSource={list}

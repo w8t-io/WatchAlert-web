@@ -122,8 +122,8 @@ class NoticeTemplate extends React.Component {
                             allowClear
                             placeholder="输入搜索关键字"
                             onSearch={this.onSearch}
-                            enterButton
-                            style={{ width: 300 }} />                </div>
+                            style={{ width: 300 }} />
+                    </div>
                     <div>
                         <Button type="primary" onClick={() => this.setState({ visible: true })}>
                             创建

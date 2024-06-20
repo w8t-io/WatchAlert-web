@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Select, Table, message, Tag, Space, DatePicker, Tooltip, Button, Drawer } from 'antd';
+import {Select, Table, message, Tag, Space, DatePicker, Tooltip, Button, Drawer, Input} from 'antd';
 import dayjs from 'dayjs';
 import { getHisEventList } from '../../../api/event';
 const { RangePicker } = DatePicker
 
 export const AlertHisEvent = () => {
+    const { Search } = Input
     const [list, setList] = useState([]);
-    const [selectedDataSource, setSelectedDataSource] = useState('');
     const [selectedSourceType, setSelectedSourceType] = useState('');
     const [selectedAlertLevel, setSelectedAlertLevel] = useState('');
     const [startTimestamp, setStartTimestamp] = useState(null)
     const [endTimestamp, setEndTimestamp] = useState(null)
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [annotations, setAnnotations] = useState('');
+    const [searchQuery,setSearchQuery] = useState('');
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: 10,
@@ -102,7 +103,7 @@ export const AlertHisEvent = () => {
 
     useEffect(() => {
         handleList(pagination.current, pagination.pageSize);
-    }, [selectedDataSource, selectedAlertLevel, startTimestamp, endTimestamp]);
+    }, [searchQuery, selectedSourceType, selectedAlertLevel, startTimestamp, endTimestamp]);
 
     const showMoreTags = (tags, record, visibleCount = 5) => {
         if (Object.entries(record.metric).length <= visibleCount) {
@@ -158,8 +159,9 @@ export const AlertHisEvent = () => {
                 severity: selectedAlertLevel ? selectedAlertLevel : undefined,
                 startAt: startTimestamp ? startTimestamp : undefined,
                 endAt: endTimestamp ? endTimestamp : undefined,
-                pageIndex: pageIndex,
-                pageSize: pageSize,
+                query: searchQuery,
+                index: pageIndex,
+                size: pageSize,
             };
 
             // 过滤掉undefined的属性
@@ -173,23 +175,14 @@ export const AlertHisEvent = () => {
             const res = await getHisEventList(filteredParams)
             setPagination({
                 ...pagination,
-                current: res.data.PageIndex,
-                total: res.data.TotalCount,
+                current: res.data.index,
+                total: res.data.total,
             });
-            setList(res.data.List);
+            setList(res.data.list);
         } catch (error) {
             message.error(error);
         }
     };
-
-    const handleDataSourceChange = (value) => {
-        setSelectedSourceType(value)
-        setSelectedDataSource(value);
-    };
-
-    const handleSeverityChange = (value) => {
-        setSelectedAlertLevel(value)
-    }
 
     // 时间选择器
     const onChange = (dates) => {
@@ -263,41 +256,17 @@ export const AlertHisEvent = () => {
                 gap: '10px',
                 width: '100vh'
             }}>
-                <Select
-                    placeholder="数据源类型"
-                    style={{
-                        flex: 1,
-                    }}
+                <Search
                     allowClear
-                    // value={selectedDataSource}
-                    onChange={handleDataSourceChange}
-                    options={[
-                        {
-                            value: 'Prometheus',
-                            label: 'Prometheus',
-                        },
-                        {
-                            value: 'AliCloudSLS',
-                            label: 'AliCloudSLS',
-                        },
-                        {
-                            value: 'Jaeger',
-                            label: 'Jaeger',
-                        },
-                        {
-                            value: 'Loki',
-                            label: 'Loki',
-                        },
-                    ]}
+                    placeholder="输入搜索关键字"
+                    onSearch={(record) => setSearchQuery(record)}
+                    style={{width: 300}}
                 />
 
                 <Select
                     placeholder="告警等级"
-                    style={{
-                        flex: 1,
-                    }}
                     allowClear
-                    onChange={handleSeverityChange}
+                    onChange={(record) => setSelectedAlertLevel(record)}
                     options={[
                         {
                             value: 'P0',
@@ -310,6 +279,35 @@ export const AlertHisEvent = () => {
                         {
                             value: 'P2',
                             label: 'P2级告警',
+                        },
+                    ]}
+                />
+
+                <Select
+                    style={{width: '20vh'}}
+                    placeholder="数据源类型"
+                    allowClear
+                    onChange={(record) => setSelectedSourceType(record)}
+                    options={[
+                        {
+                            value: 'Prometheus',
+                            label: 'Prometheus',
+                        },
+                        {
+                            value: 'AliCloudSLS',
+                            label: 'AliCloudSLS',
+                        },
+                        {
+                            value: 'Loki',
+                            label: 'Loki',
+                        },
+                        {
+                            value: 'Jaeger',
+                            label: 'Jaeger',
+                        },
+                        {
+                            value: 'CloudWatch',
+                            label: 'CloudWatch',
                         },
                     ]}
                 />
@@ -334,7 +332,7 @@ export const AlertHisEvent = () => {
 
             </div>
 
-            <div style={{ overflowX: 'auto', marginTop: 10, height: '64vh' }}>
+            <div style={{overflowX: 'auto', marginTop: 10, height: '64vh'}}>
                 <Table
                     columns={columns}
                     dataSource={list}

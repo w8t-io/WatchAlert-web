@@ -6,10 +6,16 @@ import { CopyOutlined } from '@ant-design/icons';
 import { deleteRuleGroup, getRuleGroupList } from '../../../api/rule'
 
 export const AlertRuleGroup = ({ }) => {
+    const { Search } = Input
     const [list, setList] = useState()
     const [selectedRow, setSelectedRow] = useState(null)
     const [createModalVisible, setCreateModalVisible] = useState(false)
     const [updateModalVisible, setUpdateModalVisible] = useState(false)
+    const [pagination, setPagination] = useState({
+        index: 1,
+        size: 10,
+        total: 0,
+    });
     const columns = [
         {
             title: 'ID',
@@ -85,9 +91,19 @@ export const AlertRuleGroup = ({ }) => {
 
     const handleList = async () => {
         try {
-            const res = await getRuleGroupList()
-            console.log(res)
-            setList(res.data)
+            const params = {
+                index: pagination.index,
+                size: pagination.size,
+            }
+            const res = await getRuleGroupList(params)
+
+            setPagination({
+                index: res?.data?.index,
+                size: res?.data?.size,
+                total: res?.data?.total,
+            });
+
+            setList(res.data.list)
         } catch (error) {
             console.error(error)
         }
@@ -118,22 +134,68 @@ export const AlertRuleGroup = ({ }) => {
         setUpdateModalVisible(false)
     }
 
+    const onSearch = async (value) => {
+        console.log("===>",pagination)
+        try {
+            const params = {
+                index: pagination?.index,
+                size: pagination?.size,
+                query: value,
+            }
+
+            const res = await getRuleGroupList(params)
+
+            setPagination({
+                index: res?.data?.index,
+                size: res?.data?.size,
+                total: res?.data?.total,
+            });
+
+            setList(res.data.list)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const handleShowTotal = (total, range) =>
+        `第 ${range[0]} - ${range[1]} 条 共 ${total} 条`;
+
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', borderRight: '100vh' }}>
-                <Button type="primary" onClick={() => setCreateModalVisible(true)} style={{ marginLeft: 'auto' }}>
-                    创建
-                </Button>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <div>
+                    <Search
+                        allowClear
+                        placeholder="输入搜索关键字"
+                        onSearch={onSearch}
+                        style={{width: 300}}
+                    />
+                </div>
+                <div>
+                    <Button type="primary" onClick={() => setCreateModalVisible(true)} style={{marginLeft: 'auto'}}>
+                        创建
+                    </Button>
+                </div>
             </div>
 
-            <AlertRuleGroupCreateModal visible={createModalVisible} onClose={handleModalClose} type='create' handleList={handleList} />
+            <AlertRuleGroupCreateModal visible={createModalVisible} onClose={handleModalClose} type='create'
+                                       handleList={handleList}/>
 
-            <AlertRuleGroupCreateModal visible={updateModalVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type='update' handleList={handleList} />
+            <AlertRuleGroupCreateModal visible={updateModalVisible} onClose={handleUpdateModalClose}
+                                       selectedRow={selectedRow} type='update' handleList={handleList}/>
 
-            <div style={{ overflowX: 'auto', marginTop: 10, height: '64vh' }}>
+            <div style={{overflowX: 'auto', marginTop: 10, height: '64vh'}}>
                 <Table
                     columns={columns}
                     dataSource={list}
+                    pagination={{
+                        pageIndex: pagination.pageIndex ?? 1,
+                        pageSize: pagination.pageSize ?? 10,
+                        total: pagination?.total ?? 0,
+                        showQuickJumper: true,
+                        showSizeChanger: true,
+                        showTotal: handleShowTotal,
+                    }}
                     scroll={{
                         x: 1000,
                         y: 'calc(65vh - 65px - 40px)'

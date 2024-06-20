@@ -394,7 +394,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         },
         {
             imgSrc: 'https://urlsnwww-1257117300.file.myqcloud.com/wp-content/uploads/1666109624574.png',
-            text: 'AliCloud sls',
+            text: 'AliCloudSLS',
         },
         {
             imgSrc: 'https://assets-global.website-files.com/61e1d8dcf4a5e16aab73f6b4/6436e5b8fe5853f767c5a09a_a8yT7ufF-UQoyPgzgwSWyZXpaIrCaD_HwLL7wqBC3lp_DuVBM_34ZEnzKoGB2uSPI-zo1Hb1yLcN44IV8h7TKQlWBxbktSv3S_5r8eHEwpGeomDGUgJM4CQ0LkkxzwUvkviZS3mB-JAxmGRScBqe65w.png',

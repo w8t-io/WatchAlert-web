@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Drawer, Tag, Tooltip } from 'antd';
+import {Table, Button, Drawer, Tag, Tooltip, Input, Select} from 'antd';
 import { CreateSilenceModal } from '../../silence/SilenceRuleCreateModal'
 import { getCurEventList } from '../../../api/event';
+import {getRuleList} from "../../../api/rule";
 
 export const AlertCurEvent = () => {
+    const { Search } = Input
     const [selectedRow, setSelectedRow] = useState(null);
     const [silenceVisible, setSilenceVisible] = useState(false);
     const [list, setList] = useState([]);
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [annotations, setAnnotations] = useState('');
+    const [selectedSeverity, setSelectedSeverity] = useState('');
+    const [selectedDatasourceType, setSelectedDatasourceType] = useState('');
+    const [selectedTimeScope,setSelectedTimeScope] = useState();
+    const [searchQuery,setSearchQuery] = useState('');
+    const [pagination, setPagination] = useState({
+        index: 1,
+        size: 10,
+        total: 0,
+    });
     const columns = [
         {
             title: '规则名称',
@@ -100,7 +111,7 @@ export const AlertCurEvent = () => {
 
     useEffect(() => {
         handleList();
-    }, []);
+    }, [searchQuery,selectedTimeScope,selectedDatasourceType,selectedSeverity]);
 
     const showMoreTags = (tags, record, visibleCount = 5) => {
         if (Object.entries(record.metric).length <= visibleCount) {
@@ -150,14 +161,29 @@ export const AlertCurEvent = () => {
 
     const handleList = async () => {
         try {
-            const res = await getCurEventList()
-            let sortedList = []
-            if (res.data.length >= 1) {
-                sortedList = res.data.sort((a, b) => b.first_trigger_time - a.first_trigger_time);
-            } else {
-                sortedList = res.data
+            const params = {
+                index: pagination.index,
+                size: pagination.size,
+                query: searchQuery,
+                severity: selectedSeverity,
+                datasourceType: selectedDatasourceType,
+                scope: selectedTimeScope,
             }
+            const res = await getCurEventList(params)
+
+            if (res.data.list == null) {
+                setList([]);
+            }
+
+            let sortedList = []
+            if (res.data.list.length >= 1) {
+                sortedList = res.data.list.sort((a, b) => b.first_trigger_time - a.first_trigger_time);
+            } else {
+                sortedList = res.data.list
+            }
+
             setList(sortedList);
+
         } catch (error) {
             console.error(error)
         }
@@ -172,8 +198,105 @@ export const AlertCurEvent = () => {
         setSilenceVisible(true);
     };
 
+    const handleShowTotal = (total, range) =>
+        `第 ${range[0]} - ${range[1]} 条 共 ${total} 条`;
+
     return (
         <div>
+            <div style={{display: 'flex', gap: '10px'}}>
+                <Search
+                    allowClear
+                    placeholder="输入搜索关键字"
+                    onSearch={(record) => setSearchQuery(record)}
+                    style={{width: 300}}
+                />
+
+                <Select
+                    placeholder="告警等级"
+                    allowClear
+                    onChange={(record) => setSelectedSeverity(record)}
+                    options={[
+                        {
+                            value: 'P0',
+                            label: 'P0级告警',
+                        },
+                        {
+                            value: 'P1',
+                            label: 'P1级告警',
+                        },
+                        {
+                            value: 'P2',
+                            label: 'P2级告警',
+                        },
+                    ]}
+                />
+
+                <Select
+                    style={{width: '20vh'}}
+                    placeholder="数据源类型"
+                    allowClear
+                    onChange={(record) => setSelectedDatasourceType(record)}
+                    options={[
+                        {
+                            value: 'Prometheus',
+                            label: 'Prometheus',
+                        },
+                        {
+                            value: 'AliCloudSLS',
+                            label: 'AliCloudSLS',
+                        },
+                        {
+                            value: 'Loki',
+                            label: 'Loki',
+                        },
+                        {
+                            value: 'Jaeger',
+                            label: 'Jaeger',
+                        },
+                        {
+                            value: 'CloudWatch',
+                            label: 'CloudWatch',
+                        },
+                    ]}
+                />
+
+                <Select
+                    allowClear
+                    placeholder="时间范围"
+                    options={[
+                        {
+                            value: '1',
+                            label: '近 1 天',
+                        },
+                        {
+                            value: '3',
+                            label: '近 3 天'
+                        },
+                        {
+                            value: '5',
+                            label: '近 5 天'
+                        },
+                        {
+                            value: '9',
+                            label: '近 9 天'
+                        },
+                        {
+                            value: '15',
+                            label: '近 15 天'
+                        },
+                        {
+                            value: '20',
+                            label: '近 20 天'
+                        },
+                        {
+                            value: '30',
+                            label: '近 30 天'
+                        },
+                    ]}
+                    onChange={(record) => { setSelectedTimeScope(record) }}
+                />
+            </div>
+
             <Drawer
                 title="事件详情"
                 onClose={onCloseDrawer}
@@ -182,12 +305,21 @@ export const AlertCurEvent = () => {
                 {annotations}
             </Drawer>
 
-            <CreateSilenceModal visible={silenceVisible} onClose={handleSilenceModalClose} type="createForCurEvent" selectedRow={selectedRow} />
+            <CreateSilenceModal visible={silenceVisible} onClose={handleSilenceModalClose} type="createForCurEvent"
+                                selectedRow={selectedRow}/>
 
-            <div style={{ overflowX: 'auto', marginTop: 10, height: '67.5vh' }}>
+            <div style={{overflowX: 'auto', marginTop: 10, height: '67.5vh'}}>
                 <Table
                     columns={columns}
                     dataSource={list}
+                    pagination={{
+                        current: pagination.current ?? 1,
+                        pageSize: pagination.pageSize ?? 10,
+                        total: pagination?.total ?? 0,
+                        showQuickJumper: true,
+                        showSizeChanger: true,
+                        showTotal: handleShowTotal,
+                    }}
                     scroll={{
                         x: 1500,
                         y: 'calc(67.5vh - 67.5px - 40px)'
