@@ -125,7 +125,6 @@ export const Datasources = () => {
                     <Search
                         allowClear
                         placeholder="输入搜索关键字"
-                        enterButton
                         style={{ width: 300 }}
                         onSearch={onSearch}
                     />

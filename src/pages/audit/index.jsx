@@ -13,8 +13,8 @@ export const AuditLog = () => {
     const [startTimestamp, setStartTimestamp] = useState(null)
     const [endTimestamp, setEndTimestamp] = useState(null)
     const [pagination, setPagination] = useState({
-        pageIndex: 1,
-        pageSize: 10,
+        index: 1,
+        size: 10,
         total: 0,
     });
     const columns = [
@@ -70,14 +70,14 @@ export const AuditLog = () => {
     ]
 
     useEffect(() => {
-        handleList(pagination.pageIndex, pagination.pageSize);
+        handleList(pagination.index, pagination.size);
     }, [startTimestamp, endTimestamp]);
 
-    const handleList = async (pageIndex, pageSize) => {
+    const handleList = async (index, size) => {
         try {
             const params = {
-                pageIndex: pageIndex,
-                pageSize: pageSize,
+                index: index,
+                size: size,
             };
 
             const filteredParams = {};
@@ -89,20 +89,20 @@ export const AuditLog = () => {
 
             const res = await listAuditLog(params)
             setPagination({
-                pageIndex: res.data.PageIndex,
-                pageSize: res.data.PageSize,
-                total: res.data.TotalCount,
+                index: res.data.index,
+                size: res.data.size,
+                total: res.data.total,
             });
 
-            setList(res.data.List);
+            setList(res.data.list);
         } catch (error) {
             message.error(error);
         }
     };
 
     const handlePageChange = (page) => {
-        setPagination({ ...pagination, pageIndex: page.current, pageSize: page.pageSize });
-        handleList(page.current, page.pageSize)
+        setPagination({ ...pagination, index: page.current, size: page.size });
+        handleList(page.current, page.size)
     };
 
     const handleShowTotal = (total, range) =>
@@ -124,25 +124,21 @@ export const AuditLog = () => {
 
     const onSearch = async (value) => {
         try {
-
-            console.log(pagination)
-
             const params = {
-                pageIndex: pagination.pageIndex,
-                pageSize: pagination.pageSize,
-                scope: scope,
+                index: pagination.index,
+                size: pagination.size,
                 query: value,
             }
 
             const res = await searchAuditLog(params)
 
             setPagination({
-                pageIndex: res.data.PageIndex,
-                pageSize: res.data.PageSize,
-                total: res.data.TotalCount,
+                index: res.data.index,
+                size: res.data.size,
+                total: res.data.total,
             });
 
-            setList(res.data.List)
+            setList(res.data.list);
         } catch (error) {
             console.error(error)
         }
@@ -204,7 +200,6 @@ export const AuditLog = () => {
                 <Search
                     allowClear
                     placeholder="输入搜索关键字"
-                    enterButton
                     style={{ width: 300 }}
                     onSearch={onSearch}
                 />
@@ -215,8 +210,8 @@ export const AuditLog = () => {
                     columns={columns}
                     dataSource={list}
                     pagination={{
-                        pageIndex: pagination.pageIndex ?? 1,
-                        pageSize: pagination.pageSize ?? 10,
+                        index: pagination.index ?? 1,
+                        size: pagination.size ?? 10,
                         total: pagination?.total ?? 0,
                         showQuickJumper: true,
                         showSizeChanger: true,

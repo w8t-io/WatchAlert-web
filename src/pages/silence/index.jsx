@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Table, Tag, Popconfirm, message } from 'antd';
+import {Button, Input, Table, Tag, Popconfirm, message, Radio} from 'antd';
 import { CreateSilenceModal } from './SilenceRuleCreateModal'
 import { deleteSilence, getSilenceList } from '../../api/silence';
 import { ComponentsContent } from '../../components';
 
 export const Silences = () => {
+    const { Search } = Input
     const [selectedRow, setSelectedRow] = useState(null);
     const [updateVisible, setUpdateVisible] = useState(false);
     const [visible, setVisible] = useState(false);
     const [list, setList] = useState([]); // 初始化list为空数组
+    const [pagination, setPagination] = useState({
+        index: 1,
+        size: 10,
+        total: 0,
+    });
     const [columns] = useState([
         {
             title: 'ID',
@@ -95,8 +101,20 @@ export const Silences = () => {
     // 获取所有数据
     const handleList = async () => {
         try {
-            const res = await getSilenceList()
-            setList(res.data);
+            const params = {
+                index: pagination.index,
+                size: pagination.size,
+            }
+
+            const res = await getSilenceList(params)
+
+            setPagination({
+                index: res.data.index,
+                size: res.data.size,
+                total: res.data.total,
+            });
+
+            setList(res.data.list);
         } catch (error) {
             console.error(error)
         }
@@ -129,18 +147,51 @@ export const Silences = () => {
         setUpdateVisible(true)
     };
 
+    const onSearch = async (value) => {
+        try {
+            const params = {
+                index: pagination.index,
+                size: pagination.size,
+                query: value,
+            }
+
+            const res = await getSilenceList(params)
+
+            setPagination({
+                index: res.data.index,
+                size: res.data.size,
+                total: res.data.total,
+            });
+
+            setList(res.data.list);
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Button type="primary" onClick={() => setVisible(true)}>
-                    创建
-                </Button>
+            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                <div style={{display: 'flex', gap: '10px'}}>
+                    <Search
+                        allowClear
+                        placeholder="输入搜索关键字"
+                        onSearch={onSearch}
+                        style={{width: 300}}
+                    />
+                </div>
+                <div>
+                    <Button type="primary" onClick={() => setVisible(true)}>
+                        创建
+                    </Button>
+                </div>
             </div>
 
-            <div style={{ display: 'flex' }}>
-                <CreateSilenceModal visible={visible} onClose={handleModalClose} type='create' handleList={handleList} />
+            <div style={{display: 'flex'}}>
+                <CreateSilenceModal visible={visible} onClose={handleModalClose} type='create' handleList={handleList}/>
 
-                <CreateSilenceModal visible={updateVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type='update' handleList={handleList} />
+                <CreateSilenceModal visible={updateVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow}
+                                    type='update' handleList={handleList}/>
 
                 <div style={{
                     display: 'flex',
@@ -154,7 +205,7 @@ export const Silences = () => {
 
             </div>
 
-            <div style={{ overflowX: 'auto', marginTop: 10, height: '64vh' }}>
+            <div style={{overflowX: 'auto', marginTop: 10, height: '64vh'}}>
                 <Table
                     columns={columns}
                     dataSource={list}

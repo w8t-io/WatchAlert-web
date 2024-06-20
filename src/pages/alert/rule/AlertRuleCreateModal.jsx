@@ -394,7 +394,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         },
         {
             imgSrc: 'https://urlsnwww-1257117300.file.myqcloud.com/wp-content/uploads/1666109624574.png',
-            text: 'AliCloud sls',
+            text: 'AliCloudSLS',
         },
         {
             imgSrc: 'https://assets-global.website-files.com/61e1d8dcf4a5e16aab73f6b4/6436e5b8fe5853f767c5a09a_a8yT7ufF-UQoyPgzgwSWyZXpaIrCaD_HwLL7wqBC3lp_DuVBM_34ZEnzKoGB2uSPI-zo1Hb1yLcN44IV8h7TKQlWBxbktSv3S_5r8eHEwpGeomDGUgJM4CQ0LkkxzwUvkviZS3mB-JAxmGRScBqe65w.png',
@@ -720,7 +720,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                                             placeholder='> 80'
                                                             value={label.expr}
                                                             onChange={(e) => handleExprChange(index, e.target.value)}
-                                                            style={{ width: '68.3vh', marginLeft: '10px' }}
+                                                            style={{ width: '532px', marginLeft: '10px' }}
                                                         />
                                                     </MyFormItem>
 
@@ -1170,7 +1170,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             ]}
                         >
                             <InputNumber
-                                style={{width: '100%'}}
+                                style={{width: '752px'}}
                                 addonAfter={<span>秒</span>}
                                 placeholder="10"
                                 min={1}
@@ -1183,7 +1183,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         name="effectiveTime"
                         label="生效时间"
                         style={{
-                            width: '96.5vh',
+                            width: '752px',
                         }}
                     >
                         <div style={{display: 'flex', gap: '10px'}}>
@@ -1280,9 +1280,9 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
                 <MyFormItemGroup prefix={['noticeGroup']}>
                     {noticeLabels.length >= 1 ? (<div style={{display: 'flex',}}>
-                        <label style={{marginRight: '21vh'}}>* Key</label>
-                        <label style={{marginRight: '20vh'}}>* Value</label>
-                        <label style={{marginRight: '18vh'}}>* 通知对象</label>
+                        <label style={{marginRight: '200px'}}>* Key</label>
+                        <label style={{marginRight: '190px'}}>* Value</label>
+                        <label style={{marginRight: '180px'}}>* 通知对象</label>
                         <label>操作</label>
                     </div>) : null}
                     {noticeLabels.map((label, index) => (

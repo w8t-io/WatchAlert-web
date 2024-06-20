@@ -131,7 +131,7 @@ export const NoticeObjects = () => {
         <>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
-                    <Search allowClear placeholder="输入搜索关键字" onSearch={onSearch} enterButton style={{ width: 300 }} />
+                    <Search allowClear placeholder="输入搜索关键字" onSearch={onSearch} style={{ width: 300 }} />
                 </div>
                 <div>
                     <Button type="primary" onClick={() => setVisible(true)}>

@@ -3,7 +3,7 @@ import { message } from 'antd';
 
 async function getRuleList(params) {
     try {
-        const res = await http('get', `/api/w8t/rule/ruleList?ruleGroupId=${params.ruleGroupId}`);
+        const res = await http('get', `/api/w8t/rule/ruleList`, params);
         return res;
     } catch (error) {
         message.open({

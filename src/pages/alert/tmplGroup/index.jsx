@@ -107,7 +107,6 @@ class RuleTemplateGroup extends React.Component {
                             allowClear
                             placeholder="输入搜索关键字"
                             onSearch={onSearch}
-                            enterButton
                             style={{ width: 300 }}
                         />
                     </div>
