@@ -10,6 +10,7 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
     const [selectedMonth, setSelectedMonth] = useState(null)
     const [dutyPeriod, setDutyPeriod] = useState(1)
     const [filteredOptions, setFilteredOptions] = useState([])
+    const [dateType, setDateType] = useState('day')
 
     const handleSelectChange = (_, value) => {
         setSelectedItems(value)
@@ -56,13 +57,13 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
                 dutyId: dutyId,
                 month: selectedMonth,
                 dutyPeriod: dutyPeriod,
+                dateType: dateType,
                 users: selectedItems.map((item) => ({ username: item.value, userid: item.userid })),
             }
 
             handleFormSubmit(calendarData)
 
             form.resetFields()
-
         }
     }
 
@@ -99,10 +100,15 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
                 >
                     <InputNumber
                         style={{ width: '100%' }}
-                        addonAfter={<span>天</span>}
                         placeholder="1"
                         min={1}
                         onChange={handleDutyPeriodChange}
+                        addonAfter={
+                            <Select onChange={setDateType} value={dateType?dateType:'day'}>
+                                <Option value="day">{'天'}</Option>
+                                <Option value="week">{'周'}</Option>
+                            </Select>
+                        }
                     />
                 </Form.Item>
 
@@ -117,7 +123,7 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
                 >
                     <Select
                         mode="multiple"
-                        placeholder="Inserted are removed"
+                        placeholder="请选择需要值班的人员"
                         onChange={handleSelectChange}
                         onClick={handleSearchDutyUser}
                         style={{
