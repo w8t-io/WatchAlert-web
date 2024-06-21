@@ -15,6 +15,11 @@ import {
     getRdsInstances,
     getStatistics
 } from "../../../api/cloudwatch";
+import PrometheusImg from "./img/Prometheus.svg"
+import AlicloudImg from "./img/alicloud.svg"
+import JaegerImg from "./img/jaeger.svg"
+import AwsImg from "./img/AWSlogo.svg"
+import LokiImg from "./img/L.svg"
 
 const format = 'HH:mm';
 const MyFormItemContext = React.createContext([])
@@ -385,23 +390,23 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
     const cards = [
         {
-            imgSrc: 'https://console.flashcat.cloud/logos/large/prometheus.png',
+            imgSrc: PrometheusImg,
             text: 'Prometheus',
         },
         {
-            imgSrc: 'https://console.flashcat.cloud/logos/large/loki.svg',
+            imgSrc: LokiImg,
             text: 'Loki',
         },
         {
-            imgSrc: 'https://urlsnwww-1257117300.file.myqcloud.com/wp-content/uploads/1666109624574.png',
+            imgSrc: AlicloudImg,
             text: 'AliCloudSLS',
         },
         {
-            imgSrc: 'https://assets-global.website-files.com/61e1d8dcf4a5e16aab73f6b4/6436e5b8fe5853f767c5a09a_a8yT7ufF-UQoyPgzgwSWyZXpaIrCaD_HwLL7wqBC3lp_DuVBM_34ZEnzKoGB2uSPI-zo1Hb1yLcN44IV8h7TKQlWBxbktSv3S_5r8eHEwpGeomDGUgJM4CQ0LkkxzwUvkviZS3mB-JAxmGRScBqe65w.png',
+            imgSrc: JaegerImg,
             text: 'Jaeger',
         },
         {
-            imgSrc: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUyYcSb419JTRt9roMB682vIBhG-H_OUuvNw&s',
+            imgSrc: AwsImg,
             text: 'CloudWatch',
         }
     ];
