@@ -50,12 +50,18 @@ export const CalendarApp = ({ visible, onClose, name, tenantId, dutyId }) => {
 
         if (matchingDutyData) {
             return (
-                <div
-                    style={{ marginTop: '20px', textAlign: 'center', cursor: 'pointer' }}
-                    onClick={handleClick}
-                >
-                    {matchingDutyData.username}
-                </div>
+                <>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        {dateFullCellRender(value)}
+                    </div>
+                    <div
+                        style={{marginTop: '10px', textAlign: 'center', cursor: 'pointer',}}
+                        onClick={handleClick}
+                    >
+                        {matchingDutyData.username}
+                    </div>
+                </>
+
             );
         }
 
@@ -78,6 +84,17 @@ export const CalendarApp = ({ visible, onClose, name, tenantId, dutyId }) => {
     const handleModalClose = () => {
         setCreateCalendarModal(false)
     }
+
+    const dateFullCellRender = (date) => {
+        const day = date.day();
+        const weekday = ['日', '一', '二', '三', '四', '五', '六'][day]; // 星期几的文本
+
+        return (
+            <div>
+                <div>{`周${weekday}`}</div>
+            </div>
+        );
+    };
 
     return (
         <Modal
