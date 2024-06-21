@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, Table, Popconfirm, message, Input } from 'antd';
 import { CreateNoticeObjectModal } from './NoticeObjectCreateModal';
 import { deleteNotice, getNoticeList, searchNotice } from '../../api/notice';
+import { ReactComponent as FeiShuIcon } from './img/feishu.svg'
+import { ReactComponent as DingdingIcon } from './img/dingding.svg'
 
 export const NoticeObjects = () => {
     const { Search } = Input
@@ -14,7 +16,7 @@ export const NoticeObjects = () => {
             title: '名称',
             dataIndex: 'name',
             key: 'name',
-            width: 'auto',
+            width: 150,
         },
         {
             title: '环境',
@@ -35,11 +37,21 @@ export const NoticeObjects = () => {
             width: 150,
             render: (text, record) => {
                 if (record.noticeType === 'FeiShu') {
-                    return '飞书'
+                    return (
+                       <div style={{display: 'flex'}}>
+                           <FeiShuIcon style={{height: '25px', width: '25px'}}/>
+                           <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>飞书</div>
+                       </div>
+                    )
                 } else if (record.noticeType === 'DingDing') {
-                    return '钉钉'
+                    return (
+                        <div style={{display: 'flex'}}>
+                            <DingdingIcon style={{height: '25px', width: '25px'}}/>
+                            <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>钉钉</div>
+                        </div>
+                    )
                 }
-                return ''
+                return '-'
             },
         },
         {
@@ -58,7 +70,7 @@ export const NoticeObjects = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right',
-            width: 250,
+            width: 80,
             render: (_, record) =>
                 list.length >= 1 ? (
                     <div>

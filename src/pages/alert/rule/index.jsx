@@ -3,6 +3,11 @@ import { Button, Input, Table, Radio, Popconfirm, Dropdown, Tag, message } from 
 import { useParams } from 'react-router-dom'
 import { AlertRuleCreateModal } from './AlertRuleCreateModal'
 import { deleteRule, getRuleList } from '../../../api/rule'
+import { ReactComponent as PrometheusImg } from "./img/Prometheus.svg"
+import { ReactComponent as AlicloudImg } from "./img/alicloud.svg"
+import { ReactComponent as JaegerImg } from "./img/jaeger.svg"
+import { ReactComponent as AwsImg } from "./img/AWSlogo.svg"
+import { ReactComponent as LokiImg } from "./img/L.svg"
 
 export const AlertRules = () => {
     const { Search } = Input
@@ -29,6 +34,28 @@ export const AlertRules = () => {
             dataIndex: 'datasourceType',
             key: 'datasourceType',
             width: 200,
+            render: (text, record) => {
+                return (
+                    <div style={{display: 'flex'}}>
+                        {text === "Prometheus" && (
+                            <PrometheusImg style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "CloudWatch" && (
+                            <AwsImg style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "Loki" && (
+                            <LokiImg style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "Jaeger" && (
+                            <JaegerImg style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "AliCloudSLS" && (
+                            <AlicloudImg style={{ height: "25px", width: "25px" }} />
+                        )}
+                        <div style={{marginLeft: "5px", marginTop: '3px',fontSize :'12px'}}>{text}</div>
+                    </div>
+                )
+            },
         },
         {
             title: '数据源',
