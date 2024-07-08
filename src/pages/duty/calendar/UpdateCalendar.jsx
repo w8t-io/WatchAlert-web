@@ -14,10 +14,13 @@ export const UpdateCalendarModal = ({ visible, onClose, time, tenantId, dutyId, 
 
     const handleSearchDutyUser = async () => {
         try {
-            const res = await getAllUsers()
+            const params = {
+                "joinDuty": "true"
+            }
+            const res = await getAllUsers(params)
             const options = res.data.map((item) => ({
-                username: item.zh_name,
-                userid: item.source_user_id
+                username: item.username,
+                userid: item.userid
             }))
             setFilteredOptions(options)
         } catch (error) {
