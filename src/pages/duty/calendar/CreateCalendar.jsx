@@ -35,7 +35,10 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
 
     const handleSearchDutyUser = async () => {
         try {
-            const res = await getAllUsers()
+            const params = {
+                "joinDuty": "true"
+            }
+            const res = await getAllUsers(params)
             const options = res.data.map((item) => ({
                 username: item.username,
                 userid: item.userid
