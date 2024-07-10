@@ -103,6 +103,11 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
     const [dimensionOptions,setDimensionOptions] = useState([])
     const [selectDimension,setSelectDimension] = useState('')
     const [endpointOptions,setEndpointOptions] = useState([])
+    const [inputLabelsValue, setInputLabelsValue] = useState("");
+
+    const handleInputLabelsChange = (e) => {
+        setInputLabelsValue(e.target.value);
+    };
 
     const handleCardClick = (index) => {
         setSelectedType(index)
@@ -120,7 +125,6 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         }
         handleGetNoticeData()
     }, [])
-
 
     useEffect(() => {
         handleGetNoticeData()
@@ -151,8 +155,19 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
     }, [selectDimension]);
 
+    const jsonToQueryString = (json) => {
+        return Object.entries(json)
+            .map(([key, value]) => `${key}=${value}`)
+            .join(",");
+    };
+
     useEffect(() => {
         if (selectedRow) {
+            let labels = ""
+            if (selectedRow.labels !== null) {
+                labels = jsonToQueryString(selectedRow.labels)
+            }
+
             form.setFieldsValue({
                 annotations: selectedRow.annotations,
                 datasourceId: selectedRow.datasourceId,
@@ -161,7 +176,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 enabled: selectedRow.enabled,
                 evalInterval: selectedRow.evalInterval,
                 forDuration: selectedRow.forDuration,
-                labels: selectedRow.labels,
+                labels: labels,
                 noticeGroup: selectedRow.noticeGroup,
                 noticeId: selectedRow.noticeId,
                 repeatNoticeInterval: selectedRow.repeatNoticeInterval,
@@ -212,6 +227,14 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         try {
             let t = getSelectedTypeName(selectedType)
 
+            const keyValuePairs = inputLabelsValue.split(",");
+            const labelData = {};
+
+            keyValuePairs.forEach((pair) => {
+                const [key, value] = pair.split("=");
+                labelData[key] = value;
+            });
+
             const params = {
                 ...values,
                 datasourceType: t,
@@ -222,6 +245,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     startTime: startTime,
                     endTime: endTime,
                 },
+                labels: labelData,
                 enabled: enabled
             }
 
@@ -244,6 +268,14 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         try {
             let t = getSelectedTypeName(selectedType);
 
+            const keyValuePairs = inputLabelsValue.split(",");
+            const labelData = {};
+
+            keyValuePairs.forEach((pair) => {
+                const [key, value] = pair.split("=");
+                labelData[key] = value;
+            });
+
             const params = {
                 ...values,
                 datasourceType: t,
@@ -251,6 +283,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 ruleId: selectedRow.ruleId,
                 ruleGroupId: ruleGroupId,
                 noticeGroup: noticeLabels,
+                labels: labelData,
                 effectiveTime: {
                     week: week,
                     startTime: startTime,
@@ -607,7 +640,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                 width: '500px',
                             }}
                         >
-                            <Input />
+                            <Input value={inputLabelsValue} onChange={handleInputLabelsChange}/>
                         </MyFormItem>
                     </div>
 
