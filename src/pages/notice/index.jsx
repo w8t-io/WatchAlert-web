@@ -4,6 +4,7 @@ import { CreateNoticeObjectModal } from './NoticeObjectCreateModal';
 import { deleteNotice, getNoticeList, searchNotice } from '../../api/notice';
 import { ReactComponent as FeiShuIcon } from './img/feishu.svg'
 import { ReactComponent as DingdingIcon } from './img/dingding.svg'
+import { ReactComponent as EmailIcon } from './img/Email.svg'
 
 export const NoticeObjects = () => {
     const { Search } = Input
@@ -48,6 +49,13 @@ export const NoticeObjects = () => {
                         <div style={{display: 'flex'}}>
                             <DingdingIcon style={{height: '25px', width: '25px'}}/>
                             <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>钉钉</div>
+                        </div>
+                    )
+                } else if (record.noticeType === 'Email') {
+                    return (
+                        <div style={{display: 'flex'}}>
+                            <EmailIcon style={{height: '25px', width: '25px'}}/>
+                            <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>邮件</div>
                         </div>
                     )
                 }

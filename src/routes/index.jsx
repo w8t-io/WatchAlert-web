@@ -19,6 +19,7 @@ import { Tenants } from "../pages/tenant";
 import { GrafanaDashboardComponent } from "../pages/dashboards/dashboard";
 import { DashboardFolder } from "../pages/dashboards/folder";
 import { AuditLog } from "../pages/audit";
+import {SystemSettings} from "../pages/settings";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -97,6 +98,10 @@ export default [
     {
         path: '/auditLog',
         element: <ComponentsContent name="日志审计" c={<AuditLog />} />
+    },
+    {
+        path: '/settings',
+        element: <ComponentsContent name="系统设置" c={<SystemSettings/>}/>
     },
     {
         path: '/*',

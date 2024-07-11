@@ -219,7 +219,7 @@ export const AuditLog = () => {
                     }}
                     onChange={handlePageChange}
                     scroll={{
-                        y: 'calc(65vh - 60px - 40px)'
+                        y: 'calc(100vh - 60px - 381px)'
                     }}
                 />
             </div>
