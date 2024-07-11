@@ -76,6 +76,7 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
             onCancel={onClose}
             footer={null}
             styles={{ body: { maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' } }}
+            centered
         >
             <Divider />
 

@@ -102,8 +102,8 @@ export const CalendarApp = ({ visible, onClose, name, tenantId, dutyId }) => {
             onCancel={onClose}
             footer={null}
             width={1000}
-            style={{ marginTop: '-8vh' }}
             styles={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }} // 设置弹窗内容的样式
+            centered
         >
             <div style={{ textAlign: 'center' }}>
                 <h3>日程表名称：{name}</h3>

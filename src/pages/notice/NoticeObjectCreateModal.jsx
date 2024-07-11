@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Button, Select, Checkbox, Tooltip, message } from 'antd'
+import {Modal, Form, Input, Button, Select, Checkbox, Tooltip, message, InputNumber} from 'antd'
 import React, { useState, useEffect } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import { createNotice, updateNotice } from '../../api/notice'
@@ -8,6 +8,12 @@ const MyFormItemContext = React.createContext([])
 
 function toArr(str) {
     return Array.isArray(str) ? str : [str]
+}
+
+const MyFormItemGroup = ({ prefix, children }) => {
+    const prefixPath = React.useContext(MyFormItemContext)
+    const concatPath = React.useMemo(() => [...prefixPath, ...toArr(prefix)], [prefixPath, prefix])
+    return <MyFormItemContext.Provider value={concatPath}>{children}</MyFormItemContext.Provider>
 }
 
 const MyFormItem = ({ name, ...props }) => {
@@ -23,6 +29,29 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
     const [isChecked, setIsChecked] = useState(false)
     const [dutyList, setDutyList] = useState([])
     const [selectedDutyItem, setSelectedDutyItem] = useState([])
+
+    const [subjectValue,setSubjectValue] = useState('')
+    const [arrayEmailToValue, setArrayEmailToValue] = useState([]);
+    const [arrayEmailCCValue, setArrayEmailCCValue] = useState([]);
+
+    const handleInputEmailChange = (name,value) => {
+        console.log(value)
+        const newValue = value;
+        const newArray = newValue.split(',').map(item => item.trim());
+        switch (name) {
+            case 'subject':
+                setSubjectValue(newValue)
+                break;
+            case 'to':
+                setArrayEmailToValue(newArray);
+                break;
+            case 'cc':
+                setArrayEmailCCValue(newArray);
+                break;
+            default:
+                break;
+        }
+    };
 
     // 禁止输入空格
     const [spaceValue, setSpaceValue] = useState('')
@@ -56,7 +85,12 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
                 enableCard: isChecked,
                 template: selectedRow.template,
                 templateFiring: selectedRow.templateFiring,
-                templateRecover: selectedRow.templateRecover
+                templateRecover: selectedRow.templateRecover,
+                email: {
+                    subject: selectedRow.email.subject,
+                    to: selectedRow.email.to,
+                    cc: selectedRow.email.cc,
+                }
             })
         }
     }, [selectedRow, form])
@@ -82,7 +116,12 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
         try {
             const params = {
                 ...data,
-                enableCard: isChecked ? "true" : "false"
+                enableCard: isChecked ? "true" : "false",
+                email:{
+                    subject: subjectValue,
+                    to: arrayEmailToValue,
+                    cc: arrayEmailCCValue,
+                }
             }
             await createNotice(params)
             handleList()
@@ -121,7 +160,7 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
     }
 
     return (
-        <Modal visible={visible} onCancel={onClose} footer={null} width={800} style={{ marginTop: '2vh' }}>
+        <Modal visible={visible} onCancel={onClose} footer={null} width={800} centered>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
 
                 <div style={{ display: 'flex' }}>
@@ -160,7 +199,6 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
                     </MyFormItem>
                 </div>
 
-
                 <div style={{ display: 'flex' }}>
                     <MyFormItem name="noticeType" label="通知类型"
                         rules={[
@@ -182,6 +220,10 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
                                 {
                                     value: "DingDing",
                                     label: "钉钉"
+                                },
+                                {
+                                    value: "Email",
+                                    label: "邮件"
                                 }
                             ]}
 
@@ -209,28 +251,49 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
 
                 </div>
 
-                <div style={{ display: 'flex' }}>
+                <div >
 
-                    <MyFormItem
-                        name="hook"
-                        label="Hook"
-                        tooltip="客户端机器人的 Hook 地址"
-                        style={{
-                            marginRight: '10px',
-                            width: '100vh',
-                        }}
-                        rules={[
-                            {
-                                required: true,
-                            },
-                            {
-                                pattern: /^(http|https):\/\//,
-                                message: '输入正确的URL格式',
-                            },
-                        ]}>
-                        <Input />
-                    </MyFormItem>
+                    {notificationType === "Email"&& (
+                        <MyFormItemGroup prefix={['email']}>
+                            <MyFormItem name="subject" label="邮件主题" rules={[{required: true}]}>
+                                <Input
+                                    onChange={(e) => handleInputEmailChange('subject', e.target.value)}
+                                    placeholder="WatchAlert监控报警平台" style={{width: '99%'}}/>
+                            </MyFormItem>
 
+                            <MyFormItem name="to" label="收件人" rules={[{required: true}]}>
+                                <Input
+                                    onChange={(e) => handleInputEmailChange('to', e.target.value)}
+                                    placeholder="aaa@gmail.com,bbb@gmail.com (多个用英文逗号 , 隔开)" style={{width: '99%'}} />
+                            </MyFormItem>
+
+                            <MyFormItem name="cc" label="抄送人">
+                                <Input
+                                    onChange={(e) => handleInputEmailChange('cc', e.target.value)}
+                                    placeholder="aaa@gmail.com,bbb@gmail.com (多个用英文逗号 , 隔开)" style={{width: '99%'}}/>
+                            </MyFormItem>
+                        </MyFormItemGroup>
+                    ) || (
+                        <MyFormItem
+                            name="hook"
+                            label="Hook"
+                            tooltip="客户端机器人的 Hook 地址"
+                            style={{
+                                marginRight: '10px',
+                                width: '99%',
+                            }}
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                                {
+                                    pattern: /^(http|https):\/\//,
+                                    message: '输入正确的URL格式',
+                                },
+                            ]}>
+                            <Input />
+                        </MyFormItem>
+                    )}
                 </div>
 
                 {isFeishuNotification && (

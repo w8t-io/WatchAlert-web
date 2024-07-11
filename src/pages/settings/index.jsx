@@ -42,6 +42,7 @@ export const SystemSettings = () => {
                 },
                 emailConfig:{
                     serverAddress: res.data.emailConfig.serverAddress,
+                    port: res.data.emailConfig.port,
                     email: res.data.emailConfig.email,
                     token: res.data.emailConfig.token,
                 }
@@ -128,6 +129,10 @@ export const SystemSettings = () => {
                             <MyFormItemGroup prefix={['emailConfig']}>
                                 <MyFormItem name="serverAddress" label="邮箱服务器">
                                     <Input placeholder="请输入邮箱所属服务器地址"/>
+                                </MyFormItem>
+
+                                <MyFormItem name="port" label="邮箱服务器端口">
+                                    <InputNumber type={"number"} min={1} placeholder="请输入邮箱所属服务器端口" style={{width:'100%'}}/>
                                 </MyFormItem>
 
                                 <MyFormItem name="email" label="邮箱账号">
