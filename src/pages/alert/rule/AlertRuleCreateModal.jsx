@@ -20,6 +20,7 @@ import AlicloudImg from "./img/alicloud.svg"
 import JaegerImg from "./img/jaeger.svg"
 import AwsImg from "./img/AWSlogo.svg"
 import LokiImg from "./img/L.svg"
+import VMImg from "./img/victoriametrics.svg"
 
 const format = 'HH:mm';
 const MyFormItemContext = React.createContext([])
@@ -214,6 +215,8 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 t = 3
             } else if (selectedRow.datasourceType === "CloudWatch"){
                 t = 4
+            } else if (selectedRow.datasourceType === "VictoriaMetrics"){
+                t = 5
             }
 
             setSelectedType(t)
@@ -318,6 +321,8 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
             t = "Jaeger"
         } else if (selectedType === 4){
             t = "CloudWatch"
+        } else if (selectedType === 5){
+            t = "VictoriaMetrics"
         }
 
         return t
@@ -441,11 +446,25 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         {
             imgSrc: AwsImg,
             text: 'CloudWatch',
-        }
+        },
+        {
+            imgSrc: VMImg,
+            text: 'VictoriaMetrics',
+        },
     ];
 
+    const disableSeverity = (s) => {
+        return exprRule.some((rule) => {
+            if (rule.severity) {
+                return rule.severity === s;
+            }
+        });
+    }
+
     const addExprRule = () => {
-        setExprRule([...exprRule, { severity: '', expr: '' }])
+        if(exprRule.length < 3){
+            setExprRule([...exprRule, { severity: '', expr: '' }]);
+        }
     }
 
     const updateExprRule = (index, field, value) => {
@@ -606,7 +625,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
             onCancel={onClose}
             footer={null}
             styles={{ body: { overflowY: 'auto', maxHeight: '600px' } }} // 设置最大高度并支持滚动 
-            width={800} // 设置Modal窗口宽度
+            width={820} // 设置Modal窗口宽度
         >
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
 
@@ -718,7 +737,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         </MyFormItem>
                     </div>
 
-                    {selectedType === 0 &&
+                    {(selectedType === 0 || selectedType === 5) &&
                         <>
                             <span>规则配置</span>
                             <div className="rule-config-container">
@@ -739,12 +758,12 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                                             showSearch
                                                             value={label.severity}
                                                             onChange={(e) => updateExprRule(index, 'severity', e)}
-                                                            style={{width: '127px'}}
+                                                            style={{width: '147px'}}
                                                             placeholder="普通"
                                                         >
-                                                            <Option value="P0">紧急</Option>
-                                                            <Option value="P1">告警</Option>
-                                                            <Option value="P2">普通</Option>
+                                                            <Option value="P0" disabled={disableSeverity('P0')}>紧急</Option>
+                                                            <Option value="P1" disabled={disableSeverity('P1')}>告警</Option>
+                                                            <Option value="P2" disabled={disableSeverity('P2')}>普通</Option>
                                                         </Select>
                                                     </MyFormItem>
 
@@ -1208,7 +1227,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             ]}
                         >
                             <InputNumber
-                                style={{width: '752px'}}
+                                style={{width: '772px'}}
                                 addonAfter={<span>秒</span>}
                                 placeholder="10"
                                 min={1}
@@ -1221,7 +1240,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         name="effectiveTime"
                         label="生效时间"
                         style={{
-                            width: '752px',
+                            width: '772px',
                         }}
                     >
                         <div style={{display: 'flex', gap: '10px'}}>

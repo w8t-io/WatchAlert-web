@@ -151,12 +151,16 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                             {
                                 value: 'CloudWatch',
                                 label: 'CloudWatch'
+                            },
+                            {
+                                value: 'VictoriaMetrics',
+                                label: 'VictoriaMetrics'
                             }
                         ]}
                     />
                 </MyFormItem>
 
-                {(selectedType === 'Prometheus' || selectedType === 'Loki') &&
+                {(selectedType === 'Prometheus' || selectedType === 'Loki' || selectedType === 'VictoriaMetrics') &&
                     <MyFormItemGroup prefix={['http']}>
                         <MyFormItem name="url" label="URL"
                                     rules={[

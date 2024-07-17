@@ -8,6 +8,7 @@ import { ReactComponent as AlicloudImg } from "./img/alicloud.svg"
 import { ReactComponent as JaegerImg } from "./img/jaeger.svg"
 import { ReactComponent as AwsImg } from "./img/AWSlogo.svg"
 import { ReactComponent as LokiImg } from "./img/L.svg"
+import { ReactComponent as VMImg } from "./img/victoriametrics.svg"
 
 export const AlertRules = () => {
     const { Search } = Input
@@ -51,6 +52,9 @@ export const AlertRules = () => {
                         )}
                         {text === "AliCloudSLS" && (
                             <AlicloudImg style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "VictoriaMetrics" && (
+                            <VMImg style={{ height: "25px", width: "25px" }} />
                         )}
                         <div style={{marginLeft: "5px", marginTop: '3px',fontSize :'12px'}}>{text}</div>
                     </div>
