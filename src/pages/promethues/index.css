@@ -1,0 +1,65 @@
+.App {
+    font-family: sans-serif;
+}
+
+.cm-expression-input {
+    width: 100%; /* 固定宽度 */
+    height: 32px; /* 固定高度 */
+    padding: 1px 10px; /* 内边距 */
+    line-height: 1.58;
+    background-color: #ffffff; /* 底部背景色 */
+    border-width: 1px;
+    border-style: solid;
+    border-color: #d9d9d9;
+    border-radius: 6px; /* 边框圆角 */
+    box-sizing: border-box; /* 盒子模型 */
+}
+
+.cm-expression-input::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 5px; /* 设置底部颜色的高度 */
+    background-color: #ffffff; /* 底部背景色 */
+    border-bottom: 1px solid #ccc; /* 底部边框样式 */
+    border-radius: 0 0 4px 4px; /* 底部圆角 */
+}
+
+.promInputContent {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    text-align: left;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    .promInput {
+        min-height: 40px;
+        box-sizing: border-box;
+        margin: 0;
+        padding: 4px 11px;
+        color: rgba(0, 0, 0, 0.88);
+        font-size: 14px;
+        line-height: 1.5714285714285714;
+        list-style: none;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
+        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+        position: relative;
+        display: inline-block;
+        width: 100%;
+        min-width: 0;
+        background-color: #ffffff;
+        background-image: none;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #d9d9d9;
+        border-radius: 6px 0 0 6px;
+        transition: all 0.2s;
+        &:hover {
+            border-color: #2877fb;
+        }
+    }
+}

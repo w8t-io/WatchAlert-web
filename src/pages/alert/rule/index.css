@@ -27,3 +27,24 @@
     margin-right: -15px;
     margin-top: -10px;
 }
+
+
+.scroll-container {
+    max-height: 200px; /* 根据需要调整 */
+    overflow-y: auto;
+    overflow-x: auto; /* 添加横向滚动 */
+    border: 1px solid #ddd;
+    /*padding: 8px; !* 增加内部边距 *!*/
+    /*white-space: nowrap; !* 防止内容自动换行 *!*/
+}
+
+.list-item-content {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.value {
+    margin-left: auto;
+    padding-left: 20px; /* 增加间距以使内容更易读 */
+}

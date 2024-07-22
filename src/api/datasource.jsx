@@ -33,7 +33,11 @@ async function searchDatasource(params) {
 
 async function getDatasource(params) {
     try {
-        const res = await http('get', `/api/w8t/datasource/dataSourceGet?dsType=${params.dsType}`);
+        const queryString = Object.keys(params)
+            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
+            .filter(Boolean)
+            .join('&');
+        const res = await http('get', `/api/w8t/datasource/dataSourceGet?${queryString}`);
         return res;
     } catch (error) {
         message.open({

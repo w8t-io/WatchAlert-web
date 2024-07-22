@@ -20,6 +20,7 @@ import { GrafanaDashboardComponent } from "../pages/dashboards/dashboard";
 import { DashboardFolder } from "../pages/dashboards/folder";
 import { AuditLog } from "../pages/audit";
 import {SystemSettings} from "../pages/settings";
+import {Test} from "../pages/promethues";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
