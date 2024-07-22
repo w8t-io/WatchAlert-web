@@ -3,6 +3,7 @@
  */
 import axios from 'axios';
 const curUrl = window.location.hostname
+const port = window.location.port;
 const backendPort = process.env.REACT_APP_BACKEND_PORT
 const getPort = function () {
     if (backendPort !== undefined) {
@@ -11,8 +12,13 @@ const getPort = function () {
     return 9001
 }
 const backendIP = curUrl + ":" + getPort()
+const type = process.env.REACT_APP_TYPE
 axios.defaults.timeout = 100000;
-axios.defaults.baseURL = 'http://' + backendIP;
+if (type === "local"){
+    axios.defaults.baseURL = 'http://' + curUrl+":"+port;
+} else {
+    axios.defaults.baseURL = 'http://' + backendIP;
+}
 // axios.defaults.baseURL = 'http://127.0.0.1:9001/;
 
 /**

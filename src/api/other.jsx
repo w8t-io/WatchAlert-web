@@ -44,8 +44,22 @@ async function getJaegerService(params) {
     }
 }
 
+async function queryPromMetrics(params) {
+    try {
+        const res = await http('get', `/api/w8t/datasource/promQuery?datasourceType=${params.datasourceType}&addr=${params.url}&query=${params.query}`);
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '查询Metrics失败',
+        });
+        return error
+    }
+}
+
 export {
     getAllUsers,
     getDashboardInfo,
-    getJaegerService
+    getJaegerService,
+    queryPromMetrics
 }
