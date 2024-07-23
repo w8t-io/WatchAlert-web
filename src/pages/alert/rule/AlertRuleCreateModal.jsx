@@ -22,7 +22,6 @@ import AwsImg from "./img/AWSlogo.svg"
 import LokiImg from "./img/L.svg"
 import VMImg from "./img/victoriametrics.svg"
 import {PrometheusPromQL} from "../../promethues";
-import {syntaxTree} from "@codemirror/language";
 
 const format = 'HH:mm';
 const MyFormItemContext = React.createContext([])
@@ -49,6 +48,7 @@ const MyFormItem = ({ name, ...props }) => {
 export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList, ruleGroupId }) => {
     const [form] = Form.useForm()
     const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
+    const [recoverNotify,setRecoverNotify] = useState(true)
     const [selectedType, setSelectedType] = useState(null) // 数据源类型
     const [datasourceOptions, setDatasourceOptions] = useState([])  // 数据源列表
     const [selectedItems, setSelectedItems] = useState([])  //选择数据源
@@ -203,6 +203,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     endTime: selectedRow.effectiveTime.endTime,
                 },
                 cloudwatchConfig: selectedRow.cloudwatchConfig,
+                recoverNotify:selectedRow.recoverNotify,
             })
             setSelectedItems(selectedRow.datasourceId)
             setWeek(selectedRow.effectiveTime.week)
@@ -264,6 +265,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     endTime: endTime,
                 },
                 labels: labelData,
+                recoverNotify: recoverNotify,
                 enabled: enabled
             }
 
@@ -306,7 +308,8 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     week: week,
                     startTime: startTime,
                     endTime: endTime,
-                }
+                },
+                recoverNotify: recoverNotify,
             }
 
             if (selectedType === 4) {
@@ -1407,6 +1410,23 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     </div>
 
                     <div style={{display: 'flex', alignItems: 'center'}}>
+                        <div style={{marginRight: '10px'}}>
+                            启用恢复通知
+                        </div>
+                        <MyFormItem
+                            style={{marginBottom: '0'}}
+                            name="recoverNotify"
+                            valuePropName="checked"
+                        >
+                            <Switch
+                                value={recoverNotify}
+                                checked={recoverNotify}
+                                onChange={(e) => {setRecoverNotify(e)}}
+                            />
+                        </MyFormItem>
+                    </div>
+
+                    <div style={{display: 'flex', marginTop:'10px',alignItems: 'center'}}>
                         <MyFormItem style={{marginBottom: '0', marginRight: '10px'}}>
                             <span>分组通知</span>
                             <Tooltip title="根据 Metric 标签进行分组通知">
@@ -1469,7 +1489,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     ))}
                 </MyFormItemGroup>
 
-                <div style={{ marginTop: '20px' }}>
+                <div style={{ marginTop: '10px' }}>
                     <MyFormItem
                         name="enabled"
                         label="状态"
