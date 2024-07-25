@@ -67,7 +67,7 @@ async function deleteNotice(params) {
 
 async function searchNotice(params) {
     try {
-        const res = await http('get', '/api/w8t/notice/searchNotice', params);
+        const res = await http('get', '/api/w8t/notice/noticeSearch', params);
         return res;
     } catch (error) {
         message.open({
