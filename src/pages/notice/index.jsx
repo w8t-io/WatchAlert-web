@@ -17,25 +17,13 @@ export const NoticeObjects = () => {
             title: '名称',
             dataIndex: 'name',
             key: 'name',
-            width: 150,
-        },
-        {
-            title: '环境',
-            dataIndex: 'env',
-            key: 'env',
-            width: 150,
-            render: (text, record, index) => {
-                if (!text) {
-                    return '-';
-                }
-                return text;
-            },
+            width: 'auto',
         },
         {
             title: '通知类型',
             dataIndex: 'noticeType',
             key: 'noticeType',
-            width: 150,
+            width: 'auto',
             render: (text, record) => {
                 if (record.noticeType === 'FeiShu') {
                     return (
@@ -66,7 +54,7 @@ export const NoticeObjects = () => {
             title: '值班表',
             dataIndex: 'dutyId',
             key: 'dutyId',
-            width: 300,
+            width: 'auto',
             render: (text, record, index) => {
                 if (!text) {
                     return '-';
@@ -78,7 +66,7 @@ export const NoticeObjects = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right',
-            width: 80,
+            width: 150,
             render: (_, record) =>
                 list.length >= 1 ? (
                     <div>

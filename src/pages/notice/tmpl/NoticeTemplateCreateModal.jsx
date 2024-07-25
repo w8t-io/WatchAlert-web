@@ -1,6 +1,10 @@
-import { Modal, Form, Input, Button } from 'antd'
+import {Modal, Form, Input, Button, Card, Tooltip, Checkbox} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { createNoticeTmpl, updateNoticeTmpl } from '../../../api/noticeTmpl'
+import FeiShuImg from "../img/feishu.svg";
+import EmailImg from "../img/Email.svg";
+import DingDingImg from "../img/dingding.svg";
+import {QuestionCircleOutlined} from "@ant-design/icons";
 
 const MyFormItemContext = React.createContext([])
 const { TextArea } = Input
@@ -19,6 +23,9 @@ const MyFormItem = ({ name, ...props }) => {
 // 函数组件
 const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
     const [form] = Form.useForm()
+    const [selectedNotifyCard, setSelectedNotifyCard] = useState(null);
+    const [notifyType,setNotifyType] = useState('')
+    const [isChecked, setIsChecked] = useState(false)
 
     // 禁止输入空格
     const [spaceValue, setSpaceValue] = useState('')
@@ -42,14 +49,37 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
                 id: selectedRow.id,
                 name: selectedRow.name,
                 description: selectedRow.description,
+                noticeType: selectedRow.noticeType,
                 template: selectedRow.template,
+                templateFiring: selectedRow.templateFiring,
+                templateRecover: selectedRow.templateRecover,
+                enableFeiShuJsonCard: selectedRow.enableFeiShuJsonCard,
             })
+
+            let t = 0;
+            if (selectedRow.noticeType === "FeiShu"){
+                t = 0
+            } else if (selectedRow.noticeType === "Email"){
+                t = 1
+            } else if (selectedRow.noticeType === "DingDing"){
+                t = 2
+            }
+
+            setIsChecked(selectedRow.enableFeiShuJsonCard)
+            setNotifyType(selectedRow.noticeType)
+            setSelectedNotifyCard(t)
+            console.log(t)
         }
     }, [selectedRow, form])
 
     const handleCreate = async (values) => {
         try {
-            await createNoticeTmpl(values)
+            const params = {
+                ...values,
+                noticeType: notifyType,
+                enableFeiShuJsonCard: isChecked,
+            }
+            await createNoticeTmpl(params)
             handleList()
         } catch (error) {
             console.error(error)
@@ -61,6 +91,8 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
             const newValue = {
                 ...values,
                 id: selectedRow.id,
+                noticeType: notifyType,
+                enableFeiShuJsonCard: isChecked,
             }
             await updateNoticeTmpl(newValue)
             handleList()
@@ -85,52 +117,179 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
 
     }
 
+    const cards = [
+        {
+            imgSrc: FeiShuImg,
+            text: '飞书',
+        },
+        {
+            imgSrc: EmailImg,
+            text: '邮件',
+        },
+        {
+            imgSrc: DingDingImg,
+            text: '钉钉',
+        },
+    ];
+
+    useEffect(() => {
+        if (selectedNotifyCard === null){
+            setSelectedNotifyCard(0)
+            setNotifyType("FeiShu")
+        }
+    }, [])
+
+    const handleCardClick = (index) => {
+        let t = "FeiShu";
+       if (index === 1){
+            t = "Email"
+        } else if (index === 2){
+            t = "DingDing"
+        }
+
+        setNotifyType(t)
+        setSelectedNotifyCard(index);
+    };
+
     return (
-        <Modal visible={visible} onCancel={onClose} footer={null} width={800}>
+        <Modal visible={visible} onCancel={onClose} footer={null} width={800} centered>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
 
-                <div style={{ display: 'flex' }}>
+                <div style={{display: 'flex'}}>
                     <MyFormItem name="name" label="名称"
-                        style={{
-                            marginRight: '10px',
-                            width: '500px',
-                        }}
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}>
+                                style={{
+                                    marginRight: '10px',
+                                    width: '500px',
+                                }}
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}>
                         <Input
                             value={spaceValue}
                             onChange={handleInputChange}
                             onKeyPress={handleKeyPress}
-                            disabled={type === 'update'} />
+                            disabled={type === 'update'}/>
                     </MyFormItem>
 
                     <MyFormItem name="description" label="描述"
-                        style={{
-                            marginRight: '10px',
-                            width: '500px',
-                        }}>
-                        <Input />
+                                style={{
+                                    marginRight: '10px',
+                                    width: '500px',
+                                }}>
+                        <Input/>
                     </MyFormItem>
                 </div>
 
-                <div style={{ display: 'flex' }}>
-                    <MyFormItem
-                        name="template"
-                        label="告警模版"
-                        style={{
-                            marginRight: '10px',
-                            width: '100vh',
-                        }}>
-                        <TextArea rows={15} placeholder="输入告警模版" maxLength={10000} />
-                    </MyFormItem>
+                <div style={{display: 'flex'}}>
+                    <MyFormItem name="" label="模版类型">
+                            <div style={{display: 'flex', gap: '10px'}}>
+                                {cards.map((card, index) => (
+                                    <Card
+                                        key={index}
+                                        style={{
+                                            height: 100,
+                                            width: 120,
+                                            position: 'relative',
+                                            cursor: type === 'update' ? 'not-allowed' : 'pointer',
+                                            border: selectedNotifyCard === index ? '2px solid #1890ff' : '1px solid #d9d9d9',
+                                            pointerEvents: type === 'update' ? 'none' : 'auto',
+                                        }}
+                                        onClick={() => handleCardClick(index)}
+                                    >
+                                        <div style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            height: '100%',
+                                            marginTop: '-10px'
+                                        }}>
+                                            <img src={card.imgSrc}
+                                                 style={{height: '50px', width: '100px', objectFit: 'contain'}}
+                                                 alt={card.text}/>
+                                            <p style={{
+                                                fontSize: '12px',
+                                                textAlign: 'center',
+                                                marginTop: '5px'
+                                            }}>{card.text}</p>
+                                        </div>
+                                    </Card>
+                                ))}
+                            </div>
+                        </MyFormItem>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                {selectedNotifyCard === 0 && (
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <MyFormItem style={{ marginBottom: '0', marginRight: '10px' }}>
+                            <span>应用飞书高级消息卡片</span>
+                            <Tooltip title="需要则输入 飞书消息卡片搭建工具的Json Code">
+                                <QuestionCircleOutlined style={{ color: '#1890ff', marginLeft: '4px' }} />
+                            </Tooltip>
+                        </MyFormItem>
+                        <Checkbox
+                            style={{ marginTop: '0', marginRight: '10px' }}
+                            checked={isChecked}
+                            onChange={(e) => setIsChecked(e.target.checked)}
+                        />
+                    </div>
+                )}
+
+                {!isChecked && (
+                    <div style={{ display: 'flex' }}>
+                        <MyFormItem
+                            name="template"
+                            label="告警模版"
+                            style={{
+                                marginRight: '10px',
+                                width: '100vh',
+                            }}
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}>
+                            <TextArea rows={15} placeholder="输入告警模版" maxLength={10000} />
+                        </MyFormItem>
+                    </div>
+                ) || (
+                    <div style={{ display: 'flex' }}>
+                        <MyFormItem
+                            name="templateFiring"
+                            label="告警模版"
+                            style={{
+                                marginRight: '10px',
+                                width: '100vh',
+                            }}
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}>
+                            <TextArea rows={15} placeholder="输入告警模版" maxLength={10000} />
+                        </MyFormItem>
+                        <MyFormItem
+                            name="templateRecover"
+                            label="恢复模版"
+                            style={{
+                                marginRight: '10px',
+                                width: '100vh',
+                            }}
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}>
+                            <TextArea rows={15} placeholder="输入告警模版" maxLength={10000} />
+                        </MyFormItem>
+                    </div>
+                )}
+
+                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
                     <Button type="primary" htmlType="submit">
-                        Submit
+                        提交
                     </Button>
                 </div>
             </Form>

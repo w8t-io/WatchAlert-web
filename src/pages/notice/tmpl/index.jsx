@@ -3,6 +3,9 @@ import React from 'react'
 import NoticeTemplateCreateModal from './NoticeTemplateCreateModal'
 import { getNoticeTmplList, deleteNoticeTmpl } from '../../../api/noticeTmpl'
 import { searchNoticeTmpl } from '../../../api/noticeTmpl'
+import { ReactComponent as FeiShuIcon } from '../img/feishu.svg'
+import { ReactComponent as DingdingIcon } from '../img/dingding.svg'
+import { ReactComponent as EmailIcon } from '../img/Email.svg'
 const { Search } = Input
 
 class NoticeTemplate extends React.Component {
@@ -15,16 +18,41 @@ class NoticeTemplate extends React.Component {
         // 表头
         columns: [
             {
-                title: 'ID',
-                dataIndex: 'id',
-                key: 'id',
-                width: 250,
-            },
-            {
                 title: '名称',
                 dataIndex: 'name',
                 key: 'name',
                 width: 'auto',
+            },
+            {
+                title: '模版类型',
+                dataIndex: 'noticeType',
+                key: 'noticeType',
+                width: 'auto',
+                render: (text, record) => {
+                    if (record.noticeType === 'FeiShu') {
+                        return (
+                            <div style={{display: 'flex'}}>
+                                <FeiShuIcon style={{height: '25px', width: '25px'}}/>
+                                <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>飞书</div>
+                            </div>
+                        )
+                    } else if (record.noticeType === 'DingDing') {
+                        return (
+                            <div style={{display: 'flex'}}>
+                                <DingdingIcon style={{height: '25px', width: '25px'}}/>
+                                <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>钉钉</div>
+                            </div>
+                        )
+                    } else if (record.noticeType === 'Email') {
+                        return (
+                            <div style={{display: 'flex'}}>
+                                <EmailIcon style={{height: '25px', width: '25px'}}/>
+                                <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>邮件</div>
+                            </div>
+                        )
+                    }
+                    return '-'
+                },
             },
             {
                 title: '描述',

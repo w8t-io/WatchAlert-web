@@ -86,7 +86,7 @@ const RuleTemplateGroupCreateModal = ({ visible, onClose, selectedRow, type, han
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Button type="primary" htmlType="submit">
-                        Submit
+                        提交
                     </Button>
                 </div>
             </Form>
