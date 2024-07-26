@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, message, Button, Drawer, Select, Input } from 'antd';
+import {Table, message, Button, Drawer, Select, Input, Tag} from 'antd';
 import { listAuditLog, searchAuditLog } from '../../api/auditLog';
 import moment from 'moment';
 import JsonViewer from 'react-json-view';
@@ -45,6 +45,22 @@ export const AuditLog = () => {
             dataIndex: 'auditType',
             key: 'auditType',
             width: 'auto',
+        },
+        {
+            title: '操作状态',
+            dataIndex: 'statusCode',
+            key: 'statusCode',
+            width: 'auto',
+            render: (text) => (
+                <span>
+                    {text === 200 && (
+                        <Tag color="success">{text}</Tag>
+                    ) || (
+                        <Tag color="error">{text}</Tag>
+                    )}
+
+                </span>
+            ),
         },
         {
             title: '事件ID',
