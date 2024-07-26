@@ -237,7 +237,7 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
                     </div>
                 )}
 
-                {!isChecked && (
+                {(!isChecked || notifyType !== "FeiShu") && (
                     <div style={{ display: 'flex' }}>
                         <MyFormItem
                             name="template"
