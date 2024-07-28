@@ -100,6 +100,7 @@ export const CreateSilenceModal = ({ visible, onClose, selectedRow, type, handle
                 ...values,
                 starts_at: startTimestamp,
                 ends_at: endTimestamp,
+                status: 0,
             }
 
             await handleCreate(params)

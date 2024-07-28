@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import {Button, Input, Table, Tag, Popconfirm, message, Radio} from 'antd';
+import {Button, Input, Table, Tag, Popconfirm, message, Radio, Card} from 'antd';
 import { CreateSilenceModal } from './SilenceRuleCreateModal'
 import { deleteSilence, getSilenceList } from '../../api/silence';
-import { ComponentsContent } from '../../components';
 
 export const Silences = () => {
     const { Search } = Input
@@ -10,18 +9,13 @@ export const Silences = () => {
     const [updateVisible, setUpdateVisible] = useState(false);
     const [visible, setVisible] = useState(false);
     const [list, setList] = useState([]); // 初始化list为空数组
+    const [selectedCard,setSelectedCard] = useState(null)
     const [pagination, setPagination] = useState({
         index: 1,
         size: 10,
         total: 0,
     });
     const [columns] = useState([
-        {
-            title: 'ID',
-            dataIndex: 'id',
-            key: 'id',
-            width: 230,
-        },
         {
             title: '告警指纹',
             dataIndex: 'fingerprint',
@@ -83,11 +77,15 @@ export const Silences = () => {
                 <div>
                     <Popconfirm
                         title="Sure to delete?"
-                        onConfirm={() => handleDelete(_, record)}>
-                        <a>删除</a>
+                        onConfirm={() => handleDelete(_, record)}
+                        disabled={record.status ===1}>
+                        <a style={{ cursor: record.status ===1 ? 'not-allowed' : 'pointer',
+                            color: record.status ===1 ?'rgba(0, 0, 0, 0.25)': '#1677ff',
+                        }}>删除</a>
                     </Popconfirm>
                     <Button type="link"
-                        onClick={() => handleUpdateModalOpen(record)}>
+                        onClick={() => handleUpdateModalOpen(record)}
+                        disabled={record.status ===1}>
                         更新
                     </Button>
                 </div>
@@ -99,14 +97,18 @@ export const Silences = () => {
     }, []);
 
     // 获取所有数据
-    const handleList = async () => {
+    const handleList = async (index) => {
         try {
             const params = {
+                status: index||0,
                 index: pagination.index,
                 size: pagination.size,
             }
 
             const res = await getSilenceList(params)
+            const sortedList = res.data.list.sort((a, b) => {
+                return new Date(b.update_at) - new Date(a.update_at);
+            });
 
             setPagination({
                 index: res.data.index,
@@ -114,7 +116,7 @@ export const Silences = () => {
                 total: res.data.total,
             });
 
-            setList(res.data.list);
+            setList(sortedList);
         } catch (error) {
             console.error(error)
         }
@@ -152,6 +154,7 @@ export const Silences = () => {
             const params = {
                 index: pagination.index,
                 size: pagination.size,
+                status: selectedCard,
                 query: value,
             }
 
@@ -169,9 +172,64 @@ export const Silences = () => {
         }
     }
 
+    const cards = [
+        {
+            text: '进行中',
+        },
+        {
+            text: '已失效',
+        },
+        {
+            text: '总规则',
+        },
+    ];
+
+    useEffect(() => {
+        if (selectedCard === null){
+            setSelectedCard(0)
+        }
+    }, [])
+
+    const handleCardClick = (index) => {
+        console.log(index)
+        setSelectedCard(index);
+        handleList(index)
+    };
+
     return (
         <>
-            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+            <div style={{display: 'flex', gap: '10px'}}>
+                {cards.map((card, index) => (
+                    <Card
+                        key={index}
+                        style={{
+                            height: 50,
+                            width: '100%',
+                            position: 'relative',
+                            background: card.background,
+                            border: selectedCard === index ? '1px solid #B0D6FBFF' : '1px solid #d9d9d9',
+                        }}
+                        onClick={() => handleCardClick(index)}
+                    >
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            height: '100%',
+                            marginTop: '-20px'
+                        }}>
+                            <p style={{
+                                fontSize: '12px',
+                                textAlign: 'center',
+                                fontWeight: 'bold',
+                            }}>{card.text}</p>
+                        </div>
+                    </Card>
+                ))}
+            </div>
+
+            <div style={{display: 'flex', marginTop:'10px',justifyContent: 'space-between'}}>
                 <div style={{display: 'flex', gap: '10px'}}>
                     <Search
                         allowClear
@@ -179,11 +237,6 @@ export const Silences = () => {
                         onSearch={onSearch}
                         style={{width: 300}}
                     />
-                </div>
-                <div>
-                    <Button type="primary" onClick={() => setVisible(true)}>
-                        创建
-                    </Button>
                 </div>
             </div>
 
@@ -211,7 +264,7 @@ export const Silences = () => {
                     dataSource={list}
                     scroll={{
                         x: 1500,
-                        y: 'calc(65vh - 65px - 40px)'
+                        y: 'calc(55vh - 65px - 40px)'
                     }}
                 />
             </div>
