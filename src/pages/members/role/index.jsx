@@ -54,9 +54,12 @@ class UserRole extends React.Component {
                                 title="Sure to delete?"
                                 onConfirm={() => this.handleDelete(_, record)}
                                 disabled={record.name === 'admin'}>
-                                <a style={{ cursor: record.name === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
+                                <a style={{ cursor: record.name === 'admin' ? 'not-allowed' : 'pointer',
+                                    color: record.name === 'admin' ? 'rgba(0, 0, 0, 0.25)' : '#1677ff'}}
+                                >删除</a>
                             </Popconfirm>
                             <Button
+                                disabled={record.name === 'admin'}
                                 type="link" onClick={() => this.handleUpdateModalOpen(record)}>
                                 更新
                             </Button>

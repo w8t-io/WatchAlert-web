@@ -53,12 +53,6 @@ class User extends React.Component {
                 width: 40,
             },
             {
-                title: '角色',
-                dataIndex: 'role',
-                key: 'role',
-                width: 30,
-            },
-            {
                 title: '创建时间',
                 dataIndex: 'create_at',
                 key: 'create_at',
@@ -72,7 +66,7 @@ class User extends React.Component {
                 title: '操作',
                 dataIndex: 'operation',
                 fixed: 'right',
-                width: 50,
+                width: 30,
                 render: (_, record) =>
                     this.state.list.length >= 1 ? (
                         <div>
@@ -86,7 +80,9 @@ class User extends React.Component {
                                 title="Sure to delete?"
                                 onConfirm={() => this.handleDelete(_, record)}
                                 disabled={record.username === 'admin'}>
-                                <a style={{ cursor: record.username === 'admin' ? 'not-allowed' : 'pointer' }}>删除</a>
+                                <a style={{ cursor: record.username === 'admin' ? 'not-allowed' : 'pointer',
+                                    color: record.username === 'admin' ? 'rgba(0, 0, 0, 0.25)' : '#1677ff'}}
+                                >删除</a>
                             </Popconfirm>
                             <Button type="link"
                                 onClick={() => this.handleUpdateModalOpen(record)}              >

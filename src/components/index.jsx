@@ -8,7 +8,7 @@ import {
     Menu,
     Typography,
     Dropdown,
-    Space
+    Space, message
 } from 'antd'
 import { DownOutlined, LeftOutlined } from '@ant-design/icons';
 import logoIcon from '../img/logo.jpeg'
@@ -53,6 +53,9 @@ export const ComponentsContent = (props) => {
             const res = await getUserInfo()
             setUserInfo(res.data)
             setLoading(false)
+            if (res.data.userid){
+                fetchTenantList(res.data.userid)
+            }
         } catch (error) {
             console.error(error)
         }
@@ -66,9 +69,16 @@ export const ComponentsContent = (props) => {
         return localStorage.getItem('TenantIndex')
     }
 
-    const fetchTenantList = async () => {
+    const fetchTenantList = async (userid) => {
         try {
-            const res = await getTenantList()
+            const params={
+                userId: userid
+            }
+            const res = await getTenantList(params)
+            console.log(res.data)
+            if (res.data === null || res.data.length === 0){
+                message.error("该用户没有可用租户")
+            }
             const opts = res.data.map((key, index) => (
                 {
                     'label': key.name,
@@ -89,7 +99,7 @@ export const ComponentsContent = (props) => {
     }
 
     useEffect(() => {
-        fetchTenantList()
+        // fetchTenantList()
         run()
     }, [])
 
@@ -199,7 +209,6 @@ export const ComponentsContent = (props) => {
                                 margin: '0px 16px 0',
                                 background: colorBgContainer,
                                 borderRadius: borderRadiusLG,
-                                borderRadius: '10px'
                             }}
                         >
                             <div style={{ fontSize: 15, fontWeight: 'bold', marginLeft: '1%', justifyContent: 'center', marginTop: '20px' }}>
@@ -216,7 +225,7 @@ export const ComponentsContent = (props) => {
                     </Layout>
 
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1vh' }}>
-                        <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
+                        <a href="https://github.com/w8t-io/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
                             <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />
                         </a>
                     </div>

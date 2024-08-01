@@ -21,6 +21,7 @@ import { DashboardFolder } from "../pages/dashboards/folder";
 import { AuditLog } from "../pages/audit";
 import {SystemSettings} from "../pages/settings";
 import {Test} from "../pages/promethues";
+import {TenantDetail} from "../pages/tenant/detail";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -83,6 +84,10 @@ export default [
     {
         path: '/tenants',
         element: <ComponentsContent name="租户管理" c={<Tenants />} />
+    },
+    {
+        path: '/tenants/detail/:id',
+        element: <ComponentsContent name="租户" c={<TenantDetail/>} />
     },
     {
         path: '/datasource',

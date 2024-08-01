@@ -1,0 +1,15 @@
+/* TenantUsers.css */
+.ant-transfer-list-content-item-disabled {
+    pointer-events: none; /* Prevent clicks */
+    cursor: not-allowed; /* Show non-interactive cursor */
+}
+
+.disable-right-transfer .ant-transfer-list:last-child {
+    pointer-events: none; /* Prevent any interaction */
+    background-color: #f5f5f5; /* Optional: Change background to indicate disabled state */
+    opacity: 0.8; /* Optional: Slightly fade the right box */
+}
+
+.ant-transfer .ant-transfer-list-content-item-remove{
+    color: #f5f5f5;
+}

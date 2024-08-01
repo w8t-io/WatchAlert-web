@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Popconfirm } from 'antd';
-import { deleteSilence } from '../../api/silence';
+import {Button, Table, Popconfirm, message} from 'antd';
 import { deleteTenant, getTenantList } from '../../api/tenant';
 import { CreateTenant } from './CreateTenant';
+import {Link} from "react-router-dom";
+import {getUserInfo} from "../../api/user";
 
 export const Tenants = () => {
     const [selectedRow, setSelectedRow] = useState(null);
@@ -15,12 +16,13 @@ export const Tenants = () => {
             dataIndex: 'name',
             key: 'name',
             width: 200,
-        },
-        {
-            title: '创建人',
-            dataIndex: 'createBy',
-            key: 'createBy',
-            width: 150
+            render: (text, record) => (
+                <div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Link to={`/tenants/detail/${record.id}`}>{text}</Link>
+                    </div>
+                </div>
+            ),
         },
         {
             title: '负责人',
@@ -28,16 +30,6 @@ export const Tenants = () => {
             key: 'manager',
             width: 150
 
-        },
-        {
-            title: '创建时间',
-            dataIndex: 'createAt',
-            key: 'createAt',
-            width: 200,
-            render: (text) => {
-                const date = new Date(text * 1000)
-                return date.toLocaleString()
-            },
         },
         {
             title: '描述',
@@ -55,13 +47,17 @@ export const Tenants = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right',
-            width: 150,
+            width: 75,
             render: (_, record) =>
                 <div>
                     <Popconfirm
                         title="Sure to delete?"
+                        disabled={record.id === 'default'}
                         onConfirm={() => handleDelete(_, record)}>
-                        <a>删除</a>
+                        <a style={{
+                            cursor: record.id === 'default' ? 'not-allowed' : 'pointer',
+                            color: record.id === 'default' ? 'rgba(0, 0, 0, 0.25)' : '#1677ff'
+                        }}>删除</a>
                     </Popconfirm>
                     <Button type="link"
                         onClick={() => handleUpdateModalOpen(record)}>
@@ -77,8 +73,22 @@ export const Tenants = () => {
 
     // 获取所有数据
     const handleList = async () => {
+        let userid = ""
         try {
-            const res = await getTenantList()
+            const userRes = await getUserInfo()
+            userid = userRes.data.userid
+        } catch (error){
+            console.log(error)
+        }
+
+        try {
+            const params = {
+                userId: userid,
+            }
+            const res = await getTenantList(params)
+            if (res.data === null || res.data.length === 0){
+                message.error("该用户没有可用租户")
+            }
             setList(res.data);
         } catch (error) {
             console.error(error)
@@ -122,7 +132,7 @@ export const Tenants = () => {
             <CreateTenant visible={visible} onClose={handleModalClose} type='create' handleList={handleList} />
             <CreateTenant visible={updateVisible} selectedRow={selectedRow} onClose={handleUpdateModalClose} type='update' handleList={handleList} />
 
-            <div style={{ overflowX: 'auto', marginTop: 10, height: '64vh' }}>
+            <div style={{ overflowX: 'auto', marginTop: 10, height: '64vh',textAlign:'left' }}>
                 <Table
                     columns={columns}
                     dataSource={list}
