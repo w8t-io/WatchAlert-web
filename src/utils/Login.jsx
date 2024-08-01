@@ -87,11 +87,13 @@ export const Login = () => {
         try {
 
             const params = {
+                "userid": "admin",
                 "username": "admin",
                 "email": "admin@qq.com",
                 "phone": "18888888888",
                 "password": values.password,
-                "role": "admin"
+                "role": "admin",
+                "tenants": ["default"]
             }
 
             await registerUser(params)

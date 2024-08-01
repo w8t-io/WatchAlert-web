@@ -20,8 +20,7 @@ const MyFormItem = ({ name, ...props }) => {
 // 函数组件
 const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
     const [form] = Form.useForm()
-    const [checked, setChecked] = useState() // 修改这里
-    const [roleData, setRoleData] = useState([])
+    const [checked, setChecked] = useState()
     const [username, setUsername] = useState("")
 
     // 禁止输入空格
@@ -83,7 +82,8 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
         if (type === 'create') {
             const newValues = {
                 ...values,
-                joinDuty: values.joinDuty ? "true" : "false"
+                joinDuty: values.joinDuty ? "true" : "false",
+                role: "app",
             }
             handleCreate(newValues)
 
@@ -105,22 +105,7 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
 
     }
 
-    const handleGetRoleData = async () => {
-        try {
-            const res = await getRoleList()
-            const newData = res.data.map((item) => ({
-                label: item.name,
-                value: item.name
-            }))
-
-            setRoleData(newData)
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
     const onChangeJoinDuty = (checked) => {
-        console.log("---", checked)
         setChecked(checked) // 修改这里
     }
 
@@ -172,21 +157,6 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
 
                 <MyFormItem name="email" label="邮箱">
                     <Input />
-                </MyFormItem>
-
-                <MyFormItem name="role" label="用户角色"
-                    rules={[
-                        {
-                            required: true,
-                            message: 'Please input your Role!',
-                        },
-                    ]}>
-                    <Select
-                        placeholder="请选择用户角色"
-                        onClick={handleGetRoleData}
-                        options={roleData}
-                        disabled={username === "admin"}
-                    />
                 </MyFormItem>
 
                 <MyFormItem name="joinDuty" label="接受值班">
