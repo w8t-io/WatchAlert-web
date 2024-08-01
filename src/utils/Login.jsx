@@ -93,7 +93,6 @@ export const Login = () => {
                 "phone": "18888888888",
                 "password": values.password,
                 "role": "admin",
-                "tenants": ["default"]
             }
 
             await registerUser(params)

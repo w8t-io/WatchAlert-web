@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.0b6775c6.css",
-    "main.js": "/static/js/main.1fe3bac3.js",
+    "main.css": "/static/css/main.b1b1b37f.css",
+    "main.js": "/static/js/main.7168a1f6.js",
     "static/media/feishu.svg": "/static/media/feishu.ea5f3eb7ec2bc7337a19fb7962d4da58.svg",
     "static/media/701986.svg": "/static/media/701986.dc45b1d02f44ed6cc05511a4f0a16f7b.svg",
     "static/media/victoriametrics.svg": "/static/media/victoriametrics.b669de96db69c089fce06d716d9d844d.svg",
@@ -14,11 +14,11 @@
     "static/media/Prometheus.svg": "/static/media/Prometheus.defb7d534fb74535f7410f1a08d1b131.svg",
     "static/media/alicloud.svg": "/static/media/alicloud.622bf8af8317a4ac9dfa850b5d55b5c8.svg",
     "index.html": "/index.html",
-    "main.0b6775c6.css.map": "/static/css/main.0b6775c6.css.map",
-    "main.1fe3bac3.js.map": "/static/js/main.1fe3bac3.js.map"
+    "main.b1b1b37f.css.map": "/static/css/main.b1b1b37f.css.map",
+    "main.7168a1f6.js.map": "/static/js/main.7168a1f6.js.map"
   },
   "entrypoints": [
-    "static/css/main.0b6775c6.css",
-    "static/js/main.1fe3bac3.js"
+    "static/css/main.b1b1b37f.css",
+    "static/js/main.7168a1f6.js"
   ]
 }
