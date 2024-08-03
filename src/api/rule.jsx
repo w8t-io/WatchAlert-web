@@ -65,6 +65,19 @@ async function deleteRule(params) {
     }
 }
 
+async function searchRuleInfo(params) {
+    try {
+        const res = await http('get', `/api/w8t/rule/ruleSearch`, params);
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '规则信息查询失败',
+        });
+        return error
+    }
+}
+
 async function getRuleGroupList(params) {
     try {
         const headers = {
@@ -137,6 +150,7 @@ export {
     createRule,
     updateRule,
     deleteRule,
+    searchRuleInfo,
     getRuleGroupList,
     createRuleGroup,
     updateRuleGroup,

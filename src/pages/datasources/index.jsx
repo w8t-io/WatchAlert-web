@@ -2,6 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Button, Input, Table, Tag, Popconfirm } from 'antd';
 import { CreateDatasourceModal } from './DatasourceCreateModal';
 import { deleteDatasource, getDatasourceList, searchDatasource } from '../../api/datasource';
+import { ReactComponent as PrometheusImg } from "../alert/rule/img/Prometheus.svg"
+import { ReactComponent as AlicloudImg } from "../alert/rule/img/alicloud.svg"
+import { ReactComponent as JaegerImg } from "../alert/rule/img/jaeger.svg"
+import { ReactComponent as AwsImg } from "../alert/rule/img/AWSlogo.svg"
+import { ReactComponent as LokiImg } from "../alert/rule/img/L.svg"
+import { ReactComponent as VMImg } from "../alert/rule/img/victoriametrics.svg"
+import { ReactComponent as K8sImg } from "../alert/rule/img/Kubernetes.svg"
 
 export const Datasources = () => {
     const { Search } = Input
@@ -19,6 +26,34 @@ export const Datasources = () => {
             title: '数据源类型',
             dataIndex: 'type',
             key: 'type',
+            render: (text, record) => {
+                return (
+                    <div style={{display: 'flex'}}>
+                        {text === "Prometheus" && (
+                            <PrometheusImg style={{height: "25px", width: "25px"}}/>
+                        )}
+                        {text === "CloudWatch" && (
+                            <AwsImg style={{height: "25px", width: "25px"}}/>
+                        )}
+                        {text === "Loki" && (
+                            <LokiImg style={{height: "25px", width: "25px"}}/>
+                        )}
+                        {text === "Jaeger" && (
+                            <JaegerImg style={{height: "25px", width: "25px"}}/>
+                        )}
+                        {text === "AliCloudSLS" && (
+                            <AlicloudImg style={{height: "25px", width: "25px"}}/>
+                        )}
+                        {text === "VictoriaMetrics" && (
+                            <VMImg style={{height: "25px", width: "25px"}}/>
+                        )}
+                        {text === "Kubernetes" && (
+                            <K8sImg style={{height: "25px", width: "25px"}}/>
+                        )}
+                        <div style={{marginLeft: "5px", marginTop: '3px', fontSize: '12px'}}>{text}</div>
+                    </div>
+                )
+            }
         },
         {
             title: '描述',

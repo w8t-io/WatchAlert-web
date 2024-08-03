@@ -8,7 +8,7 @@ import {
     Menu,
     Typography,
     Dropdown,
-    Space, message
+    Space, message, Divider
 } from 'antd'
 import { DownOutlined, LeftOutlined } from '@ant-design/icons';
 import logoIcon from '../img/logo.jpeg'
@@ -219,6 +219,7 @@ export const ComponentsContent = (props) => {
                                 className="site-layout-background"
                                 style={{ padding: 24, textAlign: 'center', height: '10px' }}
                             >
+                                <Divider style={{marginTop: '-10px', marginBottom: '40px' }}/>
                                 {c}
                             </div>
                         </Content>

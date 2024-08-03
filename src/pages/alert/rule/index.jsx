@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Input, Table, Radio, Popconfirm, Dropdown, Tag, message } from 'antd'
+import { Button, Input, Table, Radio, Popconfirm, Tag, message } from 'antd'
+import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 import { AlertRuleCreateModal } from './AlertRuleCreateModal'
 import { deleteRule, getRuleList } from '../../../api/rule'
@@ -9,8 +10,9 @@ import { ReactComponent as JaegerImg } from "./img/jaeger.svg"
 import { ReactComponent as AwsImg } from "./img/AWSlogo.svg"
 import { ReactComponent as LokiImg } from "./img/L.svg"
 import { ReactComponent as VMImg } from "./img/victoriametrics.svg"
+import { ReactComponent as K8sImg } from "./img/Kubernetes.svg"
 
-export const AlertRules = () => {
+export const AlertRuleList = () => {
     const { Search } = Input
     const [selectedRow, setSelectedRow] = useState(null)
     const [updateVisible, setUpdateVisible] = useState(false)
@@ -55,6 +57,9 @@ export const AlertRules = () => {
                         )}
                         {text === "VictoriaMetrics" && (
                             <VMImg style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "KubernetesEvent" && (
+                            <K8sImg style={{ height: "25px", width: "25px" }} />
                         )}
                         <div style={{marginLeft: "5px", marginTop: '3px',fontSize :'12px'}}>{text}</div>
                     </div>
@@ -110,11 +115,11 @@ export const AlertRules = () => {
                         <a>删除</a>
                     </Popconfirm>
 
-                    <Button
-                        type="link"
-                        onClick={() => handleUpdateModalOpen(record)}>
-                        更新
-                    </Button>
+                    <Link to={`/ruleGroup/${record.ruleGroupId}/rule/${record.ruleId}/edit`}>
+                        <Button type="link">
+                            更新
+                        </Button>
+                    </Link>
                 </div>
             ),
         },
@@ -232,7 +237,9 @@ export const AlertRules = () => {
                     />
                 </div>
                 <div>
-                    <Button type="primary" onClick={() => setVisible(true)}> 创建 </Button>
+                    <Link to={`/ruleGroup/${id}/rule/add`}>
+                        <Button type="primary"> 创 建 </Button>
+                    </Link>
                 </div>
             </div>
 

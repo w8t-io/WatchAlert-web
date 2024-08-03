@@ -1,6 +1,6 @@
 import { AlertCurEvent } from "../pages/alert/event/AlertCurEvent";
 import { AlertHisEvent } from "../pages/alert/event/AlertHisEvent";
-import { AlertRules } from "../pages/alert/rule";
+import {AlertRuleList} from "../pages/alert/rule";
 import { AlertRuleGroup } from "../pages/alert/ruleGroup";
 import RuleTemplate from "../pages/alert/tmpl";
 import RuleTemplateGroup from "../pages/alert/tmplGroup";
@@ -20,8 +20,8 @@ import { GrafanaDashboardComponent } from "../pages/dashboards/dashboard";
 import { DashboardFolder } from "../pages/dashboards/folder";
 import { AuditLog } from "../pages/audit";
 import {SystemSettings} from "../pages/settings";
-import {Test} from "../pages/promethues";
 import {TenantDetail} from "../pages/tenant/detail";
+import {AlertRule} from "../pages/alert/rule/create";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -34,12 +34,20 @@ export default [
         element: <Login />
     },
     {
-        path: '/alertRuleGroup',
+        path: '/ruleGroup',
         element: <ComponentsContent name="告警规则组" c={<AlertRuleGroup />} />,
     },
     {
-        path: '/alertRuleGroup/:id/rules',
-        element: <ComponentsContent name="告警规则" c={<AlertRules />} />
+        path: '/ruleGroup/:id/rule/list',
+        element: <ComponentsContent name="告警规则" c={<AlertRuleList />} />
+    },
+    {
+        path: '/ruleGroup/:id/rule/add',
+        element: <ComponentsContent name="添加告警规则" c={<AlertRule type="add"/>} />
+    },
+    {
+        path: '/ruleGroup/:id/rule/:ruleId/edit',
+        element: <ComponentsContent name="编辑告警规则" c={<AlertRule type="edit"/>} />
     },
     {
         path: '/silenceRules',
