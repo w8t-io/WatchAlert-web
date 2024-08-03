@@ -42,7 +42,7 @@ export const ComponentSider = (props) => {
                         <Menu.Item key='1' onClick={(e) => handleMenuClick(e.key, '/')} icon={<AreaChartOutlined />}>监控分析</Menu.Item >
 
                         <SubMenu key='2' icon={<BellOutlined />} title='告警管理'>
-                            <Menu.Item key='2-1' onClick={(e) => handleMenuClick(e.key, '/alertRuleGroup')}>告警规则</Menu.Item>
+                            <Menu.Item key='2-1' onClick={(e) => handleMenuClick(e.key, '/ruleGroup')}>告警规则</Menu.Item>
                             <Menu.Item key='2-2' onClick={(e) => handleMenuClick(e.key, '/silenceRules')}>静默规则</Menu.Item>
                             <Menu.Item key='2-3' onClick={(e) => handleMenuClick(e.key, '/alertCurEvent')}>当前告警</Menu.Item>
                             <Menu.Item key='2-4' onClick={(e) => handleMenuClick(e.key, '/alertHisEvent')}>历史告警</Menu.Item>
@@ -90,7 +90,7 @@ export const ComponentSider = (props) => {
                     >
                         <Menu.Item key='1' onClick={(e) => handleMenuClick(e.key, '/')} icon={<AreaChartOutlined />}>监控分析</Menu.Item >
                         <SubMenu key='2' icon={<BellOutlined />} title='告警管理'>
-                            <Menu.Item key='2-1' onClick={(e) => handleMenuClick(e.key, '/alertRuleGroup')}>告警规则</Menu.Item>
+                            <Menu.Item key='2-1' onClick={(e) => handleMenuClick(e.key, '/ruleGroup')}>告警规则</Menu.Item>
                             <Menu.Item key='2-2' onClick={(e) => handleMenuClick(e.key, '/silenceRules')}>静默规则</Menu.Item>
                             <Menu.Item key='2-3' onClick={(e) => handleMenuClick(e.key, '/alertCurEvent')}>当前告警</Menu.Item>
                             <Menu.Item key='2-4' onClick={(e) => handleMenuClick(e.key, '/alertHisEvent')}>历史告警</Menu.Item>

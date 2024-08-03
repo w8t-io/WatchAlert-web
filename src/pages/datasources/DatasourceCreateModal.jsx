@@ -1,7 +1,7 @@
 import { createDatasource, updateDatasource } from '../../api/datasource'
-import { Modal, Form, Input, Button, Switch, Select, InputNumber, message } from 'antd'
+import { Modal, Form, Input, Button, Switch, Select, InputNumber } from 'antd'
 import React, { useState, useEffect } from 'react'
-
+const { TextArea } = Input
 const MyFormItemContext = React.createContext([])
 
 function toArr(str) {
@@ -57,6 +57,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                 alicloudSk: selectedRow.alicloudSk,
                 awsCloudwatch: selectedRow.awsCloudwatch,
                 description: selectedRow.description,
+                kubeConfig: selectedRow.kubeConfig,
                 enabled: selectedRow.enabled
             })
         }
@@ -104,7 +105,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
     }
 
     return (
-        <Modal visible={visible} onCancel={onClose} footer={null}>
+        <Modal visible={visible} onCancel={onClose} footer={null} width={700} centered>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
                 <MyFormItem name="name" label="数据源名称"
                     rules={[
@@ -155,6 +156,10 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                             {
                                 value: 'VictoriaMetrics',
                                 label: 'VictoriaMetrics'
+                            },
+                            {
+                                value: 'Kubernetes',
+                                label: 'Kubernetes'
                             }
                         ]}
                     />
@@ -253,6 +258,15 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                             </MyFormItem>
                         </MyFormItemGroup>
                     </div>
+                }
+
+                {selectedType === 'Kubernetes' &&
+                    <MyFormItem name="kubeConfig" label="认证配置"
+                        rules={[{
+                            required: true,
+                        }]}>
+                        <TextArea rows={15} placeholder="输入 Kubernetes 认证配置" />
+                    </MyFormItem>
                 }
 
                 <MyFormItem name="description" label="描述">

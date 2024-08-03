@@ -1,10 +1,11 @@
-import { List, Modal, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, InputNumber, Card,TimePicker } from 'antd'
-import React, { useState, useEffect } from 'react'
+import { List, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, InputNumber, Card,TimePicker } from 'antd'
+import React, { useState, useEffect, useRef } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
-import { createRule, updateRule } from '../../../api/rule'
+import {createRule, searchRuleInfo, updateRule} from '../../../api/rule'
 import {getDatasource, searchDatasource} from '../../../api/datasource'
 import { getNoticeList } from '../../../api/notice'
 import {getJaegerService, queryPromMetrics} from '../../../api/other'
+import { useParams } from 'react-router-dom'
 import moment from 'moment';
 import './index.css'
 import {
@@ -23,6 +24,7 @@ import LokiImg from "./img/L.svg"
 import VMImg from "./img/victoriametrics.svg"
 import K8sImg from "./img/Kubernetes.svg"
 import {PrometheusPromQL} from "../../promethues";
+import {getKubernetesReasonList, getKubernetesResourceList} from "../../../api/kubernetes";
 
 const format = 'HH:mm';
 const MyFormItemContext = React.createContext([])
@@ -46,8 +48,10 @@ const MyFormItem = ({ name, ...props }) => {
     return <Form.Item name={concatName} {...props} />
 }
 
-export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, handleList, ruleGroupId }) => {
+export const AlertRule = ({ type, handleList, ruleGroupId }) => {
     const [form] = Form.useForm()
+    const { id,ruleId } = useParams()
+    const [selectedRow,setSelectedRow] = useState({})
     const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
     const [recoverNotify,setRecoverNotify] = useState(true)
     const [selectedType, setSelectedType] = useState(null) // 数据源类型
@@ -111,6 +115,103 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
     const [promQL,setPromQL] = useState()
     const [selectDatasourceURL,setSelectDatasourceURL] = useState()
     const [queryModel,setQueryModel] = useState(0)
+    const [loading, setLoading] = useState(true);
+    const [kubeResourceTypeOptions,setKubeResourceTypeOptions]=useState([])
+    const [selectedKubeResource,setSelectedKubeResource]=useState('')
+    const [kubeReasonListOptions,setKubeReasonListOptions]=useState({})
+    const [filterTags,setFilterTags] = useState([])
+
+    useEffect(() => {
+        const handleSearchRuleInfo = async ()=>{
+            try {
+                const params = {
+                    ruleGroupId: id,
+                    ruleId: ruleId
+                };
+                const res = await searchRuleInfo(params);
+                setSelectedRow(res.data); // 更新状态
+                initBasicInfo(res.data)
+            } catch (error) {
+                console.error('Error fetching rule info:', error);
+            } finally {
+                setLoading(false); // 请求完成后设置 loading 状态
+            }
+        }
+
+        if (type === "edit"){
+            handleSearchRuleInfo()
+        }
+    }, [])
+
+    const initBasicInfo =(selectedRow)=>{
+        let labels = ""
+        if (selectedRow.labels !== null) {
+            labels = jsonToQueryString(selectedRow.labels)
+        }
+
+        form.setFieldsValue({
+            annotations: selectedRow.annotations,
+            datasourceId: selectedRow.datasourceId,
+            datasourceType: selectedRow.datasourceType,
+            description: selectedRow.description,
+            enabled: selectedRow.enabled,
+            evalInterval: selectedRow.evalInterval,
+            forDuration: selectedRow.forDuration,
+            labels: labels,
+            noticeGroup: selectedRow.noticeGroup,
+            noticeId: selectedRow.noticeId,
+            repeatNoticeInterval: selectedRow.repeatNoticeInterval,
+            ruleId: selectedRow.ruleId,
+            ruleName: selectedRow.ruleName,
+            alicloudSLSConfig: selectedRow.alicloudSLSConfig,
+            lokiConfig: selectedRow.lokiConfig,
+            prometheusConfig: selectedRow.prometheusConfig,
+            severity: selectedRow.severity,
+            jaegerConfig: {
+                service: selectedRow.jaegerConfig.service,
+                tags: selectedRow.jaegerConfig.tags,
+                scope: selectedRow.jaegerConfig.scope,
+            },
+            effectiveTime: {
+                week: selectedRow.effectiveTime.week,
+                startTime: selectedRow.effectiveTime.startTime,
+                endTime: selectedRow.effectiveTime.endTime,
+            },
+            cloudwatchConfig: selectedRow.cloudwatchConfig,
+            kubernetesConfig: selectedRow.kubernetesConfig,
+            recoverNotify:selectedRow.recoverNotify,
+        })
+        setSelectedItems(selectedRow.datasourceId)
+        setWeek(selectedRow.effectiveTime.week)
+        setStartTime(selectedRow.effectiveTime.startTime)
+        setEndTime(selectedRow.effectiveTime.endTime)
+
+        let t = 0;
+        if (selectedRow.datasourceType === "Prometheus"){
+            t = 0
+        } else if (selectedRow.datasourceType === "Loki"){
+            t = 1
+        } else if (selectedRow.datasourceType === "AliCloudSLS"){
+            t = 2
+        } else if (selectedRow.datasourceType === "Jaeger"){
+            t = 3
+        } else if (selectedRow.datasourceType === "CloudWatch"){
+            t = 4
+        } else if (selectedRow.datasourceType === "VictoriaMetrics"){
+            t = 5
+        } else if (selectedRow.datasourceType === "KubernetesEvent"){
+            t = 6
+        }
+
+        setSelectedType(t)
+        setSelectedCard(t)
+        setNoticeLabels(selectedRow.noticeGroup)
+        setExprRule(selectedRow.prometheusConfig.rules)
+        setSelectedKubeResource(selectedRow.kubernetesConfig.resource)
+        setFilterTags(selectedRow.kubernetesConfig.filter)
+
+        handleGetDatasourceInfo(selectedRow.datasourceId)
+    }
 
     const handleInputLabelsChange = (e) => {
         setInputLabelsValue(e.target.value);
@@ -131,12 +232,10 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
             setSelectedType(0)
         }
         handleGetNoticeData()
-    }, [])
-
-    useEffect(() => {
         handleGetNoticeData()
         handleGetMetricTypes()
         handleGetStatistics()
+        handleGetKubernetesEventTypes()
     }, [])
 
     useEffect(() => {
@@ -146,6 +245,10 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         handleGetMetricNames(params)
         handleGetDimensions(params)
     }, [selectMetricType]);
+
+    useEffect(() => {
+        handleGetKubeReasonList(selectedKubeResource)
+    }, [selectedKubeResource]);
 
     useEffect(() => {
         const params = {
@@ -168,75 +271,17 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
             .join(",");
     };
 
-    useEffect(() => {
-        if (selectedRow) {
-            let labels = ""
-            if (selectedRow.labels !== null) {
-                labels = jsonToQueryString(selectedRow.labels)
-            }
-
-            form.setFieldsValue({
-                annotations: selectedRow.annotations,
-                datasourceId: selectedRow.datasourceId,
-                datasourceType: selectedRow.datasourceType,
-                description: selectedRow.description,
-                enabled: selectedRow.enabled,
-                evalInterval: selectedRow.evalInterval,
-                forDuration: selectedRow.forDuration,
-                labels: labels,
-                noticeGroup: selectedRow.noticeGroup,
-                noticeId: selectedRow.noticeId,
-                repeatNoticeInterval: selectedRow.repeatNoticeInterval,
-                ruleId: selectedRow.ruleId,
-                ruleName: selectedRow.ruleName,
-                alicloudSLSConfig: selectedRow.alicloudSLSConfig,
-                lokiConfig: selectedRow.lokiConfig,
-                prometheusConfig: selectedRow.prometheusConfig,
-                severity: selectedRow.severity,
-                jaegerConfig: {
-                    service: selectedRow.jaegerConfig.service,
-                    tags: selectedRow.jaegerConfig.tags,
-                    scope: selectedRow.jaegerConfig.scope,
-                },
-                effectiveTime: {
-                    week: selectedRow.effectiveTime.week,
-                    startTime: selectedRow.effectiveTime.startTime,
-                    endTime: selectedRow.effectiveTime.endTime,
-                },
-                cloudwatchConfig: selectedRow.cloudwatchConfig,
-                kubernetesConfig: selectedRow.kubernetesConfig,
-                recoverNotify:selectedRow.recoverNotify,
-            })
-            setSelectedItems(selectedRow.datasourceId)
-            setWeek(selectedRow.effectiveTime.week)
-            setStartTime(selectedRow.effectiveTime.startTime)
-            setEndTime(selectedRow.effectiveTime.endTime)
-
-            let t = 0;
-            if (selectedRow.datasourceType === "Prometheus"){
-                t = 0
-            } else if (selectedRow.datasourceType === "Loki"){
-                t = 1
-            } else if (selectedRow.datasourceType === "AliCloudSLS"){
-                t = 2
-            } else if (selectedRow.datasourceType === "Jaeger"){
-                t = 3
-            } else if (selectedRow.datasourceType === "CloudWatch"){
-                t = 4
-            } else if (selectedRow.datasourceType === "VictoriaMetrics"){
-                t = 5
-            } else if (selectedRow.datasourceType === "KubernetesEvent"){
-                t = 6
-            }
-
-            setSelectedType(t)
-            setSelectedCard(t)
-            setNoticeLabels(selectedRow.noticeGroup)
-            setExprRule(selectedRow.prometheusConfig.rules)
-
-            handleGetDatasourceInfo(selectedRow.datasourceId)
+    const handleGetKubeReasonList = async (resource)=> {
+        const params = {
+            resource: resource
         }
-    }, [selectedRow, form])
+        const res = await getKubernetesReasonList(params)
+        const options = res.data.map((item) => ({
+            label: item.typeCN,
+            value: item.type
+        }))
+        setKubeReasonListOptions(options)
+    }
 
     const handleGetDatasourceInfo = async (id ) =>{
         const params = {
@@ -262,7 +307,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 ...values,
                 datasourceType: t,
                 noticeGroup: noticeLabels,
-                ruleGroupId: ruleGroupId,
+                ruleGroupId: id,
                 effectiveTime: {
                     week: week,
                     startTime: startTime,
@@ -305,7 +350,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                 datasourceType: t,
                 tenantId: selectedRow.tenantId,
                 ruleId: selectedRow.ruleId,
-                ruleGroupId: ruleGroupId,
+                ruleGroupId: id,
                 noticeGroup: noticeLabels,
                 labels: labelData,
                 effectiveTime: {
@@ -356,8 +401,13 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         try {
             let t = getSelectedTypeName(selectedType)
 
+            let dsType = t
+            if (t === "KubernetesEvent"){
+                dsType = "Kubernetes"
+            }
+
             const params = {
-                type: t
+                type: dsType
             }
             const res = await searchDatasource(params)
             const newData = res.data.map((item) => ({
@@ -373,19 +423,22 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
         }
     }
 
+    const formRef = useRef(null);
+
+    const handleReset = () => {
+        formRef.current.reset();
+    };
+
     // 创建
     const handleFormSubmit = async (values) => {
-
-        if (type === 'create') {
+        if (type === 'add') {
             handleCreateRule(values)
         }
-
-        if (type === 'update') {
+        if (type === 'edit') {
             handleUpdateRule(values)
         }
 
-        // 关闭弹窗
-        onClose()
+        window.history.back()
     }
 
     // 获取数据源
@@ -673,25 +726,50 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
             url: selectDatasourceURL,
             query: promQL
         }
-         const res = await queryPromMetrics(params)
-         if (res.code === 200 && res.data && res.data.data && res.data.data.result) {
-             const formattedData = res.data.data.result.map(item => ({
+        const res = await queryPromMetrics(params)
+        if (res.code === 200 && res.data && res.data.data && res.data.data.result) {
+            const formattedData = res.data.data.result.map(item => ({
                 metric: item.metric,
                 value: item.value
-             }));
-             setDataSource(formattedData);
-             setQueryModel(1)
+            }));
+            setDataSource(formattedData);
+            setQueryModel(1)
         }
     }
 
+    const handleGetKubernetesEventTypes = async() =>{
+        try{
+            const res = await getKubernetesResourceList()
+            const ops = res.data.map((item) =>{
+                return {
+                    label: item,
+                    value: item,
+                }
+            })
+            setKubeResourceTypeOptions(ops)
+        } catch (error){
+            console.error(error)
+        }
+    }
+
+    const handleChangeFilterTags = (value) => {
+        setFilterTags(value);
+    };
+
+    if (loading && type === "edit") {
+        return <div>Loading...</div>;
+    }
+
+
     return (
-        <Modal
-            visible={visible}
-            onCancel={onClose}
-            footer={null}
-            styles={{ body: { overflowY: 'auto', maxHeight: '600px' } }} // 设置最大高度并支持滚动 
-            width={820} // 设置Modal窗口宽度
-        >
+        <div style={{textAlign:'left',
+            width: '100%',
+            // flex: 1,
+            alignItems: 'flex-start',
+            marginTop: '-20px',
+            maxHeight: 'calc((-145px + 100vh) - 65px - 40px)',
+            overflowY: 'auto',
+        }}>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
 
                 <div>
@@ -702,7 +780,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             label="规则名称"
                             style={{
                                 marginRight: '10px',
-                                width: '500px',
+                                width: '50%',
                             }}
                             rules={[
                                 {
@@ -721,7 +799,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             name="labels"
                             label="附加标签"
                             style={{
-                                width: '500px',
+                                width: '50%',
                             }}
                         >
                             <Input value={inputLabelsValue} onChange={handleInputLabelsChange}/>
@@ -749,9 +827,9 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                             height: 100,
                                             width: 120,
                                             position: 'relative',
-                                            cursor: type === 'update' ? 'not-allowed' : 'pointer',
+                                            cursor: type === 'edit' ? 'not-allowed' : 'pointer',
                                             border: selectedCard === index ? '2px solid #1890ff' : '1px solid #d9d9d9',
-                                            pointerEvents: type === 'update' ? 'none' : 'auto',
+                                            pointerEvents: type === 'edit' ? 'none' : 'auto',
                                         }}
                                         onClick={() => handleCardClick(index)}
                                     >
@@ -817,17 +895,16 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
                                     <MyFormItem name="" label="* 表达式" rules={[{required: !exprRule}]}>
                                         {exprRule.map((label, index) => (
-                                            <div className="rule-item" key={index}>
-                                                <div className="rule-content">
+                                            <div className="rule-item" key={index} style={{gap: '10px'}}>
                                                     <MyFormItem
                                                         name={['rules', index, 'severity']}
                                                         rules={[{required: true, message: '请选择告警等级'}]}
+                                                        style={{width: '20%', gap: '10px'}}
                                                     >
                                                         <Select
                                                             showSearch
                                                             value={label.severity}
                                                             onChange={(e) => updateExprRule(index, 'severity', e)}
-                                                            style={{width: '147px'}}
                                                             placeholder="普通"
                                                         >
                                                             <Option value="P0"
@@ -844,21 +921,21 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                                                         rules={[{required: true, message: '请输入表达式'}]}
                                                         validateStatus={errors[index] ? 'error' : ''}
                                                         help={errors[index]}
+                                                        style={{width: '100%'}}
                                                     >
                                                         <Input
                                                             placeholder='> 80'
                                                             value={label.expr}
                                                             onChange={(e) => handleExprChange(index, e.target.value)}
-                                                            style={{width: '532px', marginLeft: '10px'}}
+                                                            style={{width: '100%'}}
                                                         />
                                                     </MyFormItem>
 
                                                     <Button onClick={() => removeExprRule(index)}
-                                                            style={{marginLeft: '10px'}}
+                                                            // style={{marginLeft: '10px'}}
                                                             disabled={index === 0}>
                                                         -
                                                     </Button>
-                                                </div>
                                             </div>
                                         ))}
                                     </MyFormItem>
@@ -1294,7 +1371,108 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         </MyFormItemGroup>
                     }
 
-                    {selectedType !==0 &&
+                    {selectedType === 6 &&
+                        <MyFormItemGroup prefix={['kubernetesConfig']}>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <MyFormItem
+                                    name="resource"
+                                    label="资源类型"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                    style={{
+                                        width: '50%',
+                                    }}>
+                                    <Select
+                                        showSearch
+                                        placeholder="请选择资源类型"
+                                        options={kubeResourceTypeOptions}
+                                        onChange={(e)=>setSelectedKubeResource(e)}
+                                    />
+                                </MyFormItem>
+
+                                <MyFormItem
+                                    name="reason"
+                                    label="事件类型"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                    style={{
+                                        width: '50%',
+                                    }}>
+                                    <Select
+                                        showSearch
+                                        placeholder="请选择事件类型"
+                                        options={kubeReasonListOptions}
+                                    />
+                                </MyFormItem>
+
+                                <MyFormItem
+                                    name="value"
+                                    label="表达式"
+                                    style={{
+                                        width: '45%',
+                                    }}
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}>
+                                    <InputNumber  placeholder="输入阈值" addonBefore={
+                                        "当事件条数 >="
+                                    }addonAfter={"条时告警"}/>
+                                </MyFormItem>
+                            </div>
+                            <div style={{ display: 'flex', gap: '10px' }}>
+                                <MyFormItem
+                                    name="filter"
+                                    label="过滤"
+                                    tooltip={"过滤掉事件中某些 Reason, 例如：事件中存在 'nginx' 的 Pod 需要过滤, 那么输入 'nginx' 即可, 可以输入 Pod 全名称, 'nginx-xxx-xxx'"}
+                                    style={{
+                                        width: '100%',
+                                    }}>
+                                    <Select
+                                        mode="tags"
+                                        style={{ width: '100%' }}
+                                        placeholder="按 'Enter' 添加标签"
+                                        value={filterTags}
+                                        onChange={handleChangeFilterTags}
+                                    >
+                                        {filterTags.map((tag) => (
+                                            <Option key={tag} value={tag}>
+                                                {tag}
+                                            </Option>
+                                        ))}
+                                    </Select>
+                                </MyFormItem>
+                            </div>
+                            <MyFormItem
+                                name="scope"
+                                label="查询区间"
+                                rules={[
+                                    {
+                                        required: true,
+                                    },
+                                ]}
+                                style={{
+                                    width: '100%',
+                                }}
+                            >
+                                <InputNumber
+                                    style={{ width: '100%' }}
+                                    addonAfter={<span>分</span>}
+                                    placeholder="10"
+                                    min={1}
+                                />
+                            </MyFormItem>
+                        </MyFormItemGroup>
+                    }
+
+                    {selectedType !== 0 &&
                         <MyFormItem
                             name="severity" label="告警等级"
                             rules={[
@@ -1315,7 +1493,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             name="evalInterval"
                             label="执行频率"
                             style={{
-                                width: '100vh',
+                                width: '100%',
                             }}
                             rules={[
                                 {
@@ -1324,7 +1502,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             ]}
                         >
                             <InputNumber
-                                style={{width: '772px'}}
+                                style={{width: '100%'}}
                                 addonAfter={<span>秒</span>}
                                 placeholder="10"
                                 min={1}
@@ -1337,7 +1515,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         name="effectiveTime"
                         label="生效时间"
                         style={{
-                            width: '772px',
+                            width: '100%',
                         }}
                     >
                         <div style={{display: 'flex', gap: '10px'}}>
@@ -1379,7 +1557,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             tooltip="默认通知对象"
                             style={{
                                 marginRight: '10px',
-                                width: '500px',
+                                width: '50%',
                             }}
                             rules={[
                                 {
@@ -1389,7 +1567,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                         >
                             <Select
                                 style={{
-                                    width: 370,
+                                    width: '100%',
                                 }}
                                 allowClear
                                 placeholder="选择通知对象"
@@ -1402,7 +1580,7 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                             name="repeatNoticeInterval"
                             label="重复通知"
                             style={{
-                                width: '500px',
+                                width: '50%',
                             }}
                             rules={[
                                 {
@@ -1451,9 +1629,9 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
 
                 <MyFormItemGroup prefix={['noticeGroup']}>
                     {noticeLabels.length >= 1 ? (<div style={{display: 'flex',}}>
-                        <label style={{marginRight: '210px'}}>* Key</label>
-                        <label style={{marginRight: '200px'}}>* Value</label>
-                        <label style={{marginRight: '180px'}}>* 通知对象</label>
+                        <label style={{marginRight: '29%'}}>* Key</label>
+                        <label style={{marginRight: '28%'}}>* Value</label>
+                        <label style={{marginRight: '27%'}}>* 通知对象</label>
                         <label>操作</label>
                     </div>) : null}
                     {noticeLabels.map((label, index) => (
@@ -1516,6 +1694,6 @@ export const AlertRuleCreateModal = ({ visible, onClose, selectedRow, type, hand
                     </Button>
                 </div>
             </Form >
-        </Modal >
+        </div>
     )
 }

@@ -25,7 +25,7 @@ export const AlertRuleGroup = ({ }) => {
             render: (text, record) => (
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Link to={`/alertRuleGroup/${record.id}/rules`}>{text}</Link>
+                        <Link to={`/ruleGroup/${record.id}/rule/list`}>{text}</Link>
                         <CopyOutlined
                             style={{ marginLeft: '5px', cursor: 'pointer' }}
                             onClick={() => handleCopy(text)}
