@@ -10,6 +10,7 @@ import {
     AreaChartOutlined,
     FileDoneOutlined,
     SettingOutlined,
+    SafetyCertificateOutlined,
     // CloudSyncOutlined,
     // SafetyOutlined
 } from '@ant-design/icons';
@@ -74,6 +75,7 @@ export const ComponentSider = (props) => {
                         {/*    <Menu.Item key='11-1' onClick={(e) => handleMenuClick(e.key, '/user')}>事件大盘</Menu.Item>*/}
                         {/*    <Menu.Item key='11-2' onClick={(e) => handleMenuClick(e.key, '/userRole')}>事件中心</Menu.Item>*/}
                         {/*</SubMenu>*/}
+                        <Menu.Item key='11' onClick={(e) => handleMenuClick(e.key, '/monitor/ssl/list')} icon={<SafetyCertificateOutlined />}>证书监控</Menu.Item >
                         <Menu.Item key='9' onClick={(e) => handleMenuClick(e.key, '/auditLog')} icon={<FileDoneOutlined />}>日志审计</Menu.Item >
                         <Menu.Item key='10' onClick={(e) => handleMenuClick(e.key, '/settings')} icon={<SettingOutlined />}>系统设置</Menu.Item >
                     </Menu>
@@ -108,6 +110,7 @@ export const ComponentSider = (props) => {
 
                         <Menu.Item key='6' onClick={(e) => handleMenuClick(e.key, '/datasource')} icon={<PieChartOutlined />}>数据源</Menu.Item>
                         <Menu.Item key='8' onClick={(e) => handleMenuClick(e.key, '/dashboard')} icon={<DashboardOutlined />}>仪表盘</Menu.Item >
+                        <Menu.Item key='11' onClick={(e) => handleMenuClick(e.key, '/monitor/ssl/list')} icon={<SafetyCertificateOutlined />}>证书监控</Menu.Item >
                     </Menu>
                 </>
             );
