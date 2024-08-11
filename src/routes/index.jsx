@@ -22,6 +22,8 @@ import { AuditLog } from "../pages/audit";
 import {SystemSettings} from "../pages/settings";
 import {TenantDetail} from "../pages/tenant/detail";
 import {AlertRule} from "../pages/alert/rule/create";
+import {MonitorSSL} from "../pages/monitor/ssl";
+import {CreateMonitorSSLRule} from "../pages/monitor/ssl/create";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -116,6 +118,18 @@ export default [
     {
         path: '/settings',
         element: <ComponentsContent name="系统设置" c={<SystemSettings/>}/>
+    },
+    {
+        path: '/monitor/ssl/list',
+        element: <ComponentsContent name="证书监控" c={<MonitorSSL/>} />
+    },
+    {
+        path: '/monitor/ssl/create',
+        element: <ComponentsContent name="创建证书监控规则" c={<CreateMonitorSSLRule type="add"/>} />
+    },
+    {
+        path: '/monitor/ssl/:id/edit',
+        element: <ComponentsContent name="编辑证书监控规则" c={<CreateMonitorSSLRule type="edit"/>} />
     },
     {
         path: '/*',
