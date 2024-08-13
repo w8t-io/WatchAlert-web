@@ -21,7 +21,7 @@ jobs:
 
       - name: 2. Build Docker image
         run: |
-          docker build -t cairry/watchalert-web:$BRANCH_NAME.$DATE.$SHORT_SHA .
+          docker build -t cairry/watchalert-web:$BRANCH_NAME.$DATE.$SHORT_SHA -f Dockerfile-nginx.
           docker tag cairry/watchalert-web:$BRANCH_NAME.$DATE.$SHORT_SHA cairry/watchalert-web:latest
 
       - name: 3. Login to Docker Hub
