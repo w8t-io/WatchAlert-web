@@ -19,7 +19,8 @@ COPY --from=build /app/build.tar.gz /app
 
 RUN tar zxf /app/build.tar.gz -C /app && \
     mv /app/build/* /app && \
-    rm -rf /app/build*
+    rm -rf /app/build* && \
+    rm -rf /etc/nginx/conf.d/default.conf
 
 COPY ./w8t.conf /etc/nginx/conf.d
 
