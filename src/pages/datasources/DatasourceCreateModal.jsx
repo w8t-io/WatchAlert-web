@@ -173,8 +173,8 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                             required: true,
                                         },
                                         {
-                                            pattern: /^(http|https):\/\//,
-                                            message: '输入正确的URL格式',
+                                            pattern: /^(http|https):\/\/.*[^\/]$/,
+                                            message: '请输入正确的URL格式，且结尾不应包含"/"',
                                         },
                                     ]}>
                             <Input />
