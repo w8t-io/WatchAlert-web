@@ -9,6 +9,7 @@ import { ReactComponent as AwsImg } from "../alert/rule/img/AWSlogo.svg"
 import { ReactComponent as LokiImg } from "../alert/rule/img/L.svg"
 import { ReactComponent as VMImg } from "../alert/rule/img/victoriametrics.svg"
 import { ReactComponent as K8sImg } from "../alert/rule/img/Kubernetes.svg"
+import { ReactComponent as ESImg } from "../alert/rule/img/ElasticSearch.svg"
 
 export const Datasources = () => {
     const { Search } = Input
@@ -49,6 +50,9 @@ export const Datasources = () => {
                         )}
                         {text === "Kubernetes" && (
                             <K8sImg style={{height: "25px", width: "25px"}}/>
+                        )}
+                        {text === "ElasticSearch" && (
+                            <ESImg style={{height: "25px", width: "25px"}}/>
                         )}
                         <div style={{marginLeft: "5px", marginTop: '3px', fontSize: '12px'}}>{text}</div>
                     </div>
