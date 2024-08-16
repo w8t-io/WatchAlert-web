@@ -81,7 +81,7 @@ export const AlertRuleGroup = ({ }) => {
     ]
 
     useEffect(() => {
-        handleList()
+        handleList(pagination.index, pagination.size)
     }, [])
 
     const handleCopy = (text) => {
@@ -89,11 +89,11 @@ export const AlertRuleGroup = ({ }) => {
         message.success('已复制到剪贴板');
     };
 
-    const handleList = async () => {
+    const handleList = async (index, size) => {
         try {
             const params = {
-                index: pagination.index,
-                size: pagination.size,
+                index: index,
+                size: size,
             }
             const res = await getRuleGroupList(params)
 
@@ -108,6 +108,11 @@ export const AlertRuleGroup = ({ }) => {
             console.error(error)
         }
     }
+
+    const handlePageChange = (page) => {
+        setPagination({ ...pagination, index: page.current, size: page.size });
+        handleList(page.current, page.size)
+    };
 
     const handleDelete = async (_, record) => {
         try {
@@ -189,15 +194,15 @@ export const AlertRuleGroup = ({ }) => {
                     columns={columns}
                     dataSource={list}
                     pagination={{
-                        pageIndex: pagination.pageIndex ?? 1,
-                        pageSize: pagination.pageSize ?? 10,
+                        index: pagination.index ?? 1,
+                        size: pagination.size ?? 10,
                         total: pagination?.total ?? 0,
                         showQuickJumper: true,
                         showSizeChanger: true,
                         showTotal: handleShowTotal,
                     }}
+                    onChange={handlePageChange}
                     scroll={{
-                        x: 1000,
                         y: 'calc(65vh - 65px - 40px)'
                     }}
                 />
