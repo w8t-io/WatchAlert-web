@@ -1,5 +1,5 @@
 import { createDatasource, updateDatasource } from '../../api/datasource'
-import { Modal, Form, Input, Button, Switch, Select, InputNumber } from 'antd'
+import {Modal, Form, Input, Button, Switch, Select, InputNumber, Alert} from 'antd'
 import React, { useState, useEffect } from 'react'
 const { TextArea } = Input
 const MyFormItemContext = React.createContext([])
@@ -25,6 +25,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
     const [form] = Form.useForm()
     const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
     const [selectedType, setSelectedType] = useState(null) // 数据源类型
+    const [isChecked, setIsChecked] = useState(false)
 
     // 禁止输入空格
     const [spaceValue, setSpaceValue] = useState('')
@@ -58,6 +59,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                 awsCloudwatch: selectedRow.awsCloudwatch,
                 description: selectedRow.description,
                 kubeConfig: selectedRow.kubeConfig,
+                elasticSearch: selectedRow.elasticSearch,
                 enabled: selectedRow.enabled
             })
         }
@@ -160,6 +162,10 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                             {
                                 value: 'Kubernetes',
                                 label: 'Kubernetes'
+                            },
+                            {
+                                value: 'ElasticSearch',
+                                label: 'ElasticSearch'
                             }
                         ]}
                     />
@@ -267,6 +273,31 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                         }]}>
                         <TextArea rows={15} placeholder="输入 Kubernetes 认证配置" />
                     </MyFormItem>
+                }
+
+                {(selectedType === 'ElasticSearch') &&
+                    <MyFormItemGroup prefix={['elasticSearch']}>
+                        <MyFormItem name="url" label="URL"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                        {
+                                            pattern: /^(http|https):\/\/.*[^\/]$/,
+                                            message: '请输入正确的URL格式，且结尾不应包含"/"',
+                                        },
+                                    ]}>
+                            <Input />
+                        </MyFormItem>
+
+                        <MyFormItem name="username" label="用户名">
+                            <Input />
+                        </MyFormItem>
+
+                        <MyFormItem name="password" label="密码">
+                            <Input />
+                        </MyFormItem>
+                    </MyFormItemGroup>
                 }
 
                 <MyFormItem name="description" label="描述">

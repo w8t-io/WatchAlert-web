@@ -23,6 +23,7 @@ import AwsImg from "./img/AWSlogo.svg"
 import LokiImg from "./img/L.svg"
 import VMImg from "./img/victoriametrics.svg"
 import K8sImg from "./img/Kubernetes.svg"
+import ESImg from "./img/ElasticSearch.svg"
 import {PrometheusPromQL} from "../../promethues";
 import {getKubernetesReasonList, getKubernetesResourceList} from "../../../api/kubernetes";
 
@@ -121,6 +122,8 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
     const [kubeReasonListOptions,setKubeReasonListOptions]=useState({})
     const [filterTags,setFilterTags] = useState([])
 
+    const [esfilter, setEsfilter] = useState([{}])
+
     useEffect(() => {
         const handleSearchRuleInfo = async ()=>{
             try {
@@ -179,6 +182,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
             },
             cloudwatchConfig: selectedRow.cloudwatchConfig,
             kubernetesConfig: selectedRow.kubernetesConfig,
+            elasticSearchConfig: selectedRow.elasticSearchConfig,
             recoverNotify:selectedRow.recoverNotify,
         })
         setSelectedItems(selectedRow.datasourceId)
@@ -201,6 +205,8 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
             t = 5
         } else if (selectedRow.datasourceType === "KubernetesEvent"){
             t = 6
+        } else if (selectedRow.datasourceType === "ElasticSearch"){
+            t = 7
         }
 
         setSelectedType(t)
@@ -209,6 +215,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
         setExprRule(selectedRow.prometheusConfig.rules)
         setSelectedKubeResource(selectedRow.kubernetesConfig.resource)
         setFilterTags(selectedRow.kubernetesConfig.filter)
+        setEsfilter(selectedRow.elasticSearchConfig.filter)
 
         handleGetDatasourceInfo(selectedRow.datasourceId)
     }
@@ -392,6 +399,8 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
             t = "VictoriaMetrics"
         } else if (selectedType === 6){
             t = "KubernetesEvent"
+        } else if (selectedType === 7){
+            t = "ElasticSearch"
         }
 
         return t
@@ -532,6 +541,10 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
         {
             imgSrc: K8sImg,
             text: 'KubernetesEvent',
+        },
+        {
+            imgSrc: ESImg,
+            text: 'ElasticSearch',
         }
     ];
 
@@ -756,10 +769,25 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
         setFilterTags(value);
     };
 
+    const addEsFilter = () => {
+        setEsfilter([...esfilter, { field: '', value: '' }]);
+    }
+
+    const updateEsFilter = (index, field, value) => {
+        const updatedEsFilter = [...esfilter]
+        updatedEsFilter[index][field] = value
+        setEsfilter(updatedEsFilter)
+    }
+
+    const removeEsFilter = (index) => {
+        const updatedEsFilter = [...esfilter]
+        updatedEsFilter.splice(index, 1)
+        setEsfilter(updatedEsFilter)
+    }
+
     if (loading && type === "edit") {
         return <div>Loading...</div>;
     }
-
 
     return (
         <div style={{textAlign:'left',
@@ -1469,6 +1497,88 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                     min={1}
                                 />
                             </MyFormItem>
+                        </MyFormItemGroup>
+                    }
+
+                    {selectedType === 7 &&
+                        <MyFormItemGroup prefix={['elasticSearchConfig']}>
+                            <div style={{display: 'flex', gap: '10px'}}>
+                                <MyFormItem
+                                    name="index"
+                                    label="索引名称"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                    style={{
+                                        width: '50%',
+                                    }}>
+                                    <Input/>
+                                </MyFormItem>
+
+                                <MyFormItem
+                                    name="scope"
+                                    label="查询区间"
+                                    rules={[
+                                        {
+                                            required: true,
+                                        },
+                                    ]}
+                                    style={{
+                                        width: '50%',
+                                    }}
+                                >
+                                    <InputNumber
+                                        style={{width: '100%'}}
+                                        addonAfter={<span>分</span>}
+                                        placeholder="10"
+                                        min={1}
+                                    />
+                                </MyFormItem>
+                            </div>
+
+                            <span>筛选</span>
+                            <div className="es-rule-config-container">
+                                <MyFormItem name="" label="" rules={[{required: !esfilter}]}>
+                                    {esfilter.map((label, index) => (
+                                        <div className="rule-item" key={index} style={{gap: '10px'}}>
+                                            <MyFormItem
+                                                name={['filter', index, 'field']}
+                                                label="字段名"
+                                                rules={[{required: true, message: '请输入字段名'}]}
+                                                style={{width: '50%', gap: '10px'}}
+                                            >
+                                                <Input onChange={(e) => updateEsFilter(index, 'field', e.target.value)}/>
+                                            </MyFormItem>
+
+                                            <MyFormItem
+                                                name={['filter', index, 'value']}
+                                                label="字段值"
+                                                rules={[{required: true, message: '请输入字段值'}]}
+                                                validateStatus={errors[index] ? 'error' : ''}
+                                                help={errors[index]}
+                                                style={{width: '50%'}}
+                                            >
+                                                <Input
+                                                    value={label.expr}
+                                                    style={{width: '100%'}}
+                                                    onChange={(e) => updateEsFilter(index, 'value', e.target.value)}
+                                                />
+                                            </MyFormItem>
+
+                                            <Button onClick={() => removeEsFilter(index)}
+                                                style={{marginTop: '30px'}}
+                                                    disabled={index === 0}>
+                                                -
+                                            </Button>
+                                        </div>
+                                    ))}
+                                </MyFormItem>
+                                <Button type="link" onClick={addEsFilter} style={{ display: 'block', textAlign: 'center', width: '100%',marginTop:'-30px' }}>
+                                    添加一个新的筛选规则
+                                </Button>
+                            </div>
                         </MyFormItemGroup>
                     }
 

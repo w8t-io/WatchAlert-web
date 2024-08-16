@@ -5,6 +5,14 @@
     margin-top: 10px;
 }
 
+.es-rule-config-container {
+    border: 1px solid #ccc;
+    padding: 16px;
+    border-radius: 4px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
 .rule-item {
     display: flex;
     margin-bottom: 10px;
