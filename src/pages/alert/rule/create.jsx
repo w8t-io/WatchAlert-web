@@ -184,6 +184,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
             cloudwatchConfig: selectedRow.cloudwatchConfig,
             kubernetesConfig: selectedRow.kubernetesConfig,
             elasticSearchConfig: selectedRow.elasticSearchConfig,
+            recoverNotify:selectedRow.recoverNotify,
         })
         setSelectedItems(selectedRow.datasourceId)
         setWeek(selectedRow.effectiveTime.week)
@@ -1557,8 +1558,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                                 rules={[{required: true, message: '请输入字段名'}]}
                                                 style={{width: '50%', gap: '10px'}}
                                             >
-                                                <Input
-                                                    onChange={(e) => updateEsFilter(index, 'field', e.target.value)}/>
+                                                <Input onChange={(e) => updateEsFilter(index, 'field', e.target.value)}/>
                                             </MyFormItem>
 
                                             <MyFormItem
@@ -1577,19 +1577,14 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                             </MyFormItem>
 
                                             <Button onClick={() => removeEsFilter(index)}
-                                                    style={{marginTop: '30px'}}
+                                                style={{marginTop: '30px'}}
                                                     disabled={index === 0}>
                                                 -
                                             </Button>
                                         </div>
                                     ))}
                                 </MyFormItem>
-                                <Button type="link" onClick={addEsFilter} style={{
-                                    display: 'block',
-                                    textAlign: 'center',
-                                    width: '100%',
-                                    marginTop: '-30px'
-                                }}>
+                                <Button type="link" onClick={addEsFilter} style={{ display: 'block', textAlign: 'center', width: '100%',marginTop:'-30px' }}>
                                     添加一个新的筛选规则
                                 </Button>
                             </div>
