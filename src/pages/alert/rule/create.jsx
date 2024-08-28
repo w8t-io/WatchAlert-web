@@ -55,10 +55,11 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
     const [selectedRow,setSelectedRow] = useState({})
     const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
     const [recoverNotify,setRecoverNotify] = useState(true)
+    const [alarmAggregation,setAlarmAggregation] = useState(true)
     const [selectedType, setSelectedType] = useState(null) // 数据源类型
     const [datasourceOptions, setDatasourceOptions] = useState([])  // 数据源列表
     const [selectedItems, setSelectedItems] = useState([])  //选择数据源
-    const [noticeLabels, setNoticeLabels] = useState([]) // notice Lable
+    const [noticeLabels, setNoticeLabels] = useState([]) // noAice Lable
     const [noticeOptions, setNoticeOptions] = useState([])  // 通知对象列表
     // 禁止输入空格
     const [spaceValue, setSpaceValue] = useState('')
@@ -183,12 +184,14 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
             cloudwatchConfig: selectedRow.cloudwatchConfig,
             kubernetesConfig: selectedRow.kubernetesConfig,
             elasticSearchConfig: selectedRow.elasticSearchConfig,
-            recoverNotify:selectedRow.recoverNotify,
         })
         setSelectedItems(selectedRow.datasourceId)
         setWeek(selectedRow.effectiveTime.week)
         setStartTime(selectedRow.effectiveTime.startTime)
         setEndTime(selectedRow.effectiveTime.endTime)
+        setEnabled(selectedRow.enabled)
+        setAlarmAggregation(selectedRow.alarmAggregation)
+        setRecoverNotify(selectedRow.recoverNotify)
 
         let t = 0;
         if (selectedRow.datasourceType === "Prometheus"){
@@ -322,6 +325,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                 },
                 labels: labelData,
                 recoverNotify: recoverNotify,
+                alarmAggregation: alarmAggregation,
                 enabled: enabled
             }
 
@@ -366,6 +370,8 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                     endTime: endTime,
                 },
                 recoverNotify: recoverNotify,
+                alarmAggregation: alarmAggregation,
+                enabled: enabled
             }
 
             if (selectedType === 4) {
@@ -924,46 +930,46 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                     <MyFormItem name="" label="* 表达式" rules={[{required: !exprRule}]}>
                                         {exprRule.map((label, index) => (
                                             <div className="rule-item" key={index} style={{gap: '10px'}}>
-                                                    <MyFormItem
-                                                        name={['rules', index, 'severity']}
-                                                        rules={[{required: true, message: '请选择告警等级'}]}
-                                                        style={{width: '20%', gap: '10px'}}
+                                                <MyFormItem
+                                                    name={['rules', index, 'severity']}
+                                                    rules={[{required: true, message: '请选择告警等级'}]}
+                                                    style={{width: '20%', gap: '10px'}}
+                                                >
+                                                    <Select
+                                                        showSearch
+                                                        value={label.severity}
+                                                        onChange={(e) => updateExprRule(index, 'severity', e)}
+                                                        placeholder="普通"
                                                     >
-                                                        <Select
-                                                            showSearch
-                                                            value={label.severity}
-                                                            onChange={(e) => updateExprRule(index, 'severity', e)}
-                                                            placeholder="普通"
-                                                        >
-                                                            <Option value="P0"
-                                                                    disabled={disableSeverity('P0')}>紧急</Option>
-                                                            <Option value="P1"
-                                                                    disabled={disableSeverity('P1')}>告警</Option>
-                                                            <Option value="P2"
-                                                                    disabled={disableSeverity('P2')}>普通</Option>
-                                                        </Select>
-                                                    </MyFormItem>
+                                                        <Option value="P0"
+                                                                disabled={disableSeverity('P0')}>紧急</Option>
+                                                        <Option value="P1"
+                                                                disabled={disableSeverity('P1')}>告警</Option>
+                                                        <Option value="P2"
+                                                                disabled={disableSeverity('P2')}>普通</Option>
+                                                    </Select>
+                                                </MyFormItem>
 
-                                                    <MyFormItem
-                                                        name={['rules', index, 'expr']}
-                                                        rules={[{required: true, message: '请输入表达式'}]}
-                                                        validateStatus={errors[index] ? 'error' : ''}
-                                                        help={errors[index]}
+                                                <MyFormItem
+                                                    name={['rules', index, 'expr']}
+                                                    rules={[{required: true, message: '请输入表达式'}]}
+                                                    validateStatus={errors[index] ? 'error' : ''}
+                                                    help={errors[index]}
+                                                    style={{width: '100%'}}
+                                                >
+                                                    <Input
+                                                        placeholder='> 80'
+                                                        value={label.expr}
+                                                        onChange={(e) => handleExprChange(index, e.target.value)}
                                                         style={{width: '100%'}}
-                                                    >
-                                                        <Input
-                                                            placeholder='> 80'
-                                                            value={label.expr}
-                                                            onChange={(e) => handleExprChange(index, e.target.value)}
-                                                            style={{width: '100%'}}
-                                                        />
-                                                    </MyFormItem>
+                                                    />
+                                                </MyFormItem>
 
-                                                    <Button onClick={() => removeExprRule(index)}
-                                                            // style={{marginLeft: '10px'}}
-                                                            disabled={index === 0}>
-                                                        -
-                                                    </Button>
+                                                <Button onClick={() => removeExprRule(index)}
+                                                    // style={{marginLeft: '10px'}}
+                                                        disabled={index === 0}>
+                                                    -
+                                                </Button>
                                             </div>
                                         ))}
                                     </MyFormItem>
@@ -1112,6 +1118,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                             <Option value=">">{'>'}</Option>
                                             <Option value=">=">{'>='}</Option>
                                             <Option value="<">{'<'}</Option>
+                                            <Option value="<=">{'<='}</Option>
                                             <Option value="==">{'=='}</Option>
                                             <Option value="!=">{'!='}</Option>
                                         </Select>
@@ -1243,6 +1250,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                             <Option value=">">{'>'}</Option>
                                             <Option value=">=">{'>='}</Option>
                                             <Option value="<">{'<'}</Option>
+                                            <Option value="<=">{'<='}</Option>
                                             <Option value="==">{'=='}</Option>
                                             <Option value="!=">{'!='}</Option>
                                         </Select>
@@ -1261,7 +1269,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
 
                     {selectedType === 4 &&
                         <MyFormItemGroup prefix={['cloudwatchConfig']}>
-                            <div style={{ display: 'flex', gap: '10px' }}>
+                            <div style={{display: 'flex', gap: '10px'}}>
                                 <MyFormItem
                                     name="namespace"
                                     label="指标类型"
@@ -1327,8 +1335,8 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                             required: true,
                                         },
                                     ]}>
-                                    <InputNumber  placeholder="输入阈值, 如 80" addonBefore={
-                                        <Select onChange={setCwExpr} placeholder=">" value={cwExpr?cwExpr:'>'}>
+                                    <InputNumber placeholder="输入阈值, 如 80" addonBefore={
+                                        <Select onChange={setCwExpr} placeholder=">" value={cwExpr ? cwExpr : '>'}>
                                             <Option value=">">{'>'}</Option>
                                             <Option value=">=">{'>='}</Option>
                                             <Option value="<">{'<'}</Option>
@@ -1338,7 +1346,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                     }/>
                                 </MyFormItem>
                             </div>
-                            <div style={{ display: 'flex', gap: '10px' }}>
+                            <div style={{display: 'flex', gap: '10px'}}>
                                 <MyFormItem
                                     name="dimension"
                                     label="端点类型"
@@ -1390,7 +1398,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                 }}
                             >
                                 <InputNumber
-                                    style={{ width: '97%' }}
+                                    style={{width: '97%'}}
                                     addonAfter={<span>分</span>}
                                     placeholder="10"
                                     min={1}
@@ -1401,7 +1409,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
 
                     {selectedType === 6 &&
                         <MyFormItemGroup prefix={['kubernetesConfig']}>
-                            <div style={{ display: 'flex', gap: '10px' }}>
+                            <div style={{display: 'flex', gap: '10px'}}>
                                 <MyFormItem
                                     name="resource"
                                     label="资源类型"
@@ -1417,7 +1425,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                         showSearch
                                         placeholder="请选择资源类型"
                                         options={kubeResourceTypeOptions}
-                                        onChange={(e)=>setSelectedKubeResource(e)}
+                                        onChange={(e) => setSelectedKubeResource(e)}
                                     />
                                 </MyFormItem>
 
@@ -1450,12 +1458,12 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                             required: true,
                                         },
                                     ]}>
-                                    <InputNumber  placeholder="输入阈值" addonBefore={
+                                    <InputNumber placeholder="输入阈值" addonBefore={
                                         "当事件条数 >="
-                                    }addonAfter={"条时告警"}/>
+                                    } addonAfter={"条时告警"}/>
                                 </MyFormItem>
                             </div>
-                            <div style={{ display: 'flex', gap: '10px' }}>
+                            <div style={{display: 'flex', gap: '10px'}}>
                                 <MyFormItem
                                     name="filter"
                                     label="过滤"
@@ -1465,7 +1473,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                     }}>
                                     <Select
                                         mode="tags"
-                                        style={{ width: '100%' }}
+                                        style={{width: '100%'}}
                                         placeholder="按 'Enter' 添加标签"
                                         value={filterTags}
                                         onChange={handleChangeFilterTags}
@@ -1491,7 +1499,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                 }}
                             >
                                 <InputNumber
-                                    style={{ width: '100%' }}
+                                    style={{width: '100%'}}
                                     addonAfter={<span>分</span>}
                                     placeholder="10"
                                     min={1}
@@ -1549,7 +1557,8 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                                 rules={[{required: true, message: '请输入字段名'}]}
                                                 style={{width: '50%', gap: '10px'}}
                                             >
-                                                <Input onChange={(e) => updateEsFilter(index, 'field', e.target.value)}/>
+                                                <Input
+                                                    onChange={(e) => updateEsFilter(index, 'field', e.target.value)}/>
                                             </MyFormItem>
 
                                             <MyFormItem
@@ -1568,14 +1577,19 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                             </MyFormItem>
 
                                             <Button onClick={() => removeEsFilter(index)}
-                                                style={{marginTop: '30px'}}
+                                                    style={{marginTop: '30px'}}
                                                     disabled={index === 0}>
                                                 -
                                             </Button>
                                         </div>
                                     ))}
                                 </MyFormItem>
-                                <Button type="link" onClick={addEsFilter} style={{ display: 'block', textAlign: 'center', width: '100%',marginTop:'-30px' }}>
+                                <Button type="link" onClick={addEsFilter} style={{
+                                    display: 'block',
+                                    textAlign: 'center',
+                                    width: '100%',
+                                    marginTop: '-30px'
+                                }}>
                                     添加一个新的筛选规则
                                 </Button>
                             </div>
@@ -1707,24 +1721,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                         </MyFormItem>
                     </div>
 
-                    <div style={{display: 'flex', alignItems: 'center'}}>
-                        <div style={{marginRight: '10px'}}>
-                            启用恢复通知
-                        </div>
-                        <MyFormItem
-                            style={{marginBottom: '0'}}
-                            name="recoverNotify"
-                            valuePropName="checked"
-                        >
-                            <Switch
-                                value={recoverNotify}
-                                checked={recoverNotify}
-                                onChange={(e) => {setRecoverNotify(e)}}
-                            />
-                        </MyFormItem>
-                    </div>
-
-                    <div style={{display: 'flex', marginTop:'10px',alignItems: 'center'}}>
+                    <div style={{display: 'flex', marginTop: '10px', alignItems: 'center'}}>
                         <MyFormItem style={{marginBottom: '0', marginRight: '10px'}}>
                             <span>分组通知</span>
                             <Tooltip title="根据 Metric 标签进行分组通知">
@@ -1737,73 +1734,108 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                     </div>
                 </div>
 
-                <MyFormItemGroup prefix={['noticeGroup']}>
-                    {noticeLabels.length >= 1 ? (<div style={{display: 'flex',}}>
-                        <label style={{marginRight: '29%'}}>* Key</label>
-                        <label style={{marginRight: '28%'}}>* Value</label>
-                        <label style={{marginRight: '27%'}}>* 通知对象</label>
-                        <label>操作</label>
-                    </div>) : null}
-                    {noticeLabels.map((label, index) => (
-                        <div style={{display: 'flex', alignItems: 'center', marginTop: '10px'}}>
-                            <Input
-                                name={`[${index}].key`}
-                                placeholder="Key"
-                                style={{
-                                    marginRight: '10px',
-                                    width: 'calc((100% / 3) - 20px)',
-                                    height: '32px'
-                                }} // 减去marginRight和padding
-                                value={label.key}
-                                onChange={(e) => updateLabel(index, 'key', e.target.value)}
-                            />
+                <div style={{marginTop: '20px'}}>
+                    <MyFormItemGroup prefix={['noticeGroup']}>
+                        {noticeLabels.length >= 1 ? (<div style={{display: 'flex',}}>
+                            <label style={{marginRight: '29%'}}>* Key</label>
+                            <label style={{marginRight: '28%'}}>* Value</label>
+                            <label style={{marginRight: '27%'}}>* 通知对象</label>
+                            <label>操作</label>
+                        </div>) : null}
+                        {noticeLabels.map((label, index) => (
+                            <div style={{display: 'flex', alignItems: 'center', marginTop: '10px'}}>
+                                <Input
+                                    name={`[${index}].key`}
+                                    placeholder="Key"
+                                    style={{
+                                        marginRight: '10px',
+                                        width: 'calc((100% / 3) - 20px)',
+                                        height: '32px'
+                                    }} // 减去marginRight和padding
+                                    value={label.key}
+                                    onChange={(e) => updateLabel(index, 'key', e.target.value)}
+                                />
 
-                            <Input
-                                name={`[${index}].value`}
-                                placeholder="Value"
-                                style={{
-                                    marginRight: '10px',
-                                    width: 'calc((100% / 3) - 20px)',
-                                    height: '32px'
-                                }} // 减去marginRight和padding
-                                value={label.value}
-                                onChange={(e) => updateLabel(index, 'value', e.target.value)}
-                            />
+                                <Input
+                                    name={`[${index}].value`}
+                                    placeholder="Value"
+                                    style={{
+                                        marginRight: '10px',
+                                        width: 'calc((100% / 3) - 20px)',
+                                        height: '32px'
+                                    }} // 减去marginRight和padding
+                                    value={label.value}
+                                    onChange={(e) => updateLabel(index, 'value', e.target.value)}
+                                />
 
-                            <Select
-                                name={`[${index}].noticeId`}
-                                placeholder="选择通知对象"
-                                style={{ width: 'calc((100% / 3) - 20px)', height: '32px' }} // 减去marginRight和padding
-                                allowClear
-                                options={noticeOptions}
-                                value={label.noticeId ? [label.noticeId] : undefined}
-                                onChange={(e) => updateLabel(index, 'noticeId', e)}
-                            />
+                                <Select
+                                    name={`[${index}].noticeId`}
+                                    placeholder="选择通知对象"
+                                    style={{width: 'calc((100% / 3) - 20px)', height: '32px'}} // 减去marginRight和padding
+                                    allowClear
+                                    options={noticeOptions}
+                                    value={label.noticeId ? [label.noticeId] : undefined}
+                                    onChange={(e) => updateLabel(index, 'noticeId', e)}
+                                />
 
-                            <Button onClick={() => removeLabel(index)} style={{ marginLeft: '10px' }}>
-                                -
-                            </Button>
-                        </div>
-                    ))}
-                </MyFormItemGroup>
+                                <Button onClick={() => removeLabel(index)} style={{marginLeft: '10px'}}>
+                                    -
+                                </Button>
+                            </div>
+                        ))}
+                    </MyFormItemGroup>
+                </div>
 
-                <div style={{ marginTop: '10px' }}>
+                <div style={{display: 'flex', alignItems: 'center', gap: '15px', marginTop: '10px'}}>
                     <MyFormItem
-                        name="enabled"
-                        label="状态"
-                        tooltip="启用/禁用"
-                        valuePropName="checked"
+                        style={{marginBottom: 0}}
+                        name="recoverNotify"
                     >
-                        <Switch value={enabled} checked={enabled} onChange={(e)=>{setEnabled(e)}} />
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                            <span style={{marginRight: 8}}>启用恢复通知</span>
+                            <Switch
+                                value={recoverNotify}
+                                checked={recoverNotify}
+                                onChange={setRecoverNotify}
+                            />
+                        </div>
+                    </MyFormItem>
+                    <MyFormItem
+                        style={{marginBottom: 0}}
+                        name="alarmAggregation"
+                    >
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                            <span style={{marginRight: 8}}>启用告警聚合</span>
+                            <Switch
+                                value={alarmAggregation}
+                                checked={alarmAggregation}
+                                onChange={setAlarmAggregation}
+                            />
+                        </div>
                     </MyFormItem>
                 </div>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <div style={{marginTop: '20px'}}>
+                    <MyFormItem
+                        style={{marginBottom: 0}}
+                        name="enabled"
+                        valuePropName="checked"
+                    >
+                        <div style={{display: 'flex', alignItems: 'center'}}>
+                            <span style={{marginRight: 8}}>规则状态</span>
+                            <Switch value={enabled} checked={enabled} onChange={(e) => {
+                                setEnabled(e)
+                            }}/>
+                        </div>
+                    </MyFormItem>
+                </div>
+
+                <div style={{display: 'flex', justifyContent: 'flex-end'}}>
                     <Button type="primary" htmlType="submit">
                         提交
                     </Button>
                 </div>
-            </Form >
+            </Form>
         </div>
     )
 }
