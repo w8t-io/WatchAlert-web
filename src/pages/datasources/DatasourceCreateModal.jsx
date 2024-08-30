@@ -26,6 +26,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
     const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
     const [selectedType, setSelectedType] = useState(null) // 数据源类型
     const [isChecked, setIsChecked] = useState(false)
+    const [submitLoading,setSubmitLoading] = useState(false)
 
     // 禁止输入空格
     const [spaceValue, setSpaceValue] = useState('')
@@ -71,6 +72,8 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
             handleList()
         } catch (error) {
             console.error(error)
+        } finally {
+            setSubmitLoading(false)
         }
     }
 
@@ -80,6 +83,8 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
             handleList()
         } catch (error) {
             console.error(error)
+        } finally {
+            setSubmitLoading(false)
         }
     }
 
@@ -104,6 +109,10 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
 
     const handleGetDatasourceData = async (data) => {
         setSelectedType(data)
+    }
+
+    const handleSubmit = async () => {
+        setSubmitLoading(true)
     }
 
     return (
@@ -314,7 +323,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                 </MyFormItem>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button type="primary" htmlType="submit">
+                    <Button type="primary" htmlType="submit" loading={submitLoading} onClick={handleSubmit}>
                         提交
                     </Button>
                 </div>
