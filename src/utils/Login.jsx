@@ -127,7 +127,7 @@ export const Login = () => {
                 </Sider>
                 <Layout >
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: '3vh', marginRight: '20px' }}>
-                        <a href="https://github.com/Cairry/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
+                        <a href="https://github.com/w8t-io/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
                             <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '3.5vh', height: '3.5vh', marginRight: '5px' }} />
                         </a>
                     </div>

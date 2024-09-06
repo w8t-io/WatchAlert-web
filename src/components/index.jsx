@@ -41,11 +41,11 @@ export const ComponentsContent = (props) => {
     } = theme.useToken()
 
     const content = (
-        <div>
+        <>
             <Button type="text" onClick={handleLogout}>
                 退出登录
             </Button>
-        </div>
+        </>
     )
 
     const run = async () => {
@@ -53,7 +53,7 @@ export const ComponentsContent = (props) => {
             const res = await getUserInfo()
             setUserInfo(res.data)
             setLoading(false)
-            if (res.data.userid){
+            if (res.data.userid) {
                 fetchTenantList(res.data.userid)
             }
         } catch (error) {
@@ -163,74 +163,82 @@ export const ComponentsContent = (props) => {
                                 alignItems: 'center',
                             }}>
 
-                            <div style={{ marginTop: '25px', marginLeft: '-30px' }}>
+                            <div style={{marginTop: '25px', marginLeft: '-30px'}}>
                                 <div className="footer">
                                     <a target="_blank" title="Logo">
-                                        <img src={logoIcon} alt="Logo" className="icon" style={{ width: '40%', height: '40%' }} />
+                                        <img src={logoIcon} alt="Logo" className="icon"
+                                             style={{width: '40%', height: '40%'}}/>
                                     </a>
                                 </div>
                             </div>
 
-                            <div style={{ fontSize: 15, fontWeight: 'bold' }}>
-                                <div style={{ position: 'absolute', left: '100px', top: '12px' }}>
+                            <div style={{fontSize: 15, fontWeight: 'bold'}}>
+                                <div style={{position: 'absolute', left: '100px', top: '12px'}}>
                                     <Dropdown overlay={menu} trigger={['click']}>
-                                        <Typography.Link style={{ fontSize: 15, color: 'black' }}>
+                                        <Typography.Link style={{fontSize: 15, color: 'black'}}>
                                             <Space>
                                                 多租户
-                                                <DownOutlined />
+                                                <DownOutlined/>
                                             </Space>
                                         </Typography.Link>
                                     </Dropdown>
                                 </div>
                             </div>
 
-                            <div style={{ position: 'absolute', top: '12px', right: '30px', bottom: '10px' }}>                            {userInfo !== null ? (
-                                <Popover content={content} trigger="hover" placement="bottom">
-                                    <Avatar
-                                        style={{
-                                            backgroundColor: '#7265e6',
-                                            verticalAlign: 'middle',
-                                        }}
-                                        size="large"
-                                    >
-                                        {userInfo.username}
-                                    </Avatar>
-                                </Popover>
-                            ) : null}
+                            <div style={{position: 'absolute', top: '12px', right: '35px', bottom: '10px'}}>
+                                {userInfo !== null ? (
+                                    <Popover content={content} trigger="hover" placement="bottom">
+                                        <Avatar
+                                            style={{
+                                                backgroundColor: '#7265e6',
+                                                verticalAlign: 'middle',
+                                            }}
+                                            size="large"
+                                        >
+                                            {userInfo.username}
+                                        </Avatar>
+                                    </Popover>
+                                ) : null}
                             </div>
                         </Header>
                     </Layout>
 
                     {/* 右侧内容区 */}
-                    <Layout style={{ marginTop: '15px' }}>
+                    <Layout>
                         <Content
                             style={{
-                                height: 'calc(100vh - 80px - 65px)',
+                                height: 'calc(98vh - 100px )',
                                 margin: '0px 16px 0',
                                 background: colorBgContainer,
                                 borderRadius: borderRadiusLG,
                             }}
                         >
-                            <div style={{ fontSize: 15, fontWeight: 'bold', marginLeft: '1%', justifyContent: 'center', marginTop: '20px' }}>
-                                <Button type="text" shape="circle" icon={<LeftOutlined />} onClick={goBackPage} />
+                            <div style={{
+                                fontSize: 15,
+                                fontWeight: 'bold',
+                                marginLeft: '1%',
+                                justifyContent: 'center',
+                                marginTop: '20px'
+                            }}>
+                                <Button type="text" shape="circle" icon={<LeftOutlined/>} onClick={goBackPage}/>
                                 {name}
                             </div>
                             <div
                                 className="site-layout-background"
-                                style={{ padding: 24, textAlign: 'center', height: '10px' }}
+                                style={{padding: 24, textAlign: 'center', height: '10px'}}
                             >
-                                <Divider style={{marginTop: '-10px', marginBottom: '40px' }}/>
+                                <Divider style={{marginTop: '-10px', marginBottom: '40px'}}/>
                                 {c}
                             </div>
                         </Content>
+                        <span style={{textAlign:'center',color:'#B1B1B1FF',marginLeft:'-200px'}}> WatchAlert 轻量级一站式监控报警服务!</span>
                     </Layout>
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1vh' }}>
-                        <a href="https://github.com/w8t-io/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
-                            <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />
-                        </a>
-                    </div>
-                    <Footer style={{ textAlign: 'center', padding: '1vh' }}>WatchAlert ©2024 Created by Cairry</Footer>
+                    {/*<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1vh' }}>*/}
+                    {/*    <a href="https://github.com/w8t-io/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">*/}
+                    {/*        <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />*/}
+                    {/*    </a>*/}
+                    {/*</div>*/}
 
                 </Layout>
             </Layout >

@@ -1,194 +1,202 @@
-import { Select, Input, Table, Button, Popconfirm, message } from 'antd'
-import React from 'react'
-import UserCreateModal from './UserCreateModal'
-import UserChangePass from './UserChangePass'
-import { deleteUser, getUserList, searchUser } from '../../../api/user'
-const { Search } = Input
+import { Input, Table, Button, Popconfirm } from 'antd';
+import React, { useState, useEffect } from 'react';
+import UserCreateModal from './UserCreateModal';
+import UserChangePass from './UserChangePass';
+import { deleteUser, getUserList, searchUser } from '../../../api/user';
 
-class User extends React.Component {
+const { Search } = Input;
 
-    state = {
-        selectedRow: null,
-        updateVisible: false,
-        changeVisible: false,
-        selectedUsername: null,
-        selectedUserId: null,
-        visible: false,
-        list: [],
-        columns: [
-            {
-                title: '用户名',
-                dataIndex: 'username',
-                key: 'username',
-                width: 30,
+export const User = () => {
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [changeVisible, setChangeVisible] = useState(false);
+    const [selectedUsername, setSelectedUsername] = useState(null);
+    const [selectedUserId, setSelectedUserId] = useState(null);
+    const [visible, setVisible] = useState(false);
+    const [list, setList] = useState([]);
+
+    // 表头
+    const columns = [
+        {
+            title: '用户名',
+            dataIndex: 'username',
+            key: 'username',
+            width: 30,
+        },
+        {
+            title: '邮箱',
+            dataIndex: 'email',
+            key: 'email',
+            width: 40,
+            render: (text) => (!text ? '-' : text),
+        },
+        {
+            title: '手机号',
+            dataIndex: 'phone',
+            key: 'phone',
+            width: 40,
+            render: (text) => (!text ? '-' : text),
+        },
+        {
+            title: '创建人',
+            dataIndex: 'create_by',
+            key: 'create_by',
+            width: 40,
+        },
+        {
+            title: '创建时间',
+            dataIndex: 'create_at',
+            key: 'create_at',
+            width: 50,
+            render: (text) => {
+                const date = new Date(text * 1000);
+                return date.toLocaleString();
             },
-            {
-                title: '邮箱',
-                dataIndex: 'email',
-                key: 'email',
-                width: 40,
-                render: (text) => {
-                    if (!text) {
-                        return '-'
-                    }
-                    return text
-                }
-            },
-            {
-                title: '手机号',
-                dataIndex: 'phone',
-                key: 'phone',
-                width: 40,
-                render: (text) => {
-                    if (!text) {
-                        return '-'
-                    }
-                    return text
-                }
-            },
-            {
-                title: '创建人',
-                dataIndex: 'create_by',
-                key: 'create_by',
-                width: 40,
-            },
-            {
-                title: '创建时间',
-                dataIndex: 'create_at',
-                key: 'create_at',
-                width: 50,
-                render: (text) => {
-                    const date = new Date(text * 1000)
-                    return date.toLocaleString()
-                },
-            },
-            {
-                title: '操作',
-                dataIndex: 'operation',
-                fixed: 'right',
-                width: 30,
-                render: (_, record) =>
-                    this.state.list.length >= 1 ? (
-                        <div>
-                            <Button type="link"
-                                onClick={() => this.setState({ changeVisible: true, selectedUserId: record.userid, selectedUsername: record.username })}
+        },
+        {
+            title: '操作',
+            dataIndex: 'operation',
+            fixed: 'right',
+            width: 30,
+            render: (_, record) => (
+                list.length >= 1 ? (
+                    <div>
+                        <Button
+                            type="link"
+                            onClick={() => {
+                                setChangeVisible(true);
+                                setSelectedUserId(record.userid);
+                                setSelectedUsername(record.username);
+                            }}
+                        >
+                            重置密码
+                        </Button>
+                        <UserChangePass
+                            visible={changeVisible}
+                            onClose={() => setChangeVisible(false)}
+                            userid={selectedUserId}
+                            username={selectedUsername}
+                        />
+                        <Popconfirm
+                            title="Sure to delete?"
+                            onConfirm={() => handleDelete(record)}
+                            disabled={record.username === 'admin'}
+                        >
+                            <a
+                                style={{
+                                    cursor: record.username === 'admin' ? 'not-allowed' : 'pointer',
+                                    color: record.username === 'admin' ? 'rgba(0, 0, 0, 0.25)' : '#1677ff',
+                                }}
                             >
-                                重置密码
-                            </Button>
-                            <UserChangePass visible={this.state.changeVisible} onClose={this.handleChanagePassModalClose} userid={this.state.selectedUserId} username={this.state.selectedUsername} />
-                            <Popconfirm
-                                title="Sure to delete?"
-                                onConfirm={() => this.handleDelete(_, record)}
-                                disabled={record.username === 'admin'}>
-                                <a style={{ cursor: record.username === 'admin' ? 'not-allowed' : 'pointer',
-                                    color: record.username === 'admin' ? 'rgba(0, 0, 0, 0.25)' : '#1677ff'}}
-                                >删除</a>
-                            </Popconfirm>
-                            <Button type="link"
-                                onClick={() => this.handleUpdateModalOpen(record)}              >
-                                更新
-                            </Button>
-                        </div>
-                    ) : null,
-            },
-        ]
-    }
-
-
-    async componentDidMount() {
-        this.handleList()
-    }
-
-    handleList = async () => {
-        const res = await getUserList()
-        this.setState({
-            list: res.data,
-        })
-    };
-
-    handleDelete = async (_, record) => {
-        try {
-            const params = {
-                "userid": record.userid
-            }
-            await deleteUser(params)
-            this.handleList()
-        } catch (error) {
-            console.error(error)
-        }
-    };
-
-    handleModalClose = () => {
-        this.setState({ visible: false })
-    };
-
-    handleChanagePassModalClose = () => {
-        this.setState({ changeVisible: false })
-    };
-
-    handleUpdateModalClose = () => {
-        this.setState({ updateVisible: false })
-    }
-
-    handleUpdateModalOpen = (record) => {
-        this.setState({
-            selectedRow: record,
-            updateVisible: true,
-        })
-    };
-
-    onSearch = async (value) => {
-        try {
-            const params = {
-                query: value,
-            }
-            const res = await searchUser(params)
-            this.setState({
-                list: res.data,
-            })
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    render() {
-
-        return (
-            <>
-                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div>
-                        <Search
-                            allowClear
-                            placeholder="输入搜索关键字"
-                            onSearch={this.onSearch}
-                            style={{ width: 300 }} />
-                    </div>
-                    <div>
-                        <Button type="primary" onClick={() => this.setState({ visible: true })}>
-                            创建
+                                删除
+                            </a>
+                        </Popconfirm>
+                        <Button type="link" onClick={() => handleUpdateModalOpen(record)}>
+                            更新
                         </Button>
                     </div>
-                </div>
+                ) : null
+            ),
+        },
+    ];
 
-                <UserCreateModal visible={this.state.visible} onClose={this.handleModalClose} type='create' handleList={this.handleList} />
+    const [height, setHeight] = useState(window.innerHeight);
 
-                <UserCreateModal visible={this.state.updateVisible} onClose={this.handleUpdateModalClose} selectedRow={this.state.selectedRow} type='update' handleList={this.handleList} />
+    useEffect(() => {
+        // 定义一个处理窗口大小变化的函数
+        const handleResize = () => {
+            setHeight(window.innerHeight);
+        };
 
-                <div style={{ overflowX: 'auto', marginTop: 10, height: '65vh' }}>
-                    <Table
-                        columns={this.state.columns}
-                        dataSource={this.state.list}
-                        scroll={{
-                            x: 1500,
-                            y: 'calc(65vh - 65px - 40px)'
-                        }}
+        // 监听窗口的resize事件
+        window.addEventListener('resize', handleResize);
+
+        // 在组件卸载时移除监听器
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    const handleList = async () => {
+        try {
+            const res = await getUserList();
+            setList(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleDelete = async (record) => {
+        try {
+            const params = {
+                userid: record.userid,
+            };
+            await deleteUser(params);
+            handleList();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleUpdateModalOpen = (record) => {
+        setSelectedRow(record);
+        setUpdateVisible(true);
+    };
+
+    const onSearch = async (value) => {
+        try {
+            const params = { query: value };
+            const res = await searchUser(params);
+            setList(res.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        handleList();
+    }, []);
+
+    return (
+        <>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>
+                    <Search
+                        allowClear
+                        placeholder="输入搜索关键字"
+                        onSearch={onSearch}
+                        style={{ width: 300 }}
                     />
                 </div>
-            </>
-        )
+                <div>
+                    <Button type="primary" onClick={() => setVisible(true)}>
+                        创建
+                    </Button>
+                </div>
+            </div>
 
-    }
+            <UserCreateModal
+                visible={visible}
+                onClose={() => setVisible(false)}
+                type="create"
+                handleList={handleList}
+            />
 
-}
+            <UserCreateModal
+                visible={updateVisible}
+                onClose={() => setUpdateVisible(false)}
+                selectedRow={selectedRow}
+                type="update"
+                handleList={handleList}
+            />
 
-export default User
+            <div style={{ overflowX: 'auto', marginTop: 10 }}>
+                <Table
+                    columns={columns}
+                    dataSource={list}
+                    scroll={{ x: 1500, y: height-400 }}
+                />
+            </div>
+        </>
+    );
+};
