@@ -7,229 +7,124 @@ import { getDashboardInfo } from '../api/other';
 export const Home = () => {
     const [dashboardInfo, setDashboardInfo] = useState([]);
 
-    const run = async () => {
+    const fetchDashboardInfo = async () => {
         try {
-            const res = await getDashboardInfo()
+            const res = await getDashboardInfo();
             setDashboardInfo(res.data);
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
     useEffect(() => {
-        run();
+        fetchDashboardInfo();
     }, []);
 
-    // 所有规则数
-    const allAlertRulesOption = {
+    const gaugeChartConfig = (value) => ({
         series: [
             {
                 type: 'gauge',
-                progress: {
-                    show: true,
-                    width: 10,
-                    stroke: '#48b'
-                },
-                axisTick: {
-                    show: false
-                },
-                splitLine: {
-                    length: 10,
-                    lineStyle: {
-                        width: 2,
-                        color: '#999'
-                    }
-                },
-                axisLabel: {
-                    distance: 25,
-                    color: '#999',
-                    fontSize: 1,
-                },
-                anchor: {
-                    show: true,
-                    showAbove: true,
-                    size: 25,
-                    itemStyle: {
-                        borderWidth: 10
-                    }
-                },
-                title: {
-                    show: false
-                },
-                detail: {
-                    // 增加垂直偏移量，将数值往下调整
-                    offsetCenter: [0, '70%'],
-                    valueAnimation: true,
-                    fontSize: 20,
-                },
-                data: [
-                    {
-                        value: dashboardInfo?.countAlertRules ?? 0,
-                    }
-                ]
-            }
-        ]
-    };
+                progress: { show: true, width: 10, stroke: '#48b' },
+                axisTick: { show: false },
+                splitLine: { length: 10, lineStyle: { width: 2, color: '#999' } },
+                axisLabel: { distance: 25, color: '#999', fontSize: 12 },
+                anchor: { show: true, size: 25, itemStyle: { borderWidth: 10 } },
+                detail: { offsetCenter: [0, '70%'], valueAnimation: true, fontSize: 18 },
+                data: [{ value: value || 0 }],
+            },
+        ],
+    });
 
-    // 当前告警数
-    const curAlertsOption = {
-        series: [
-            {
-                type: 'gauge',
-                progress: {
-                    show: true,
-                    width: 10,
-                    stroke: '#48b'
-                },
-                axisTick: {
-                    show: false
-                },
-                splitLine: {
-                    length: 10,
-                    lineStyle: {
-                        width: 2,
-                        color: '#999'
-                    }
-                },
-                axisLabel: {
-                    distance: 25,
-                    color: '#999',
-                    fontSize: 1,
-                },
-                anchor: {
-                    show: true,
-                    showAbove: true,
-                    size: 25,
-                    itemStyle: {
-                        borderWidth: 10
-                    }
-                },
-                title: {
-                    show: false
-                },
-                detail: {
-                    // 增加垂直偏移量，将数值往下调整
-                    offsetCenter: [0, '70%'],
-                    valueAnimation: true,
-                    fontSize: 20,
-                },
-                data: [
-                    {
-                        value: dashboardInfo?.curAlerts ?? 0,
-                    }
-                ]
-            }
-        ]
-    };
-
-    // 告警分布
     const alarmDistributionOption = {
-        xAxis: {
-            type: 'category',
-            data: ['P0', 'P1', 'P2']
-        },
-        yAxis: {
-            type: 'value'
-        },
+        xAxis: { type: 'category', data: ['P0', 'P1', 'P2'] },
+        yAxis: { type: 'value' },
         series: [
             {
-                data: [dashboardInfo?.alarmDistribution?.P0 ?? undefined, dashboardInfo?.alarmDistribution?.P1 ?? undefined, dashboardInfo?.alarmDistribution?.P2 ?? undefined],
-                type: 'bar'
-            }
-        ]
+                data: [
+                    dashboardInfo?.alarmDistribution?.P0 ?? 0,
+                    dashboardInfo?.alarmDistribution?.P1 ?? 0,
+                    dashboardInfo?.alarmDistribution?.P2 ?? 0,
+                ],
+                type: 'bar',
+            },
+        ],
     };
 
-    const data = dashboardInfo?.serviceResource ?? []
-
-    const config = {
-        data,
+    const lineChartConfig = {
+        data: dashboardInfo?.serviceResource ?? [],
         xField: 'time',
         yField: 'value',
         seriesField: 'label',
         xAxis: {
             type: 'time',
             labels: {
-                formatter: function () {
-                    const date = new Date(this.value);
+                formatter: (value) => {
+                    const date = new Date(value);
                     return `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
                 },
             },
         },
         tooltip: {
             dateTimeLabelFormats: {
-                // 定义鼠标悬停时显示的时间格式
                 minute: '%H:%M:%S',
                 hour: '%H:%M:%S',
                 day: '%H:%M:%S',
-                week: '%H:%M:%S',
-                month: '%H:%M:%S',
-                year: '%H:%M:%S'
-            }
+            },
         },
-        interval: 1 * 60
+        interval: 60,
     };
 
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', height: '30vh' }}>
-                <div style={{ width: '100vh', height: '35vh', overflowY: 'auto' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px', height: '35vh', marginTop: '-20px' }}>
+                <div style={{ width: '25%', minWidth: '200px', height: '80%' }}>
                     <Divider>规则总数</Divider>
                     <ReactECharts
-                        option={allAlertRulesOption}
-                        style={{ marginTop: '-30px', height: '90%', width: '100%' }}
-                        className="chart"
+                        option={gaugeChartConfig(dashboardInfo?.countAlertRules)}
+                        style={{ height: '100%', width: '100%' }}
                     />
                 </div>
 
-                <div style={{ width: '100vh', height: '35vh', overflowY: 'auto' }}>
+                <div style={{ width: '25%', minWidth: '200px', height: '80%' }}>
                     <Divider>当前告警总数</Divider>
                     <ReactECharts
-                        option={curAlertsOption}
-                        style={{ marginTop: '-30px', height: '90%', width: '100%' }}
-                        className="chart"
+                        option={gaugeChartConfig(dashboardInfo?.curAlerts)}
+                        style={{ height: '100%', width: '100%' }}
                     />
                 </div>
 
-                <div style={{ width: '120vh', height: '35vh', overflowY: 'auto' }}>
+                <div style={{ width: '45%', minWidth: '200px', height: '80%' }}>
                     <Divider>服务资源使用率</Divider>
                     <Line
-                        style={{ marginTop: '-30px', height: '80%', width: '100%' }}
-                        {...config}
+                        style={{ height: '100%', width: '100%' }}
+                        {...lineChartConfig}
                     />
                 </div>
-            </div >
+            </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div style={{ width: '100vh', height: '40vh', overflowY: 'auto' }}>
+            <div style={{display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '20px'}}>
+                <div style={{width: '50%', minWidth: '300px', height: '40vh'}}>
                     <Divider>最近告警列表</Divider>
                     <List
                         bordered
-                        dataSource={dashboardInfo?.curAlertList ?? undefined}
-                        style={{
-                            borderRadius: 0,
-                            height: '30vh'
-                        }}
+                        dataSource={dashboardInfo?.curAlertList ?? []}
+                        style={{height: '30vh', overflow: 'auto'}}
                         renderItem={(item) => (
                             <List.Item>
-                                {/* 包裹文本内容的容器，设置为可滚动 */}
-                                <div style={{ borderRadius: 0, overflowX: 'auto', textOverflow: 'ellipsis', whiteSpace: 'nowrap', display: 'block', maxWidth: '100%' }}>
-                                    {item}
-                                </div>
+                                <div style={{overflowX: 'auto', whiteSpace: 'nowrap'}}>{item}</div>
                             </List.Item>
                         )}
                     />
                 </div>
 
-                <div style={{ width: '70vh', height: '45vh', overflowY: 'auto' }} >
+                <div style={{width: '48%', minWidth: '200px', height: '80%'}}>
                     <Divider>告警分布</Divider>
                     <ReactECharts
                         option={alarmDistributionOption}
-                        style={{ marginTop: '-6vh', height: '95%', width: '110%' }}
-                        className="chart"
+                        style={{height: '45vh', overflow: 'auto', marginTop: '-50px'}}
                     />
                 </div>
             </div>
-
         </>
     );
-}
+};

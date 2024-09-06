@@ -144,7 +144,7 @@ export const ComponentsContent = (props) => {
                 {/* 导航栏 */}
                 <div style={{
                     marginLeft: '15px',
-                    marginTop: '89px',
+                    marginTop: '90px',
                 }}>
                     {<ComponentSider userInfo={userInfo} />}
                 </div>
@@ -207,7 +207,7 @@ export const ComponentsContent = (props) => {
                     <Layout>
                         <Content
                             style={{
-                                height: 'calc(98vh - 100px )',
+                                height: 'calc(97vh - 100px )',
                                 margin: '0px 16px 0',
                                 background: colorBgContainer,
                                 borderRadius: borderRadiusLG,

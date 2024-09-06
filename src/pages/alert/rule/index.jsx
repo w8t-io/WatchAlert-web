@@ -99,7 +99,7 @@ export const AlertRuleList = () => {
             title: '状态',
             dataIndex: 'enabled',
             key: 'enabled',
-            width: 150,
+            width: 90,
             render: enabled => (
                 enabled ?
                     <Tag color="success">启用</Tag> :
@@ -293,12 +293,11 @@ export const AlertRuleList = () => {
                 </div>
             </div>
 
-            <div style={{overflowX: 'auto', marginTop: 10}}>
+            <div style={{ marginTop: 10}}>
                 <Table
                     columns={columns}
                     dataSource={list}
                     scroll={{
-                        x: 1500,
                         y: height-400
                     }}
                 />

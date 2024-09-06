@@ -205,7 +205,6 @@ export const DutyManage = () => {
                     columns={columns}
                     dataSource={list}
                     scroll={{
-                        x: 1500,
                         y: height-400
                     }}
                 />
