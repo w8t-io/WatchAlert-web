@@ -92,6 +92,23 @@ export const Silences = () => {
         },
     ]);
 
+    const [height, setHeight] = useState(window.innerHeight);
+
+    useEffect(() => {
+        // 定义一个处理窗口大小变化的函数
+        const handleResize = () => {
+            setHeight(window.innerHeight);
+        };
+
+        // 监听窗口的resize事件
+        window.addEventListener('resize', handleResize);
+
+        // 在组件卸载时移除监听器
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     useEffect(() => {
         handleList();
     }, []);
@@ -264,7 +281,7 @@ export const Silences = () => {
                     dataSource={list}
                     scroll={{
                         x: 1500,
-                        y: 'calc(55vh - 65px - 40px)'
+                        y: height-400
                     }}
                 />
             </div>

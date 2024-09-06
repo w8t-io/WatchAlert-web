@@ -1,16 +1,16 @@
 import { AlertCurEvent } from "../pages/alert/event/AlertCurEvent";
 import { AlertHisEvent } from "../pages/alert/event/AlertHisEvent";
-import {AlertRuleList} from "../pages/alert/rule";
+import { AlertRuleList } from "../pages/alert/rule";
 import { AlertRuleGroup } from "../pages/alert/ruleGroup";
-import RuleTemplate from "../pages/alert/tmpl";
-import RuleTemplateGroup from "../pages/alert/tmplGroup";
+import { RuleTemplate } from "../pages/alert/tmpl";
+import { RuleTemplateGroup } from "../pages/alert/tmplGroup";
 import { Datasources } from "../pages/datasources";
 import { DutyManage } from "../pages/duty";
 import { Home } from "../pages/home";
-import UserRole from "../pages/members/role";
-import User from "../pages/members/user";
+import { UserRole } from "../pages/members/role";
+import { User } from "../pages/members/user";
 import { NoticeObjects } from "../pages/notice";
-import NoticeTemplate from "../pages/notice/tmpl";
+import { NoticeTemplate } from "../pages/notice/tmpl";
 import { Silences } from "../pages/silence";
 import { Login } from "../utils/Login";
 import Error from "../utils/Error"
@@ -19,11 +19,11 @@ import { Tenants } from "../pages/tenant";
 import { GrafanaDashboardComponent } from "../pages/dashboards/dashboard";
 import { DashboardFolder } from "../pages/dashboards/folder";
 import { AuditLog } from "../pages/audit";
-import {SystemSettings} from "../pages/settings";
-import {TenantDetail} from "../pages/tenant/detail";
-import {AlertRule} from "../pages/alert/rule/create";
-import {MonitorSSL} from "../pages/monitor/ssl";
-import {CreateMonitorSSLRule} from "../pages/monitor/ssl/create";
+import { SystemSettings } from "../pages/settings";
+import { TenantDetail } from "../pages/tenant/detail";
+import { AlertRule } from "../pages/alert/rule/create";
+import { MonitorSSL } from "../pages/monitor/ssl";
+import { CreateMonitorSSLRule } from "../pages/monitor/ssl/create";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [

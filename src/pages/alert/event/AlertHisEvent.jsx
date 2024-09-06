@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Select, Table, message, Tag, Space, DatePicker, Tooltip, Button, Drawer, Input} from 'antd';
+import {Select, Table, message, Tag, Space, DatePicker, Tooltip, Button, Drawer, Input, Row, Col} from 'antd';
 import dayjs from 'dayjs';
 import { getHisEventList } from '../../../api/event';
 const { RangePicker } = DatePicker
@@ -50,7 +50,11 @@ export const AlertHisEvent = () => {
             key: 'metric',
             width: 300,
             render: (text, record) => (
-                <span>{showMoreTags([], record)}</span>
+                <>
+                    {record && (
+                        <span>{showMoreTags([], record)}</span>
+                    )}
+                </>
             ),
         },
         {
@@ -92,6 +96,22 @@ export const AlertHisEvent = () => {
             },
         },
     ]
+    const [height, setHeight] = useState(window.innerHeight);
+
+    useEffect(() => {
+        // 定义一个处理窗口大小变化的函数
+        const handleResize = () => {
+            setHeight(window.innerHeight);
+        };
+
+        // 监听窗口的resize事件
+        window.addEventListener('resize', handleResize);
+
+        // 在组件卸载时移除监听器
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const showDrawer = (record) => {
         setDrawerOpen(true);
@@ -106,7 +126,7 @@ export const AlertHisEvent = () => {
     }, [searchQuery, selectedSourceType, selectedAlertLevel, startTimestamp, endTimestamp]);
 
     const showMoreTags = (tags, record, visibleCount = 5) => {
-        if (Object.entries(record.metric).length <= visibleCount) {
+        if (record && Object?.entries(record?.metric).length <= visibleCount) {
             // 如果标签数量小于或等于可见数量，直接显示所有标签
             return Object.entries(record.metric).map(([key, value]) => {
                 // 截取value的前20个字符，并添加省略号如果value长度超过20
@@ -294,6 +314,10 @@ export const AlertHisEvent = () => {
                             label: 'Prometheus',
                         },
                         {
+                            value: 'VictoriaMetrics',
+                            label: 'VictoriaMetrics',
+                        },
+                        {
                             value: 'AliCloudSLS',
                             label: 'AliCloudSLS',
                         },
@@ -308,6 +332,14 @@ export const AlertHisEvent = () => {
                         {
                             value: 'CloudWatch',
                             label: 'CloudWatch',
+                        },
+                        {
+                            value: 'KubernetesEvent',
+                            label: 'KubernetesEvent',
+                        },
+                        {
+                            value: 'ElasticSearch',
+                            label: 'ElasticSearch',
                         },
                     ]}
                 />
@@ -329,17 +361,16 @@ export const AlertHisEvent = () => {
                         onOk={onOk}
                     />
                 </Space>
-
             </div>
 
-            <div style={{overflowX: 'auto', marginTop: 10, height: '64vh'}}>
+            <div style={{ overflowX: 'auto', marginTop: 10 }}>
                 <Table
                     columns={columns}
                     dataSource={list}
                     pagination={{
                         current: pagination.current ?? 1,
                         pageSize: pagination.pageSize ?? 10,
-                        total: pagination?.total ?? 0,
+                        total: pagination.total ?? 0,
                         showQuickJumper: true,
                         showSizeChanger: true,
                         showTotal: handleShowTotal,
@@ -347,7 +378,7 @@ export const AlertHisEvent = () => {
                     onChange={handlePageChange}
                     scroll={{
                         x: 1700,
-                        y: 'calc(64vh - 64px - 40px)'
+                        y: height-400
                     }}
                 />
             </div>

@@ -79,6 +79,22 @@ export const AlertRuleGroup = ({ }) => {
                 ) : null,
         },
     ]
+    const [height, setHeight] = useState(window.innerHeight);
+
+    useEffect(() => {
+        // 定义一个处理窗口大小变化的函数
+        const handleResize = () => {
+            setHeight(window.innerHeight);
+        };
+
+        // 监听窗口的resize事件
+        window.addEventListener('resize', handleResize);
+
+        // 在组件卸载时移除监听器
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     useEffect(() => {
         handleList(pagination.index, pagination.size)
@@ -189,7 +205,7 @@ export const AlertRuleGroup = ({ }) => {
             <AlertRuleGroupCreateModal visible={updateModalVisible} onClose={handleUpdateModalClose}
                                        selectedRow={selectedRow} type='update' handleList={handleList}/>
 
-            <div style={{overflowX: 'auto', marginTop: 10, height: '64vh'}}>
+            <div style={{overflowX: 'auto', marginTop: 10}}>
                 <Table
                     columns={columns}
                     dataSource={list}
@@ -203,7 +219,7 @@ export const AlertRuleGroup = ({ }) => {
                     }}
                     onChange={handlePageChange}
                     scroll={{
-                        y: 'calc(65vh - 65px - 40px)'
+                        y: height-400
                     }}
                 />
             </div>
