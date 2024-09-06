@@ -121,7 +121,7 @@ export const ComponentSider = (props) => {
         <Layout.Sider
             style={{
                 overflow: 'auto',
-                height: '98%',
+                height: '97.5%',
                 background: 'white',
                 borderRadius: '12px',
             }}
