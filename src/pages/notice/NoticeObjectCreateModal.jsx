@@ -6,6 +6,7 @@ import FeiShuImg from "./img/feishu.svg";
 import EmailImg from "./img/Email.svg";
 import DingDingImg from "./img/dingding.svg";
 import { searchNoticeTmpl} from "../../api/noticeTmpl";
+import { getAllUsers } from "../../api/other";
 const MyFormItemContext = React.createContext([])
 
 function toArr(str) {
@@ -25,14 +26,12 @@ const MyFormItem = ({ name, ...props }) => {
 }
 
 export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, handleList }) => {
+    const { Option } = Select
     const [form] = Form.useForm()
     const [dutyList, setDutyList] = useState([])
     const [selectedDutyItem, setSelectedDutyItem] = useState([])
 
     const [subjectValue,setSubjectValue] = useState('')
-    const [arrayEmailToValue, setArrayEmailToValue] = useState([]);
-    const [arrayEmailCCValue, setArrayEmailCCValue] = useState([]);
-
     const [selectedNoticeCard, setSelectedNoticeCard] = useState(null);
     const [noticeType,setNoticeType] = useState('')
 
@@ -42,16 +41,9 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
     const handleInputEmailChange = (name,value) => {
         console.log(value)
         const newValue = value;
-        const newArray = newValue.split(',').map(item => item.trim());
         switch (name) {
             case 'subject':
                 setSubjectValue(newValue)
-                break;
-            case 'to':
-                setArrayEmailToValue(newArray);
-                break;
-            case 'cc':
-                setArrayEmailCCValue(newArray);
                 break;
             default:
                 break;
@@ -75,6 +67,7 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
     }
 
     useEffect(() => {
+        handleSearchUser()
         handleDutyManageList()
         handleGetNoticeTmpl()
         if (selectedRow) {
@@ -102,6 +95,9 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
                 t = 2
             }
 
+            setSubjectValue(selectedRow.email.subject)
+            setSelectedToItems(selectedRow.email.to)
+            setSelectedCcItems(selectedRow.email.cc)
             setSelectedNoticeCard(t)
             setNoticeType(selectedRow.noticeType)
             setSelectNoticeTmpl(selectedRow.noticeTmplId)
@@ -125,10 +121,11 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
         try {
             const params = {
                 ...data,
+                noticeType: noticeType,
                 email:{
                     subject: subjectValue,
-                    to: arrayEmailToValue,
-                    cc: arrayEmailCCValue,
+                    to: selectedToItems,
+                    cc: selectedCcItems,
                 }
             }
             await createNotice(params)
@@ -142,8 +139,14 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
         try {
             const params = {
                 ...data,
+                noticeType: noticeType,
                 tenantId: selectedRow.tenantId,
                 uuid: selectedRow.uuid,
+                email:{
+                    subject: subjectValue,
+                    to: selectedToItems,
+                    cc: selectedCcItems,
+                }
             }
             await updateNotice(params)
             handleList()
@@ -210,6 +213,29 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
             value: item.id
         }))
         setNoticeTmplItems(newData)
+    }
+
+    const [selectedToItems, setSelectedToItems] = useState([])
+    const [selectedCcItems, setSelectedCcItems] = useState([])
+    const [filteredOptions, setFilteredOptions] = useState([])
+    const handleSelectChangeTo = (value) => {
+        setSelectedToItems(value)
+    }
+    const handleSelectChangeCc = (value) => {
+        setSelectedCcItems(value)
+    }
+
+    const handleSearchUser = async () => {
+        try {
+            const res = await getAllUsers()
+            const options = res.data.map((item) => ({
+                userName: item.username,
+                userEmail: item.email
+            }))
+            setFilteredOptions(options)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     return (
@@ -303,18 +329,45 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
                                     placeholder="WatchAlert监控报警平台" style={{width: '100%'}}/>
                             </MyFormItem>
 
-                            <MyFormItem name="to" label="收件人" rules={[{required: true}]}>
-                                <Input
-                                    onChange={(e) => handleInputEmailChange('to', e.target.value)}
-                                    placeholder="aaa@gmail.com,bbb@gmail.com (多个用英文逗号 , 隔开)"
-                                    style={{width: '100%'}}/>
+                            <MyFormItem name="to" label="收件人" rules={[{ required: true }]}>
+                                <Select
+                                    mode="multiple"
+                                    placeholder="请选择需要通知的人员"
+                                    onChange={handleSelectChangeTo}
+                                    style={{ width: '100%' }}
+                                >
+                                    {filteredOptions.map((item) => (
+                                        <Option
+                                            key={item.userName}
+                                            value={item.userEmail}
+                                            userName={item.userName}
+                                            userEmail={item.userEmail}
+                                        >
+                                            {item.userName} ({item.userEmail})
+                                        </Option>
+                                    ))}
+                                </Select>
                             </MyFormItem>
 
                             <MyFormItem name="cc" label="抄送人">
-                                <Input
-                                    onChange={(e) => handleInputEmailChange('cc', e.target.value)}
-                                    placeholder="aaa@gmail.com,bbb@gmail.com (多个用英文逗号 , 隔开)"
-                                    style={{width: '100%'}}/>
+                                <Select
+                                    mode="multiple"
+                                    placeholder="请选择需要抄送的人员"
+                                    onChange={handleSelectChangeCc}
+                                    style={{ width: '100%' }}
+                                >
+                                    {filteredOptions.map((item) => (
+                                        <Option
+                                            key={item.userName}
+                                            value={item.userEmail}
+                                            userName={item.userName}
+                                            userEmail={item.userEmail}
+                                            disabled={(selectedToItems.some(toItem => toItem === item.userEmail) || item.userEmail === "")}
+                                        >
+                                            {item.userName} ({item.userEmail})
+                                        </Option>
+                                    ))}
+                                </Select>
                             </MyFormItem>
                         </MyFormItemGroup>
                     ) || (
