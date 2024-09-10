@@ -362,7 +362,7 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
                                             value={item.userEmail}
                                             userName={item.userName}
                                             userEmail={item.userEmail}
-                                            disabled={selectedToItems.some(toItem => toItem === item.userEmail)}
+                                            disabled={(selectedToItems.some(toItem => toItem === item.userEmail) || item.userEmail === "")}
                                         >
                                             {item.userName} ({item.userEmail})
                                         </Option>
