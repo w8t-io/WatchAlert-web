@@ -3,6 +3,7 @@ import {Table, Button, Drawer, Tag, Tooltip, Input, Select} from 'antd';
 import { CreateSilenceModal } from '../../silence/SilenceRuleCreateModal'
 import { getCurEventList } from '../../../api/event';
 import {getRuleList} from "../../../api/rule";
+import {getDatasourceList} from "../../../api/datasource";
 
 export const AlertCurEvent = () => {
     const { Search } = Input
@@ -15,6 +16,7 @@ export const AlertCurEvent = () => {
     const [selectedDatasourceType, setSelectedDatasourceType] = useState('');
     const [selectedTimeScope,setSelectedTimeScope] = useState();
     const [searchQuery,setSearchQuery] = useState('');
+    const [datasourceList,setDatasourceList] = useState([])
     const [pagination, setPagination] = useState({
         index: 1,
         size: 10,
@@ -40,7 +42,9 @@ export const AlertCurEvent = () => {
             width: 'auto',
             render: (text, record) => (
                 <span>
-                    <div>{record.datasource_id}</div>
+                    {getDatasourceNamesById(record.datasource_id).split(', ').map((name, index) => (
+                        <Tag color="processing" key={index}>{name}</Tag>
+                    ))}
                 </span>
             ),
         },
@@ -103,6 +107,7 @@ export const AlertCurEvent = () => {
     const [height, setHeight] = useState(window.innerHeight);
 
     useEffect(() => {
+        handleListDatasource()
         // 定义一个处理窗口大小变化的函数
         const handleResize = () => {
             setHeight(window.innerHeight);
@@ -216,6 +221,20 @@ export const AlertCurEvent = () => {
 
     const handleShowTotal = (total, range) =>
         `第 ${range[0]} - ${range[1]} 条 共 ${total} 条`;
+
+    const handleListDatasource = async () => {
+        try {
+            const res = await getDatasourceList()
+            setDatasourceList(res.data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const getDatasourceNamesById = (datasourceId) => {
+        const datasource = datasourceList.find(ds => ds.id === datasourceId);
+        return datasource ? datasource.name : 'Unknown';
+    };
 
     return (
         <div>

@@ -12,6 +12,7 @@ import { ReactComponent as LokiImg } from "./img/L.svg"
 import { ReactComponent as VMImg } from "./img/victoriametrics.svg"
 import { ReactComponent as K8sImg } from "./img/Kubernetes.svg"
 import { ReactComponent as ESImg } from "./img/ElasticSearch.svg"
+import {getDatasourceList} from "../../../api/datasource";
 
 export const AlertRuleList = () => {
     const { Search } = Input
@@ -19,6 +20,7 @@ export const AlertRuleList = () => {
     const [updateVisible, setUpdateVisible] = useState(false)
     const [visible, setVisible] = useState(false)
     const [list, setList] = useState([])
+    const [datasourceList,setDatasourceList] = useState([])
     const { id } = useParams()
     const [selectRuleStatus, setSelectRuleStatus] = useState('all')
     const [pagination, setPagination] = useState({
@@ -77,8 +79,8 @@ export const AlertRuleList = () => {
             width: 200,
             render: (text, record) => (
                 <span>
-                    {Object.entries(record.datasourceId).map(([key, value]) => (
-                        <Tag color="processing" key={key}>{`${value}`}</Tag>
+                    {getDatasourceNamesByIds(record.datasourceId).split(', ').map((name, index) => (
+                        <Tag color="processing" key={index}>{name}</Tag>
                     ))}
                 </span>
             ),
@@ -147,7 +149,28 @@ export const AlertRuleList = () => {
 
     useEffect(() => {
         handleList(id)
+        handleListDatasource()
     }, [])
+
+    const handleListDatasource = async () => {
+        try {
+            const res = await getDatasourceList()
+            setDatasourceList(res.data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const getDatasourceNamesByIds = (datasourceIdList) => {
+        if (!Array.isArray(datasourceIdList)) return 'Unknown';
+
+        const matchedNames = datasourceIdList.map((id) => {
+            const datasource = datasourceList.find(ds => ds.id === id);
+            return datasource ? datasource.name : 'Unknown';
+        });
+
+        return matchedNames.join(', ') || 'Unknown'; // Join multiple names with commas
+    };
 
     const handleList = async (id) => {
         try {

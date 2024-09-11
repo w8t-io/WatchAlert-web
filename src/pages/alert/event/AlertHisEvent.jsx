@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Select, Table, message, Tag, Space, DatePicker, Tooltip, Button, Drawer, Input, Row, Col} from 'antd';
 import dayjs from 'dayjs';
 import { getHisEventList } from '../../../api/event';
+import {getDatasourceList} from "../../../api/datasource";
 const { RangePicker } = DatePicker
 
 export const AlertHisEvent = () => {
@@ -14,6 +15,7 @@ export const AlertHisEvent = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [annotations, setAnnotations] = useState('');
     const [searchQuery,setSearchQuery] = useState('');
+    const [datasourceList,setDatasourceList] = useState([])
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: 10,
@@ -37,6 +39,13 @@ export const AlertHisEvent = () => {
             dataIndex: 'datasource_id',
             key: 'datasource_id',
             width: 'auto',
+            render: (text, record) => (
+                <span>
+                    {getDatasourceNamesById(record.datasource_id).split(', ').map((name, index) => (
+                        <Tag color="processing" key={index}>{name}</Tag>
+                    ))}
+                </span>
+            ),
         },
         {
             title: '告警等级',
@@ -99,6 +108,7 @@ export const AlertHisEvent = () => {
     const [height, setHeight] = useState(window.innerHeight);
 
     useEffect(() => {
+        handleListDatasource()
         // 定义一个处理窗口大小变化的函数
         const handleResize = () => {
             setHeight(window.innerHeight);
@@ -258,6 +268,20 @@ export const AlertHisEvent = () => {
 
     const handleShowTotal = (total, range) =>
         `第 ${range[0]} - ${range[1]} 条 共 ${total} 条`;
+
+    const handleListDatasource = async () => {
+        try {
+            const res = await getDatasourceList()
+            setDatasourceList(res.data)
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const getDatasourceNamesById = (datasourceId) => {
+        const datasource = datasourceList.find(ds => ds.id === datasourceId);
+        return datasource ? datasource.name : 'Unknown';
+    };
 
     return (
         <div>
