@@ -4,7 +4,7 @@
 import axios from 'axios';
 const curUrl = window.location.hostname
 const port = window.location.port;
-const backendIP = curUrl + ":" + 9001
+const backendIP = curUrl + ":" + 80
 const type = process.env.REACT_APP_TYPE
 axios.defaults.timeout = 100000;
 if (type === "local"){
