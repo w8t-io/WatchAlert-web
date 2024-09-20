@@ -1,22 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { getDashboardData } from '../../../api/dashboard';
+import { Table, Input } from 'antd'
+import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import {
+    getFolderInfo,
+    getGrafanaDashboardList,
+} from '../../../api/dashboard';
 import { useParams } from 'react-router-dom'
 
-export const GrafanaDashboardComponent = () => {
+export const Dashboards = () => {
+    const [list, setList] = useState()
     const { id } = useParams()
-    const [iframeSrc, setIframeSrc] = useState('')
+    const columns = [
+        {
+            title: '名称',
+            dataIndex: 'title',
+            key: 'title',
+            render: (text, record) => (
+                <div>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <Link
+                            to={{
+                                pathname: `/dashboard/f/${id}/g/${record.uid}/info`
+                            }}
+                        >
+                            {text}
+                        </Link>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            title: 'ID',
+            dataIndex: 'uid',
+            key: 'uid',
+        },
+    ]
 
     useEffect(() => {
-        run();
-    }, []);
+        handleList()
+    }, [])
 
-    const run = async () => {
+    const handleList = async () => {
         try {
-            const params = {
-                id: id,
+            const fParams = {
+                id: id
             }
-            const res = await getDashboardData(params)
-            setIframeSrc(res.data.url)
+            const resInfo = await getFolderInfo(fParams)
+            const params = {
+                grafanaHost: resInfo.data.grafanaHost,
+                limit: 1000,
+                grafanaFolderId: resInfo.data.grafanaFolderId
+            }
+            const res = await getGrafanaDashboardList(params)
+            const d = res.data.map((item, index) => {
+                return {
+                    key: index,
+                    ...item,
+                }
+            })
+            setList(d)
         } catch (error) {
             console.error(error)
         }
@@ -24,20 +66,16 @@ export const GrafanaDashboardComponent = () => {
 
     return (
         <>
-            <div >Loading...</div>
-            <div style={{ marginLeft: '-24px', marginTop: '-25px' }}>
-                <iframe
-                    src={iframeSrc}
-                    frameborder="0"
-                    style={{
-                        borderRadius: '10px',
-                        margin: '0',
-                        width: 'calc(100% + 24px)',
-                        height: 'calc(92.2vh - 60px - 90px)',
-                        overflow: 'auto',
+            <div style={{ overflowX: 'auto', marginTop: 10, height: '71vh' }}>
+                <Table
+                    columns={columns}
+                    dataSource={list}
+                    scroll={{
+                        x: 1000,
+                        y: 'calc(71vh - 71px - 40px)'
                     }}
                 />
-            </div >
+            </div>
         </>
     );
 };

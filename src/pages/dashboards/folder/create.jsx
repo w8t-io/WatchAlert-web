@@ -1,8 +1,6 @@
-import { Modal, Form, Input, Button } from 'antd'
-import React, { useState, useEffect } from 'react'
-import { createRuleTmplGroup } from '../../../api/ruleTmpl'
-import { createDashboard, updateDashboard } from '../../../api/dashboard'
-
+import {Modal, Form, Input, Button, InputNumber, Segmented} from 'antd'
+import React, {useEffect, useState} from 'react'
+import {createDashboardFolder, updateDashboardFolder} from '../../../api/dashboard';
 
 const MyFormItemContext = React.createContext([])
 
@@ -18,6 +16,7 @@ const MyFormItem = ({ name, ...props }) => {
 
 const CreateFolderModal = ({ visible, onClose, selectedRow, type, handleList }) => {
     const [form] = Form.useForm()
+    const [theme,setTheme] = useState('light')
 
     // 禁止输入空格
     const [spaceValue, setSpaceValue] = useState('')
@@ -40,8 +39,9 @@ const CreateFolderModal = ({ visible, onClose, selectedRow, type, handleList }) 
             form.setFieldsValue({
                 id: selectedRow.id,
                 name: selectedRow.name,
-                url: selectedRow.url,
-                description: selectedRow.description,
+                grafanaHost: selectedRow.grafanaHost,
+                grafanaFolderId: selectedRow.grafanaFolderId,
+                theme: selectedRow.theme,
             })
         }
 
@@ -49,29 +49,27 @@ const CreateFolderModal = ({ visible, onClose, selectedRow, type, handleList }) 
 
     const handleCreate = async (data) => {
         try {
-            await createDashboard(data)
+            await createDashboardFolder(data)
             handleList()
+            form.resetFields();
         } catch (error) {
             console.error(error)
         }
     }
 
     const handleUpdate = async (data) => {
-        const newData = {
-            ...data,
-            tenantId: selectedRow.tenantId,
-            id: selectedRow.id,
-        }
         try {
-            await updateDashboard(newData)
+            data.id = selectedRow.id
+            await updateDashboardFolder(data)
             handleList()
+            form.resetFields();
         } catch (error) {
             console.error(error)
         }
     }
 
     const handleFormSubmit = async (values) => {
-
+        values.theme = theme
         if (type === 'create') {
             await handleCreate(values)
         }
@@ -87,42 +85,43 @@ const CreateFolderModal = ({ visible, onClose, selectedRow, type, handleList }) 
     return (
         <Modal visible={visible} onCancel={onClose} footer={null}>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
-                <MyFormItem name="name" label="名称"
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                >
+                <MyFormItem name="name" label="名称" rules={[{required: true}]}>
                     <Input
-                        placeholder="图表名称"
+                        placeholder="文件夹名称"
                         value={spaceValue}
                         onChange={handleInputChange}
                         onKeyPress={handleKeyPress} />
                 </MyFormItem>
 
-                <MyFormItem name="url" label="URL"
-                    tooltip="Grafana Link URL"
-                    rules={[
-                        {
-                            required: true,
-                        },
-                        {
-                            pattern: /^(http|https):\/\//,
-                            message: '输入正确的URL格式',
-                        },
-                    ]}
-                >
-                    <Input placeholder="图表分享链接" />
+                <MyFormItem name="grafanaHost" label="Grafana Host" rules={[
+                    {
+                        required: true
+                    },
+                    {
+                        pattern: /^(http|https):\/\/.*[^\/]$/,
+                        message: '请输入正确的URL格式，且结尾不应包含"/"',
+                    },
+                ]}>
+                    <Input placeholder="Grafana链接日志, 例如: https://xx.xx.xx"/>
                 </MyFormItem>
 
-                <MyFormItem name="description" label="描述">
-                    <Input />
+                <MyFormItem name="grafanaFolderId" label="Grafana FolderId"  rules={[{required: true}]}>
+                    <InputNumber style={{width:'100%'}} placeholder="Grafana目录Id" min={1}/>
+                </MyFormItem>
+
+                <MyFormItem name="theme" label="背景颜色">
+                    <Segmented
+                        options={['light', 'dark']}
+                        defaultValue={'light'}
+                        onChange={(value) => {
+                            setTheme(value)
+                        }}
+                    />
                 </MyFormItem>
 
                 <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Button type="primary" htmlType="submit">
-                        提交
+                        创建
                     </Button>
                 </div>
             </Form>
