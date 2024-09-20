@@ -16,7 +16,7 @@ import { Login } from "../utils/Login";
 import Error from "../utils/Error"
 import { ComponentsContent } from '../components';
 import { Tenants } from "../pages/tenant";
-import { GrafanaDashboardComponent } from "../pages/dashboards/dashboard";
+import { GrafanaDashboardComponent } from "../pages/dashboards/dashboard/iframe";
 import { DashboardFolder } from "../pages/dashboards/folder";
 import { AuditLog } from "../pages/audit";
 import { SystemSettings } from "../pages/settings";
@@ -24,6 +24,7 @@ import { TenantDetail } from "../pages/tenant/detail";
 import { AlertRule } from "../pages/alert/rule/create";
 import { MonitorSSL } from "../pages/monitor/ssl";
 import { CreateMonitorSSLRule } from "../pages/monitor/ssl/create";
+import {Dashboards} from "../pages/dashboards/dashboard";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -104,11 +105,15 @@ export default [
         element: <ComponentsContent name="数据源" c={<Datasources />} />
     },
     {
-        path: '/dashboard',
-        element: <ComponentsContent name="仪表盘" c={<DashboardFolder />} />
+        path: '/folders',
+        element: <ComponentsContent name="仪表盘目录" c={<DashboardFolder />} />
     },
     {
-        path: '/dashboard/:id/info',
+        path: '/folder/:id/list',
+        element: <ComponentsContent name="仪表盘" c={<Dashboards />} />
+    },
+    {
+        path: 'dashboard/f/:fid/g/:did/info',
         element: <ComponentsContent name="仪表盘" c={<GrafanaDashboardComponent />} />
     },
     {

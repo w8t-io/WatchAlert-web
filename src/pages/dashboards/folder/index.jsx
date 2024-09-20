@@ -2,7 +2,13 @@ import { Button, Table, Popconfirm, Input } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { deleteRuleGroup } from '../../../api/rule'
-import { deleteDashboard, getDashboardList, searchDashboard } from '../../../api/dashboard';
+import {
+    deleteDashboard,
+    deleteDashboardFolder,
+    getDashboardList,
+    getFolderList,
+    searchDashboard
+} from '../../../api/dashboard';
 import CreateFolderModal from './create';
 
 export const DashboardFolder = () => {
@@ -16,26 +22,13 @@ export const DashboardFolder = () => {
             title: '名称',
             dataIndex: 'name',
             key: 'name',
-            width: 'auto',
             render: (text, record) => (
                 < div >
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Link to={`/dashboard/${record.id}/info`}>{text}</Link>
+                        <Link to={`/folder/${record.id}/list`}>{text}</Link>
                     </div>
                 </div >
             ),
-        },
-        {
-            title: '描述',
-            dataIndex: 'description',
-            key: 'description',
-            width: 'auto',
-            render: (text) => {
-                if (!text) {
-                    return '没有留下任何描述~';
-                }
-                return text;
-            },
         },
         {
             title: '操作',
@@ -84,10 +77,16 @@ export const DashboardFolder = () => {
 
     const handleList = async () => {
         try {
-            const res = await getDashboardList()
-            setList(res.data)
+            const res = await getFolderList();
+            const d = res.data.map((item, index) => {
+                return {
+                    key: index,
+                    ...item,
+                }
+            })
+            setList(d);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     }
 
@@ -96,7 +95,7 @@ export const DashboardFolder = () => {
             const params = {
                 id: record.id,
             }
-            await deleteDashboard(params)
+            await deleteDashboardFolder(params)
             handleList()
         } catch (error) {
             console.error(error)
