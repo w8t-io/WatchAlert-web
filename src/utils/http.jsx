@@ -4,13 +4,12 @@
 import axios from 'axios';
 const curUrl = window.location.hostname
 const port = window.location.port;
-const backendIP = curUrl + ":" + 80
 const type = process.env.REACT_APP_TYPE
 axios.defaults.timeout = 100000;
 if (type === "local"){
-    axios.defaults.baseURL = 'http://' + curUrl+":"+port;
+    axios.defaults.baseURL = 'http://' + curUrl+":"+9001;
 } else {
-    axios.defaults.baseURL = 'http://' + backendIP;
+    axios.defaults.baseURL = 'http://' + curUrl+":"+port;
 }
 // axios.defaults.baseURL = 'http://127.0.0.1:9001/;
 
