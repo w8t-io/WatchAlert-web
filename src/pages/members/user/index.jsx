@@ -68,6 +68,7 @@ export const User = () => {
                                 setSelectedUserId(record.userid);
                                 setSelectedUsername(record.username);
                             }}
+                            disabled={record.create_by === 'LDAP'}
                         >
                             重置密码
                         </Button>
