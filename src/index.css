@@ -14,5 +14,15 @@
     width: 100%;
     background-color: rgb(238, 240, 243);
   }
-  
-  
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+* {
+  -ms-overflow-style: none;
+}

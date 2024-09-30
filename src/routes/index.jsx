@@ -25,6 +25,8 @@ import { AlertRule } from "../pages/alert/rule/create";
 import { MonitorSSL } from "../pages/monitor/ssl";
 import { CreateMonitorSSLRule } from "../pages/monitor/ssl/create";
 import {Dashboards} from "../pages/dashboards/dashboard";
+import {Subscribe} from "../pages/subscribe";
+import {CreateSubscribeModel} from "../pages/subscribe/create";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -135,6 +137,14 @@ export default [
     {
         path: '/monitor/ssl/:id/edit',
         element: <ComponentsContent name="编辑证书监控规则" c={<CreateMonitorSSLRule type="edit"/>} />
+    },
+    {
+        path: '/subscribes',
+        element: <ComponentsContent name="告警订阅" c={<Subscribe />} />
+    },
+    {
+        path: '/subscribe/create',
+        element: <ComponentsContent name="添加订阅" c={<CreateSubscribeModel />} />
     },
     {
         path: '/*',

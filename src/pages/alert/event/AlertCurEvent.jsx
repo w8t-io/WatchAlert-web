@@ -4,6 +4,9 @@ import { CreateSilenceModal } from '../../silence/SilenceRuleCreateModal'
 import { getCurEventList } from '../../../api/event';
 import {getRuleList} from "../../../api/rule";
 import {getDatasourceList} from "../../../api/datasource";
+import { ReactComponent as P0 } from "./img/P0.svg"
+import { ReactComponent as P1 } from "./img/P1.svg"
+import { ReactComponent as P2 } from "./img/P2.svg"
 
 export const AlertCurEvent = () => {
     const { Search } = Input
@@ -53,6 +56,22 @@ export const AlertCurEvent = () => {
             dataIndex: 'severity',
             key: 'severity',
             width: 100,
+            render: (text) => {
+                return (
+                    <div style={{display: 'flex'}}>
+                        {text === "P0" && (
+                            <P0 style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "P1" && (
+                            <P1 style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "P2" && (
+                            <P2 style={{ height: "25px", width: "25px" }} />
+                        )}
+                        <div style={{marginLeft: "5px", marginTop: '3px',fontSize :'12px'}}>{text}</div>
+                    </div>
+                )
+            },
         },
         {
             title: '事件标签',

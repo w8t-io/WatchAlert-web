@@ -151,11 +151,17 @@ const UserCreateModal = ({ visible, onClose, selectedRow, type, handleList }) =>
 
                 </div>
 
-                <MyFormItem name="phone" label="手机号">
+                <MyFormItem name="email" label="邮箱"
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please input your email!',
+                                },
+                            ]}>
                     <Input />
                 </MyFormItem>
 
-                <MyFormItem name="email" label="邮箱">
+                <MyFormItem name="phone" label="手机号">
                     <Input />
                 </MyFormItem>
 

@@ -139,12 +139,8 @@ export const CreateSilenceModal = ({ visible, onClose, selectedRow, type, handle
                         style={{
                             flex: 1,
                         }}
-                        options={[
-                            {
-                                value: 'Prometheus',
-                                label: 'Prometheus',
-                            },
-                        ]}
+                        options=""
+                        disabled={true}
                         onChange={onClickToDsType}
                     />
                 </MyFormItem>
@@ -161,6 +157,7 @@ export const CreateSilenceModal = ({ visible, onClose, selectedRow, type, handle
                         style={{
                             flex: 1,
                         }}
+                        disabled={true}
                         options={alertFingerprint}
                         onClick={handleSearchCurAlert}
                     />
