@@ -3,6 +3,9 @@ import {Select, Table, message, Tag, Space, DatePicker, Tooltip, Button, Drawer,
 import dayjs from 'dayjs';
 import { getHisEventList } from '../../../api/event';
 import {getDatasourceList} from "../../../api/datasource";
+import { ReactComponent as P0 } from "./img/P0.svg"
+import { ReactComponent as P1 } from "./img/P1.svg"
+import { ReactComponent as P2 } from "./img/P2.svg"
 const { RangePicker } = DatePicker
 
 export const AlertHisEvent = () => {
@@ -52,6 +55,22 @@ export const AlertHisEvent = () => {
             dataIndex: 'severity',
             key: 'severity',
             width: 100,
+            render: (text) => {
+                return (
+                    <div style={{display: 'flex'}}>
+                        {text === "P0" && (
+                            <P0 style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "P1" && (
+                            <P1 style={{ height: "25px", width: "25px" }} />
+                        )}
+                        {text === "P2" && (
+                            <P2 style={{ height: "25px", width: "25px" }} />
+                        )}
+                        <div style={{marginLeft: "5px", marginTop: '3px',fontSize :'12px'}}>{text}</div>
+                    </div>
+                )
+            },
         },
         {
             title: '事件标签',
@@ -304,7 +323,7 @@ export const AlertHisEvent = () => {
                     allowClear
                     placeholder="输入搜索关键字"
                     onSearch={(record) => setSearchQuery(record)}
-                    style={{width: 300}}
+                    style={{width: 335}}
                 />
 
                 <Select
@@ -401,7 +420,6 @@ export const AlertHisEvent = () => {
                     }}
                     onChange={handlePageChange}
                     scroll={{
-                        x: 1700,
                         y: height-400
                     }}
                 />

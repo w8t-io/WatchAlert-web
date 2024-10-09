@@ -49,6 +49,8 @@ export const ComponentSider = (props) => {
                             <Menu.Item key='2-3' onClick={(e) => handleMenuClick(e.key, '/alertCurEvent')}>当前告警</Menu.Item>
                             <Menu.Item key='2-4' onClick={(e) => handleMenuClick(e.key, '/alertHisEvent')}>历史告警</Menu.Item>
                             <Menu.Item key='2-5' onClick={(e) => handleMenuClick(e.key, '/ruleTemplateGroup')}>规则模版</Menu.Item>
+                            <Menu.Item key='2-6' onClick={(e) => handleMenuClick(e.key, '/subscribes')}>告警订阅</Menu.Item>
+
                         </SubMenu>
 
                         <SubMenu key='3' icon={<NotificationOutlined />} title='通知管理'>
@@ -65,7 +67,6 @@ export const ComponentSider = (props) => {
                             <Menu.Item key='5-2' onClick={(e) => handleMenuClick(e.key, '/userRole')}>角色管理</Menu.Item>
                         </SubMenu>
                         <Menu.Item key='7' onClick={(e) => handleMenuClick(e.key, '/tenants')} icon={<DeploymentUnitOutlined />}>租户管理</Menu.Item>
-                        {/*<Menu.Item key='12' onClick={(e) => handleMenuClick(e.key, '/subscribe')} icon={<BookOutlined />}>我的订阅</Menu.Item>*/}
                         <Menu.Item key='6' onClick={(e) => handleMenuClick(e.key, '/datasource')} icon={<PieChartOutlined />}>数据源</Menu.Item>
                         <Menu.Item key='8' onClick={(e) => handleMenuClick(e.key, '/folders')} icon={<DashboardOutlined />}>仪表盘</Menu.Item >
                         {/*<SubMenu key='10' icon={<CloudSyncOutlined />} title='云拨测'>*/}
@@ -98,6 +99,7 @@ export const ComponentSider = (props) => {
                             <Menu.Item key='2-3' onClick={(e) => handleMenuClick(e.key, '/alertCurEvent')}>当前告警</Menu.Item>
                             <Menu.Item key='2-4' onClick={(e) => handleMenuClick(e.key, '/alertHisEvent')}>历史告警</Menu.Item>
                             <Menu.Item key='2-5' onClick={(e) => handleMenuClick(e.key, '/ruleTemplateGroup')}>规则模版</Menu.Item>
+                            <Menu.Item key='2-6' onClick={(e) => handleMenuClick(e.key, '/subscribes')}>告警订阅</Menu.Item>
                         </SubMenu>
 
                         <SubMenu key='3' icon={<NotificationOutlined />} title='通知管理'>
@@ -109,7 +111,6 @@ export const ComponentSider = (props) => {
                             <Menu.Item key='4-1' onClick={(e) => handleMenuClick(e.key, '/dutyManage')}>值班日程</Menu.Item>
                         </SubMenu>
 
-                        {/*<Menu.Item key='12' onClick={(e) => handleMenuClick(e.key, '/subscribe')} icon={<BookOutlined />}>我的订阅</Menu.Item>*/}
                         <Menu.Item key='6' onClick={(e) => handleMenuClick(e.key, '/datasource')} icon={<PieChartOutlined />}>数据源</Menu.Item>
                         <Menu.Item key='8' onClick={(e) => handleMenuClick(e.key, '/folders')} icon={<DashboardOutlined />}>仪表盘</Menu.Item >
                         <Menu.Item key='11' onClick={(e) => handleMenuClick(e.key, '/monitor/ssl/list')} icon={<SafetyCertificateOutlined />}>证书监控</Menu.Item >
