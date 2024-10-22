@@ -10,6 +10,9 @@ import {
     Dropdown,
     Space, message, Divider
 } from 'antd'
+import {
+    TeamOutlined
+} from '@ant-design/icons';
 import { DownOutlined, LeftOutlined } from '@ant-design/icons';
 import logoIcon from '../img/logo.jpeg'
 import githubIcon from '../img/github_logo.png'
@@ -43,7 +46,7 @@ export const ComponentsContent = (props) => {
     const content = (
         <>
             <Button type="text" onClick={handleLogout}>
-                退出登录
+                <span style={{color: 'red'}}>退出登录</span>
             </Button>
         </>
     )
@@ -184,29 +187,44 @@ export const ComponentsContent = (props) => {
                                 bottom: '10px'}}>
                                <div style={{ marginRight: '20px', marginTop: '5px'}}>
                                    <Dropdown overlay={menu} trigger={['click']} overlayStyle={{marginRight:'100px'}}>
-                                       <Typography.Link style={{fontSize: 15, color: '#404142'}}>
+                                       <Typography.Link style={{fontSize: 13, color: '#404142'}}>
                                            <Space>
-                                               切换租户
+                                               {<TeamOutlined />}切换租户
                                                <DownOutlined/>
                                            </Space>
                                        </Typography.Link>
                                    </Dropdown>
                                </div>
 
-                                {userInfo !== null ? (
-                                   <div style={{marginTop:'2px'}}>
-                                       <Popover content={content} trigger="hover" placement="bottom">
-                                           <Avatar
-                                               style={{
-                                                   backgroundColor: '#7265e6',
-                                                   verticalAlign: 'middle',
-                                               }}
-                                               size="large"
-                                           >
-                                               {userInfo.username}
-                                           </Avatar>
-                                       </Popover>
-                                   </div>
+                                {/* 分割线 */}
+                                <div style={{
+                                    marginTop: '12px',
+                                    marginRight: '20px',
+                                    width: '1px',
+                                    height: '45px', // 设置分割线的高度
+                                    backgroundColor: '#e0e0e0', // 分割线颜色
+                                    // margin: '0 20px', // 分割线左右的间距
+                                }} />
+
+                                {userInfo ? (
+                                    <div style={{ marginTop: '18px' }}>
+                                        <Popover content={content} trigger="hover" placement="bottom">
+                                            <Avatar
+                                                style={{
+                                                    backgroundColor: '#7265e6',
+                                                    verticalAlign: 'middle',
+                                                    width: 35,
+                                                    height: 35,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                }}
+                                                size="large"
+                                            >
+                                                {userInfo.username ? userInfo.username.charAt(0).toUpperCase() : ''}
+                                            </Avatar>
+                                        </Popover>
+                                    </div>
                                 ) : null}
                             </div>
                         </Header>
