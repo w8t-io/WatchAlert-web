@@ -130,8 +130,8 @@ export const MonitorSSL = () => {
             const params = {
                 query: value,
             }
-            // const res = await searchNotice(params)
-            // setList(res.data)
+            const res = await listMonitor(params)
+            setList(res.data);
         } catch (error) {
             console.error(error)
         }

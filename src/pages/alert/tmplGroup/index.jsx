@@ -11,6 +11,11 @@ export const RuleTemplateGroup = () => {
     const [updateVisible, setUpdateVisible] = useState(false);
     const [visible, setVisible] = useState(false);
     const [list, setList] = useState([]);
+    const [pagination, setPagination] = useState({
+        index: 1,
+        size: 10,
+        total: 0,
+    });
 
     // 表头
     const columns = [
@@ -84,18 +89,33 @@ export const RuleTemplateGroup = () => {
 
     useEffect(() => {
         handleList();
-    }, []);
+    }, [pagination.index, pagination.size]);
 
     const handleModalClose = () => setVisible(false);
 
     const handleUpdateModalClose = () => setUpdateVisible(false);
 
-    const handleUpdateModalOpen = (record) => {
-        setSelectedRow(record);
-        setUpdateVisible(true);
-    };
+    const onSearch = async (value) => {
+        try {
+            const params = {
+                index: pagination.index,
+                size: pagination.size,
+                query: value,
+            }
 
-    const onSearch = (value, _e, info) => console.log(info?.source, value);
+            const res = await getRuleTmplGroupList(params)
+
+            setPagination({
+                index: res.data.index,
+                size: res.data.size,
+                total: res.data.total,
+            });
+
+            setList(res.data);
+        } catch (error) {
+            console.error(error)
+        }
+    }
 
     return (
         <>

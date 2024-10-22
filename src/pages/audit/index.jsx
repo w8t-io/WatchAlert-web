@@ -105,6 +105,10 @@ export const AuditLog = () => {
         handleList(pagination.index, pagination.size);
     }, [startTimestamp, endTimestamp]);
 
+    useEffect(() => {
+        onSearch()
+    }, [scope]);
+
     const handleList = async (index, size) => {
         try {
             const params = {
@@ -159,6 +163,7 @@ export const AuditLog = () => {
             const params = {
                 index: pagination.index,
                 size: pagination.size,
+                scope: scope,
                 query: value,
             }
 

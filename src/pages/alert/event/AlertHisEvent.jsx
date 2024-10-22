@@ -155,7 +155,7 @@ export const AlertHisEvent = () => {
     }, [searchQuery, selectedSourceType, selectedAlertLevel, startTimestamp, endTimestamp]);
 
     const showMoreTags = (tags, record, visibleCount = 5) => {
-        if (record && Object?.entries(record?.metric).length <= visibleCount) {
+        if (record && Object?.entries(record?.metric)?.length <= visibleCount) {
             // 如果标签数量小于或等于可见数量，直接显示所有标签
             return Object.entries(record.metric).map(([key, value]) => {
                 // 截取value的前20个字符，并添加省略号如果value长度超过20

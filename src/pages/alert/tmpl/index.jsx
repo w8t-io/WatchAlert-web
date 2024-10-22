@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Input, Table, Popconfirm, message } from 'antd'
 import RuleTemplateCreateModal from './RuleTemplateCreateModal'
 import { useParams } from 'react-router-dom'
-import { deleteRuleTmpl, getRuleTmplList } from '../../../api/ruleTmpl'
+import {deleteRuleTmpl, getRuleTmplList} from '../../../api/ruleTmpl'
 
 const { Search } = Input
 
@@ -118,13 +118,24 @@ export const RuleTemplate = () => {
         setVisible(false)
     }
 
-    const onSearch = (value, _e, info) => console.log(info?.source, value)
+    const onSearch = async (value) => {
+        try {
+            const params = {
+                ruleGroupName: ruleGroupName,
+                query: value,
+            }
 
+            const res = await getRuleTmplList(params)
+            setList(res.data);
+        } catch (error) {
+            console.error(error)
+        }
+    }
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>
-                    <Search allowClear placeholder="输入搜索关键字" onSearch={onSearch} enterButton style={{ width: 300 }} />
+                    <Search allowClear placeholder="输入搜索关键字" onSearch={onSearch} style={{ width: 300 }} />
                 </div>
                 <div>
                     <Button type="primary" onClick={() => setVisible(true)}>

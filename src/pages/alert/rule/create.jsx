@@ -7,6 +7,7 @@ import { getNoticeList } from '../../../api/notice'
 import {getJaegerService, queryPromMetrics} from '../../../api/other'
 import { useParams } from 'react-router-dom'
 import moment from 'moment';
+import dayjs from 'dayjs';
 import './index.css'
 import {
     getDimensions,
@@ -72,8 +73,8 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
     const [exprRule, setExprRule] = useState([{}])
     // 初始化时间数据的状态
     const [week,setWeek] = useState(null)
-    const [startTime, setStartTime] = useState(null);
-    const [endTime, setEndTime] = useState(null);
+    const [startTime, setStartTime] = useState(0);
+    const [endTime, setEndTime] = useState(86340);
     const weekOptions = [
         {
             label:'周一',
@@ -600,6 +601,19 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
         const minutes = time.getMinutes().toString().padStart(2, '0');
         const seconds = (hours * 3600) + (minutes * 60);
         setEndTime(seconds);
+    };
+
+    // 将秒数转换为 ISO 格式的 Date 对象
+    const secondsToDateObj = (seconds) => {
+        // 以当前日期为基础
+        const date = dayjs();
+
+        // 计算小时和分钟
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+
+        // 设置 dayjs 对象的小时和分钟
+        return date.set('hour', hours).set('minute', minutes).set('second', 0); // 秒数设为 0
     };
 
     const [errors, setErrors] = useState([]);
@@ -1653,12 +1667,13 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                 placeholder={"开始"}
                                 format={format}
                                 onChange={handleStartTimeChange}
-                                value={secondsToMoment(startTime)}/>
+                                value={secondsToDateObj(startTime)}/>
                             <TimePicker
                                 placeholder={"结束"}
                                 format={format}
                                 onChange={handleEndTimeChange}
-                                value={secondsToMoment(endTime)}/>
+                                value={secondsToDateObj(endTime)}
+                            />
                         </div>
                     </MyFormItem>
 
