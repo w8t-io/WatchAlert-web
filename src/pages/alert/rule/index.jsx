@@ -152,6 +152,10 @@ export const AlertRuleList = () => {
         handleListDatasource()
     }, [])
 
+    useEffect(() => {
+        onSearch()
+    },[selectRuleStatus])
+
     const handleListDatasource = async () => {
         try {
             const res = await getDatasourceList()

@@ -53,9 +53,9 @@ async function deleteRuleTmpl(params) {
     }
 }
 
-async function getRuleTmplGroupList() {
+async function getRuleTmplGroupList(params) {
     try {
-        const res = await http('get', `/api/w8t/ruleTmplGroup/ruleTmplGroupList`);
+        const res = await http('get', `/api/w8t/ruleTmplGroup/ruleTmplGroupList`, params);
         return res;
     } catch (error) {
         message.open({
