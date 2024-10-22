@@ -40,6 +40,7 @@ export const RuleTemplateGroup = () => {
         {
             title: '操作',
             dataIndex: 'operation',
+            width: 120,
             render: (_, record) =>
                 list.length >= 1 ? (
                     <div>

@@ -21,7 +21,7 @@ export const DutyManage = () => {
             title: 'ID',
             dataIndex: 'id',
             key: 'id',
-            width: 60,
+            width: 'auto',
             render: (text, record) => (
                 <div>
 
@@ -52,13 +52,13 @@ export const DutyManage = () => {
             title: '名称',
             dataIndex: 'name',
             key: 'name',
-            width: 50,
+            width: 'auto',
         },
         {
             title: '负责人',
             dataIndex: 'manager',
             key: 'manager',
-            width: 30,
+            width: 'auto',
             render: (text) => {
                 return <span>{text.username}</span>;
             },
@@ -67,7 +67,7 @@ export const DutyManage = () => {
             title: '今日值班',
             dataIndex: 'curDutyUser',
             key: 'curDutyUser',
-            width: 30,
+            width: 'auto',
             render: (text) => {
                 if (!text) {
                     return '-';
@@ -79,7 +79,7 @@ export const DutyManage = () => {
             title: '描述',
             dataIndex: 'description',
             key: 'description',
-            width: 100,
+            width: 'auto',
             render: (text) => {
                 if (!text) {
                     return '没有留下任何描述~';
@@ -91,7 +91,7 @@ export const DutyManage = () => {
             title: '创建时间',
             dataIndex: 'create_at',
             key: 'create_at',
-            width: 50,
+            width: 'auto',
             render: (text) => {
                 const date = new Date(text * 1000)
                 return date.toLocaleString()
@@ -101,7 +101,7 @@ export const DutyManage = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right',
-            width: 50,
+            width: 120,
             render: (_, record) =>
                 <>
                     <div>

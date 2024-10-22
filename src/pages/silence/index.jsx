@@ -28,13 +28,13 @@ export const Silences = () => {
             title: '告警指纹',
             dataIndex: 'fingerprint',
             key: 'fingerprint',
-            width: 200,
+            width: 'auto',
         },
         {
             title: '数据源类型',
             dataIndex: 'datasource_type',
             key: 'datasource_type',
-            width: 150,
+            width: 'auto',
             render: (text, record) => {
                 return (
                     <div style={{display: 'flex'}}>
@@ -76,7 +76,7 @@ export const Silences = () => {
             title: '更新时间',
             dataIndex: 'update_at',
             key: 'update_at',
-            width: 200,
+            width: 'auto',
             render: (text) => {
                 const date = new Date(text * 1000)
                 return date.toLocaleString()
@@ -91,7 +91,7 @@ export const Silences = () => {
             title: '静默开始时间',
             dataIndex: 'starts_at',
             key: 'starts_at',
-            width: 200,
+            width: 'auto',
             render: (text) => {
                 const date = new Date(text * 1000)
                 return date.toLocaleString()
@@ -101,7 +101,7 @@ export const Silences = () => {
             title: '静默结束时间',
             dataIndex: 'ends_at',
             key: 'ends_at',
-            width: 200,
+            width: 'auto',
             render: (text) => {
                 const date = new Date(text * 1000)
                 return date.toLocaleString()
@@ -111,7 +111,7 @@ export const Silences = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right',
-            width: 150,
+            width: 120,
             render: (_, record) =>
                 <div>
                     <Popconfirm

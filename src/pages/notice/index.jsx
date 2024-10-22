@@ -66,7 +66,7 @@ export const NoticeObjects = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right',
-            width: 150,
+            width: 120,
             render: (_, record) =>
                 list.length >= 1 ? (
                     <div>

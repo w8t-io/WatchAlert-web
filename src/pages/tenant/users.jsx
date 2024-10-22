@@ -227,6 +227,7 @@ export const TenantUsers = ({ tenantInfo }) => {
                 onCancel={onClose}
                 footer={null}
                 title="选择用户"
+                width={690}
             >
                 <Form form={form} name="form_item_path" onFinish={handleFormSubmit}>
                     <MyFormItem name="users" label="">

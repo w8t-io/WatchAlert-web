@@ -21,7 +21,7 @@ export const AlertRuleGroup = ({ }) => {
             title: 'ID',
             dataIndex: 'id',
             key: 'id',
-            width: 250,
+            width: 'auto',
             render: (text, record) => (
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -38,13 +38,13 @@ export const AlertRuleGroup = ({ }) => {
             title: '规则组名称',
             dataIndex: 'name',
             key: 'name',
-            width: 200,
+            width: 'auto',
         },
         {
             title: '规则数',
             dataIndex: 'number',
             key: 'number',
-            width: 200,
+            width: 'auto',
         },
         {
             title: '描述',
@@ -60,7 +60,7 @@ export const AlertRuleGroup = ({ }) => {
         {
             title: '操作',
             dataIndex: 'operation',
-            width: 150,
+            width: 120,
             fixed: 'right',
             render: (_, record) =>
                 list.length >= 1 ? (

@@ -84,6 +84,7 @@ export const Datasources = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right', // 设置操作列固定
+            width: 120,
             render: (_, record) => (
                 <div>
                     <Popconfirm

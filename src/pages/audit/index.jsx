@@ -22,7 +22,7 @@ export const AuditLog = () => {
             title: '时间',
             dataIndex: 'createdAt',
             key: 'createdAt',
-            width: 200,
+            width: 'auto',
             render: (text) => {
                 const dateInMilliseconds = text * 1000;
                 return moment(dateInMilliseconds).format('YYYY-MM-DD HH:mm:ss');
@@ -72,7 +72,7 @@ export const AuditLog = () => {
             title: '事件Body详情',
             dataIndex: 'body',
             key: 'body',
-            width: 150,
+            width: 120,
             render: (text, record) => (
                 <span>
                     {record.body && (

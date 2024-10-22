@@ -163,41 +163,50 @@ export const ComponentsContent = (props) => {
                                 alignItems: 'center',
                             }}>
 
-                            <div style={{marginTop: '25px', marginLeft: '-30px'}}>
+                            <div style={{display: 'flex', marginTop: '25px', marginLeft: '-25px', gap: '5px'}}>
                                 <div className="footer">
                                     <a target="_blank" title="Logo">
                                         <img src={logoIcon} alt="Logo" className="icon"
-                                             style={{width: '40%', height: '40%'}}/>
+                                             style={{width: '40px', height: '40px'}}/>
                                     </a>
                                 </div>
-                            </div>
 
-                            <div style={{fontSize: 15, fontWeight: 'bold'}}>
-                                <div style={{position: 'absolute', left: '100px', top: '12px'}}>
-                                    <Dropdown overlay={menu} trigger={['click']}>
-                                        <Typography.Link style={{fontSize: 15, color: 'black'}}>
-                                            <Space>
-                                                多租户
-                                                <DownOutlined/>
-                                            </Space>
-                                        </Typography.Link>
-                                    </Dropdown>
+                                <div style={{fontSize: 15, fontWeight: 'bold', marginTop: '-12px'}}>
+                                    <span>监控云平台</span>
                                 </div>
                             </div>
 
-                            <div style={{position: 'absolute', top: '12px', right: '35px', bottom: '10px'}}>
+                            <div style={{
+                                display: 'flex',
+                                position: 'absolute',
+                                top: '12px',
+                                right: '35px',
+                                bottom: '10px'}}>
+                               <div style={{ marginRight: '20px', marginTop: '5px'}}>
+                                   <Dropdown overlay={menu} trigger={['click']} overlayStyle={{marginRight:'100px'}}>
+                                       <Typography.Link style={{fontSize: 15, color: '#404142'}}>
+                                           <Space>
+                                               切换租户
+                                               <DownOutlined/>
+                                           </Space>
+                                       </Typography.Link>
+                                   </Dropdown>
+                               </div>
+
                                 {userInfo !== null ? (
-                                    <Popover content={content} trigger="hover" placement="bottom">
-                                        <Avatar
-                                            style={{
-                                                backgroundColor: '#7265e6',
-                                                verticalAlign: 'middle',
-                                            }}
-                                            size="large"
-                                        >
-                                            {userInfo.username}
-                                        </Avatar>
-                                    </Popover>
+                                   <div style={{marginTop:'2px'}}>
+                                       <Popover content={content} trigger="hover" placement="bottom">
+                                           <Avatar
+                                               style={{
+                                                   backgroundColor: '#7265e6',
+                                                   verticalAlign: 'middle',
+                                               }}
+                                               size="large"
+                                           >
+                                               {userInfo.username}
+                                           </Avatar>
+                                       </Popover>
+                                   </div>
                                 ) : null}
                             </div>
                         </Header>

@@ -134,7 +134,7 @@ const UserRoleCreateModal = ({ visible, onClose, selectedRow, type, handleList }
     }
 
     return (
-        <Modal visible={visible} onCancel={onClose} footer={null}>
+        <Modal visible={visible} onCancel={onClose} footer={null} width={690}>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
 
                 <MyFormItem name="name" label="角色名称"
