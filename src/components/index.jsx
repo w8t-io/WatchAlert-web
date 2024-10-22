@@ -226,7 +226,6 @@ export const ComponentsContent = (props) => {
                                         </Popover>
                                     </div>
                                 ) : null}
-
                             </div>
                         </Header>
                     </Layout>
