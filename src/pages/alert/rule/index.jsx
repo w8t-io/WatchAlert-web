@@ -33,13 +33,13 @@ export const AlertRuleList = () => {
             title: '规则名称',
             dataIndex: 'ruleName',
             key: 'ruleName',
-            width: 200,
+            width: 'auto',
         },
         {
             title: '数据源类型',
             dataIndex: 'datasourceType',
             key: 'datasourceType',
-            width: 200,
+            width: 'auto',
             render: (text, record) => {
                 return (
                     <div style={{display: 'flex'}}>
@@ -76,7 +76,7 @@ export const AlertRuleList = () => {
             title: '数据源',
             dataIndex: 'datasourceId',
             key: 'datasourceId',
-            width: 200,
+            width: 'auto',
             render: (text, record) => (
                 <span>
                     {getDatasourceNamesByIds(record.datasourceId).split(', ').map((name, index) => (
@@ -89,7 +89,7 @@ export const AlertRuleList = () => {
             title: '描述',
             dataIndex: 'description',
             key: 'description',
-            width: 300,
+            width: 'auto',
             render: (text, record, index) => {
                 if (!text) {
                     return '没有留下任何描述~';
@@ -101,7 +101,7 @@ export const AlertRuleList = () => {
             title: '状态',
             dataIndex: 'enabled',
             key: 'enabled',
-            width: 90,
+            width: 'auto',
             render: enabled => (
                 enabled ?
                     <Tag color="success">启用</Tag> :
@@ -112,7 +112,7 @@ export const AlertRuleList = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right', // 设置操作列固定
-            width: 150,
+            width: 120,
             render: (_, record) => (
                 <div>
                     <Popconfirm

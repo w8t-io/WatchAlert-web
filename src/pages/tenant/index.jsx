@@ -15,7 +15,7 @@ export const Tenants = () => {
             title: '租户名称',
             dataIndex: 'name',
             key: 'name',
-            width: 200,
+            width: 'auto',
             render: (text, record) => (
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -28,14 +28,14 @@ export const Tenants = () => {
             title: '负责人',
             dataIndex: 'manager',
             key: 'manager',
-            width: 150
+            width: 'auto'
 
         },
         {
             title: '描述',
             dataIndex: 'description',
             key: 'description',
-            width: 300,
+            width: 'auto',
             render: (text) => {
                 if (!text) {
                     return '-'
@@ -47,7 +47,7 @@ export const Tenants = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right',
-            width: 75,
+            width: 120,
             render: (_, record) =>
                 <div>
                     <Popconfirm

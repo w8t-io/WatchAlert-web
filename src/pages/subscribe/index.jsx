@@ -84,7 +84,7 @@ export const Subscribe = () => {
             title: '操作',
             dataIndex: 'operation',
             fixed: 'right',
-            width: 150,
+            width: 120,
             render: (_, record) =>
                 <div>
                     <Popconfirm

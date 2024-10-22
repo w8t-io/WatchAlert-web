@@ -63,7 +63,7 @@ export const NoticeTemplate = () => {
         {
             title: '操作',
             dataIndex: 'operation',
-            width: 150,
+            width: 120,
             fixed: 'right',
             render: (_, record) =>
                 list.length >= 1 ? (
