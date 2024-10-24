@@ -78,10 +78,38 @@ async function searchNotice(params) {
     }
 }
 
+async function noticeRecordList(params) {
+    try {
+        const res = await http('get', '/api/w8t/notice/noticeRecordList',params);
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '获取通知记录列表失败',
+        });
+        return error
+    }
+}
+
+async function noticeRecordMetric() {
+    try {
+        const res = await http('get', '/api/w8t/notice/noticeRecordMetric');
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '获取通知记录指标失败',
+        });
+        return error
+    }
+}
+
 export {
     getNoticeList,
     createNotice,
     updateNotice,
     deleteNotice,
     searchNotice,
+    noticeRecordList,
+    noticeRecordMetric
 }
