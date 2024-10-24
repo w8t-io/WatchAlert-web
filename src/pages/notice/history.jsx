@@ -136,6 +136,10 @@ export const NoticeRecords = () => {
                             type: 'cross',
                         },
                     },
+                    legend: {
+                        data: ['P0', 'P1', 'P2'],
+                        left: 35
+                    },
                     xAxis: {
                         type: 'category',
                         data: date,
