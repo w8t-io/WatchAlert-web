@@ -27,6 +27,7 @@ import { CreateMonitorSSLRule } from "../pages/monitor/ssl/create";
 import {Dashboards} from "../pages/dashboards/dashboard";
 import {Subscribe} from "../pages/subscribe";
 import {CreateSubscribeModel} from "../pages/subscribe/create";
+import {NoticeRecords} from "../pages/notice/history";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -81,6 +82,10 @@ export default [
     {
         path: '/noticeTemplate',
         element: <ComponentsContent name="通知模版" c={<NoticeTemplate />} />
+    },
+    {
+        path: '/noticeRecords',
+        element: <ComponentsContent name="通知记录" c={<NoticeRecords />} />
     },
     {
         path: '/dutyManage',

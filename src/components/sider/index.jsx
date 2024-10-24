@@ -56,6 +56,7 @@ export const ComponentSider = (props) => {
                         <SubMenu key='3' icon={<NotificationOutlined />} title='通知管理'>
                             <Menu.Item key='3-1' onClick={(e) => handleMenuClick(e.key, '/noticeObjects')}>通知对象</Menu.Item>
                             <Menu.Item key='3-2' onClick={(e) => handleMenuClick(e.key, '/noticeTemplate')}>通知模版</Menu.Item>
+                            <Menu.Item key='3-3' onClick={(e) => handleMenuClick(e.key, '/noticeRecords')}>通知记录</Menu.Item>
                         </SubMenu>
 
                         <SubMenu key='4' icon={<CalendarOutlined />} title='值班管理'>
@@ -105,6 +106,7 @@ export const ComponentSider = (props) => {
                         <SubMenu key='3' icon={<NotificationOutlined />} title='通知管理'>
                             <Menu.Item key='3-1' onClick={(e) => handleMenuClick(e.key, '/noticeObjects')}>通知对象</Menu.Item>
                             <Menu.Item key='3-2' onClick={(e) => handleMenuClick(e.key, '/noticeTemplate')}>通知模版</Menu.Item>
+                            <Menu.Item key='3-3' onClick={(e) => handleMenuClick(e.key, '/noticeRecords')}>通知记录</Menu.Item>
                         </SubMenu>
 
                         <SubMenu key='4' icon={<CalendarOutlined />} title='值班管理'>
