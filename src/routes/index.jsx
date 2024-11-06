@@ -28,6 +28,7 @@ import {Dashboards} from "../pages/dashboards/dashboard";
 import {Subscribe} from "../pages/subscribe";
 import {CreateSubscribeModel} from "../pages/subscribe/create";
 import {NoticeRecords} from "../pages/notice/history";
+import {CalendarApp} from "../pages/duty/calendar";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -90,6 +91,10 @@ export default [
     {
         path: '/dutyManage',
         element: <ComponentsContent name="值班日程" c={<DutyManage />} />
+    },
+    {
+        path: '/dutyManage/:id/calendar',
+        element: <ComponentsContent name="日程表" c={<CalendarApp />} />
     },
     {
         path: '/user',

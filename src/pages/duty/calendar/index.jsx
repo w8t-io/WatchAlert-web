@@ -1,8 +1,10 @@
-import { Calendar, Modal, Divider, Button } from 'antd';
+import { Calendar, Divider, Button } from 'antd';
 import React, { useState, useEffect } from 'react';
 import { CreateCalendarModal } from './CreateCalendar';
 import { UpdateCalendarModal } from './UpdateCalendar';
 import { searchCalendar } from '../../../api/duty';
+import {useParams} from "react-router-dom";
+import './index.css'
 
 export const fetchDutyData = async (dutyId) => {
     try {
@@ -17,26 +19,27 @@ export const fetchDutyData = async (dutyId) => {
     }
 }
 
-export const CalendarApp = ({ visible, onClose, name, tenantId, dutyId }) => {
+export const CalendarApp = ({ tenantId }) => {
+    const url = new URL(window.location);
+    const calendarName = url.searchParams.get('calendarName');
+    const { id } = useParams()
     const [dutyData, setDutyData] = useState([])
     const [createCalendarModal, setCreateCalendarModal] = useState(false)
     const [selectedDate, setSelectedDate] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
 
-    const run = async (visible) => {
-        if (visible) {
-            try {
-                const data = await fetchDutyData(dutyId)
-                setDutyData(data)
-            } catch (error) {
-                console.error('Error:', error)
-            }
+    const run = async () => {
+        try {
+            const data = await fetchDutyData(id)
+            setDutyData(data)
+        } catch (error) {
+            console.error('Error:', error)
         }
     }
 
     useEffect(() => {
-        run(visible)
-    }, [visible])
+        run()
+    }, [])
 
     const dateCellRender = (value) => {
         const matchingDutyData = dutyData.find((item) => {
@@ -96,31 +99,49 @@ export const CalendarApp = ({ visible, onClose, name, tenantId, dutyId }) => {
         );
     };
 
-    return (
-        <Modal
-            visible={visible}
-            onCancel={onClose}
-            footer={null}
-            width={1000}
-            styles={{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }} // 设置弹窗内容的样式
-            centered
-        >
-            <div style={{ textAlign: 'center' }}>
-                <h3>日程表名称：{name}</h3>
-            </div>
+    const [height, setHeight] = useState(window.innerHeight);
 
-            <div style={{ position: 'relative' }}>
-                <div style={{ position: 'absolute', bottom: '747px', width: '100%' }}>
+    useEffect(() => {
+        // 定义一个处理窗口大小变化的函数
+        const handleResize = () => {
+            setHeight(window.innerHeight);
+        };
+
+        // 监听窗口的resize事件
+        window.addEventListener('resize', handleResize);
+
+        // 在组件卸载时移除监听器
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return (
+        <div style={{
+            textAlign: 'left',
+            width: '100%',
+            alignItems: 'flex-start',
+            height:height-210,
+            overflowY:'auto',
+            marginTop:'-15px'
+        }}>
+            <div style={{position: 'relative',overflowY: "auto",height: '830px'}}>
+                <div style={{position: 'absolute', width: '100%',marginTop:'3px'}}>
                     <Button onClick={() => setCreateCalendarModal(true)}>
                         发布日程
                     </Button>
+                    <div style={{textAlign: 'center',marginTop:'-45px'}}>
+                        <h3>日程表名称：{calendarName}</h3>
+                    </div>
                 </div>
-                <CreateCalendarModal visible={createCalendarModal} onClose={handleModalClose} dutyId={dutyId} />
-                <Divider />
+
+                <CreateCalendarModal visible={createCalendarModal} onClose={handleModalClose} dutyId={id}/>
+                <Divider/>
                 <div style={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    marginTop: '-60px',
                 }}>
                     <Calendar
                         onChange={handleClick}
@@ -131,9 +152,9 @@ export const CalendarApp = ({ visible, onClose, name, tenantId, dutyId }) => {
             </div>
 
 
+            <UpdateCalendarModal visible={modalVisible} onClose={handleUpdateModalClose} time={selectedDate}
+                                 tenantId={tenantId} dutyId={id} date={selectedDate}/>
 
-            <UpdateCalendarModal visible={modalVisible} onClose={handleUpdateModalClose} time={selectedDate} tenantId={tenantId} dutyId={dutyId} date={selectedDate} />
-
-        </Modal>
+        </div>
     )
 }

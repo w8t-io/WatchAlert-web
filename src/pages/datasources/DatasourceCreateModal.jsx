@@ -1,5 +1,5 @@
 import { createDatasource, updateDatasource } from '../../api/datasource'
-import {Modal, Form, Input, Button, Switch, Select, InputNumber, Alert} from 'antd'
+import {Modal, Form, Input, Button, Switch, Select, InputNumber, Alert, Drawer} from 'antd'
 import React, { useState, useEffect } from 'react'
 const { TextArea } = Input
 const MyFormItemContext = React.createContext([])
@@ -116,7 +116,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
     }
 
     return (
-        <Modal visible={visible} onCancel={onClose} footer={null} width={700} centered>
+        <Drawer title="创建数据源" open={visible} onClose={onClose}>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
                 <MyFormItem name="name" label="数据源名称"
                     rules={[
@@ -328,6 +328,6 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                     </Button>
                 </div>
             </Form>
-        </Modal>
+        </Drawer>
     )
 }
