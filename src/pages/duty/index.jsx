@@ -5,6 +5,7 @@ import { CreateDutyModal } from './DutyManageCreateModal';
 import { CalendarApp } from './calendar';
 import { CopyOutlined } from '@ant-design/icons';
 import { deleteDutyManager, getDutyManagerList } from '../../api/duty';
+import {Link} from "react-router-dom";
 
 export const DutyManage = () => {
     const [tenantId, setTenantId] = useState('')
@@ -24,28 +25,16 @@ export const DutyManage = () => {
             width: 'auto',
             render: (text, record) => (
                 <div>
-
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <a
-                            style={{ cursor: 'pointer' }}
-                            onClick={() => {
-                                // 将所有状态更新放在一个函数中以确保顺序和组件更新
-                                setSelectedId(text);
-                                setCalendarVisible(true);
-                                setCalendarName(record.name);
-                                setCalendarDutyId(record.id);
-                                setTenantId(record.tenantId)
-                            }}
-                        >
+                        <Link to={`/dutyManage/${record.id}/calendar?calendarName=${record.name}`}>
                             {text}
-                        </a>
+                        </Link>
                         <CopyOutlined
                             style={{ marginLeft: '5px', cursor: 'pointer' }}
                             onClick={() => handleCopy(text)}
                         />
                     </div>
                 </div>
-
             ),
         },
         {
@@ -196,7 +185,7 @@ export const DutyManage = () => {
 
                 <CreateDutyModal visible={updateVisible} onClose={handleUpdateModalClose} handleList={handleList} selectedRow={selectedRow} type="update" />
 
-                <CalendarApp visible={calendarVisible} onClose={handleCalendarModalClose} name={calendarName} tenantId={tenantId} dutyId={calendarDutyId} handleList={handleList} />
+                {/*<CalendarApp visible={calendarVisible} onClose={handleCalendarModalClose} name={calendarName} tenantId={tenantId} dutyId={calendarDutyId} handleList={handleList} />*/}
 
             </div>
 
