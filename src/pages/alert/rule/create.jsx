@@ -624,13 +624,19 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
     };
 
     const handleExprChange = (index, value) => {
+        const trimmedValue = value.trim(); // 去除输入值两端的空格
         const newErrors = [...errors];
-        if (validateExpr(value) || value === '') {
-            updateExprRule(index, 'expr', value);
+
+        if (trimmedValue !== value) {
+            // 输入值中含有空格时，提示错误信息
+            newErrors[index] = '输入的值不允许包含空格';
+        } else if (validateExpr(trimmedValue) || trimmedValue === '') {
+            updateExprRule(index, 'expr', trimmedValue);
             newErrors[index] = '';
         } else {
-            newErrors[index] = '请输入有效的表达式，例如："> 80"';
+            newErrors[index] = '请输入有效的表达式，例如：>80';
         }
+
         setErrors(newErrors);
     };
 
@@ -973,7 +979,7 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
                                                     style={{width: '100%'}}
                                                 >
                                                     <Input
-                                                        placeholder='> 80'
+                                                        placeholder='请输入有效的表达式，例如：>80'
                                                         value={label.expr}
                                                         onChange={(e) => handleExprChange(index, e.target.value)}
                                                         style={{width: '100%'}}
