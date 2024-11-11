@@ -130,7 +130,7 @@ async function updateRuleGroup(params) {
 
 async function deleteRuleGroup(params) {
     try {
-        const res = await http('post', `/api/w8t/ruleGroup/ruleGroupDelete?id=${params.id}`);
+        const res = await http('post', `/api/w8t/ruleGroup/ruleGroupDelete`,params);
         message.open({
             type: 'success',
             content: '规则组删除成功',

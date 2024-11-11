@@ -136,7 +136,7 @@ export const AlertRuleGroup = ({ }) => {
                 id: record.id,
             }
             await deleteRuleGroup(params)
-            handleList()
+            handleList(pagination.index, pagination.size)
         } catch (error) {
             console.error(error)
         }

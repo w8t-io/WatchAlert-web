@@ -50,11 +50,7 @@ async function updateRole(params) {
 
 async function deleteRole(params) {
     try {
-        const queryString = Object.keys(params)
-            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
-            .filter(Boolean)
-            .join('&');
-        const res = await http('post', `/api/w8t/role/roleDelete?${queryString}`);
+        const res = await http('post', `/api/w8t/role/roleDelete`,params);
         message.open({
             type: 'success',
             content: '角色删除成功',

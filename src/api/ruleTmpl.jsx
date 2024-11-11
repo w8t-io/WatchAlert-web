@@ -85,11 +85,7 @@ async function createRuleTmplGroup(params) {
 
 async function deleteRuleTmplGroup(params) {
     try {
-        const queryString = Object.keys(params)
-            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
-            .filter(Boolean)
-            .join('&');
-        const res = await http('post', `/api/w8t/ruleTmplGroup/ruleTmplGroupDelete?${queryString}`);
+        const res = await http('post', `/api/w8t/ruleTmplGroup/ruleTmplGroupDelete`,params);
         message.open({
             type: 'success',
             content: '规则模版组删除成功',
