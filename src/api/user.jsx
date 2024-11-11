@@ -64,11 +64,7 @@ async function updateUser(params) {
 
 async function deleteUser(params) {
     try {
-        const queryString = Object.keys(params)
-            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
-            .filter(Boolean)
-            .join('&');
-        const res = await http('post', `/api/w8t/user/userDelete?${queryString}`);
+        const res = await http('post', `/api/w8t/user/userDelete`,params);
         message.open({
             type: 'success',
             content: '用户删除成功',

@@ -50,11 +50,7 @@ async function updateNoticeTmpl(params) {
 
 async function deleteNoticeTmpl(params) {
     try {
-        const queryString = Object.keys(params)
-            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
-            .filter(Boolean)
-            .join('&');
-        const res = await http('post', `/api/w8t/noticeTemplate/noticeTemplateDelete?${queryString}`);
+        const res = await http('post', `/api/w8t/noticeTemplate/noticeTemplateDelete`,params);
         message.open({
             type: 'success',
             content: '通知模版删除成功',
