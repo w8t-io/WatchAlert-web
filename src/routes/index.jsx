@@ -29,6 +29,7 @@ import {Subscribe} from "../pages/subscribe";
 import {CreateSubscribeModel} from "../pages/subscribe/create";
 import {NoticeRecords} from "../pages/notice/history";
 import {CalendarApp} from "../pages/duty/calendar";
+import {AlertEvent} from "../pages/event";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -59,6 +60,10 @@ export default [
     {
         path: '/silenceRules',
         element: <ComponentsContent name="静默规则" c={<Silences />} />
+    },
+    {
+        path: '/events',
+        element: <ComponentsContent name="告警事件" c={<AlertEvent />} />
     },
     {
         path: '/alertCurEvent',

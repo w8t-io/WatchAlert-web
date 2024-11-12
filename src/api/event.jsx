@@ -3,7 +3,11 @@ import { message } from 'antd';
 
 async function getCurEventList(params) {
     try {
-        const res = await http('get', '/api/w8t/event/curEvent', params);
+        const queryString = Object.keys(params)
+            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
+            .filter(Boolean)
+            .join('&');
+        const res = await http('get', `/api/w8t/event/curEvent?${queryString}`);
         return res;
     } catch (error) {
         message.open({
