@@ -1,0 +1,11 @@
+/* Removes the background overlay on the Spin component */
+.ant-spin-nested-loading,
+.ant-spin-container,
+.ant-spin-blur {
+    background: none !important;
+}
+
+/* Removes the default overlay */
+.ant-spin {
+    background-color: transparent !important;
+}
