@@ -9,12 +9,6 @@ export const MonitorSSL = () => {
     const [list, setList] = useState([]);
     const columns = [
         {
-            title: '名称',
-            dataIndex: 'name',
-            key: 'name',
-            width: 'auto',
-        },
-        {
             title: '域名',
             dataIndex: 'domain',
             key: 'domain',
@@ -33,15 +27,17 @@ export const MonitorSSL = () => {
             },
         },
         {
-            title: '证书剩余时间',
+            title: '证书有效天数',
             dataIndex: 'timeRemaining',
             key: 'timeRemaining',
             width: 'auto',
             render: (text) => {
-                if (!text) {
+                if (text === undefined || text === null) {
                     return '-';
                 }
-                return text+"天";
+                return text < 0
+                    ? <span style={{ color: 'red' }}>{`-${Math.abs(text)}天 (已过期)`}</span>
+                    : `${text}天`;
             },
         },
         {

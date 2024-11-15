@@ -52,7 +52,6 @@ export const CreateMonitorSSLRule = ({ type, handleList }) => {
 
     const initBasicInfo =(selectedRow)=>{
         form.setFieldsValue({
-            name: selectedRow.name,
             domain: selectedRow.domain,
             expectTime: selectedRow.expectTime,
             description: selectedRow.description,
@@ -168,38 +167,6 @@ export const CreateMonitorSSLRule = ({ type, handleList }) => {
             overflowY: 'auto',
         }}>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
-
-                <div>
-                    <strong style={{ fontSize: '20px' }}>基础配置</strong>
-                    <div style={{ display: 'flex' }}>
-                        <MyFormItem
-                            name="name"
-                            label="规则名称"
-                            style={{
-                                marginRight: '10px',
-                                width: '50%',
-                            }}
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}
-                        >
-                            <Input
-                                value={spaceValue}
-                                onChange={handleInputChange}
-                                onKeyPress={handleKeyPress}
-                                disabled={type === 'update'} />
-                        </MyFormItem>
-
-                        <MyFormItem name="description" label="描述" style={{width: '50%',}}>
-                            <Input />
-                        </MyFormItem>
-                    </div>
-                </div>
-
-                <Divider />
-
                 <div>
                     <strong style={{fontSize: '20px'}}>规则配置</strong>
                     <div style={{display: 'flex', gap:'10px'}}>
@@ -230,9 +197,11 @@ export const CreateMonitorSSLRule = ({ type, handleList }) => {
                                     required: true,
                                 },
                             ]}>
-                            <InputNumber placeholder="输入阈值" addonBefore={
-                                "当证书有效期 <"
-                            }addonAfter={"天时, 触发告警"}/>
+                            <InputNumber
+                                style={{width: '100%'}}
+                                placeholder="输入阈值"
+                                addonBefore={"当证书有效期 <"}
+                                addonAfter={"天时, 触发告警"}/>
                         </MyFormItem>
                     </div>
 
