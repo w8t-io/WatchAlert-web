@@ -675,8 +675,6 @@ export const AlertEvent = () => {
                             current: currentPagination.pageIndex ?? 1,
                             pageSize: currentPagination.pageSize ?? 10,
                             total: currentPagination?.pageTotal ?? 0,
-                            showQuickJumper: true,
-                            showSizeChanger: true,
                             showTotal: handleShowTotal,
                         }}
                         onChange={handleCurrentPageChange}
@@ -693,8 +691,6 @@ export const AlertEvent = () => {
                             current: historyPagination.pageIndex ?? 1,
                             pageSize: historyPagination.pageSize ?? 10,
                             total: historyPagination?.pageTotal ?? 0,
-                            showQuickJumper: true,
-                            showSizeChanger: true,
                             showTotal: handleShowTotal,
                         }}
                         onChange={handleHistoryPageChange}

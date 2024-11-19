@@ -250,8 +250,6 @@ export const AuditLog = () => {
                         index: pagination.index ?? 1,
                         size: pagination.size ?? 10,
                         total: pagination?.total ?? 0,
-                        showQuickJumper: true,
-                        showSizeChanger: true,
                         showTotal: handleShowTotal,
                     }}
                     onChange={handlePageChange}

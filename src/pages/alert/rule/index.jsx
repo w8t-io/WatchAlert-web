@@ -148,7 +148,7 @@ export const AlertRuleList = () => {
     }, []);
 
     useEffect(() => {
-        handleList(id)
+        handleList(id, pagination.index, pagination.size)
         handleListDatasource()
     }, [])
 
@@ -176,11 +176,11 @@ export const AlertRuleList = () => {
         return matchedNames.join(', ') || 'Unknown'; // Join multiple names with commas
     };
 
-    const handleList = async (id) => {
+    const handleList = async (id,index,size) => {
         try {
             const params = {
-                index: pagination.index,
-                size: pagination.size,
+                index: index,
+                size: size,
                 status: selectRuleStatus,
                 ruleGroupId: id,
             }
@@ -205,7 +205,7 @@ export const AlertRuleList = () => {
                 ruleGroupId: record.ruleGroupId
             }
             await deleteRule(params)
-            handleList(id)
+            handleList(id, pagination.index, pagination.size)
         } catch (error) {
             console.error(error)
         }
@@ -217,11 +217,6 @@ export const AlertRuleList = () => {
 
     const handleUpdateModalClose = () => {
         setUpdateVisible(false)
-    }
-
-    const handleUpdateModalOpen = (record) => {
-        setSelectedRow(record)
-        setUpdateVisible(true)
     }
 
     const onSearch = async (value) => {
@@ -237,9 +232,9 @@ export const AlertRuleList = () => {
             const res = await getRuleList(params)
 
             setPagination({
-                index: res.data.index,
-                size: res.data.size,
-                total: res.data.total,
+                index: res?.data?.index,
+                size: res?.data?.size,
+                total: res?.data?.total,
             });
 
             setList(res.data.list);
@@ -251,6 +246,14 @@ export const AlertRuleList = () => {
     const changeStatus = async ({ target: { value } }) => {
         setSelectRuleStatus(value)
     }
+
+    const handlePageChange = (page) => {
+        setPagination({ ...pagination, index: page.current, size: page.size });
+        handleList(id, page.current, page.size)
+    };
+
+    const handleShowTotal = (total, range) =>
+        `第 ${range[0]} - ${range[1]} 条 共 ${total} 条`;
 
     return (
         <>
@@ -324,6 +327,13 @@ export const AlertRuleList = () => {
                 <Table
                     columns={columns}
                     dataSource={list}
+                    pagination={{
+                        index: pagination.index ?? 1,
+                        size: pagination.size ?? 10,
+                        total: pagination?.total ?? 0,
+                        showTotal: handleShowTotal,
+                    }}
+                    onChange={handlePageChange}
                     scroll={{
                         y: height-400
                     }}

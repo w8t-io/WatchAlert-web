@@ -156,7 +156,6 @@ export const AlertRuleGroup = ({ }) => {
     }
 
     const onSearch = async (value) => {
-        console.log("===>",pagination)
         try {
             const params = {
                 index: pagination?.index,
@@ -200,10 +199,10 @@ export const AlertRuleGroup = ({ }) => {
             </div>
 
             <AlertRuleGroupCreateModal visible={createModalVisible} onClose={handleModalClose} type='create'
-                                       handleList={handleList}/>
+                                       handleList={handleList} pagination={pagination}/>
 
             <AlertRuleGroupCreateModal visible={updateModalVisible} onClose={handleUpdateModalClose}
-                                       selectedRow={selectedRow} type='update' handleList={handleList}/>
+                                       selectedRow={selectedRow} type='update' handleList={handleList} pagination={pagination}/>
 
             <div style={{overflowX: 'auto', marginTop: 10}}>
                 <Table
@@ -213,8 +212,6 @@ export const AlertRuleGroup = ({ }) => {
                         index: pagination.index ?? 1,
                         size: pagination.size ?? 10,
                         total: pagination?.total ?? 0,
-                        showQuickJumper: true,
-                        showSizeChanger: true,
                         showTotal: handleShowTotal,
                     }}
                     onChange={handlePageChange}

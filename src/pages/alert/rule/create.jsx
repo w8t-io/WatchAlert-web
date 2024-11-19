@@ -50,7 +50,7 @@ const MyFormItem = ({ name, ...props }) => {
     return <Form.Item name={concatName} {...props} />
 }
 
-export const AlertRule = ({ type, handleList, ruleGroupId }) => {
+export const AlertRule = ({ type, ruleGroupId }) => {
     const [form] = Form.useForm()
     const { id,ruleId } = useParams()
     const [selectedRow,setSelectedRow] = useState({})
@@ -340,7 +340,6 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
             }
 
             await createRule(params)
-            handleList(ruleGroupId)
         } catch (error) {
             console.error(error)
         }
@@ -385,7 +384,6 @@ export const AlertRule = ({ type, handleList, ruleGroupId }) => {
             }
 
             await updateRule(params)
-            handleList(ruleGroupId)
         } catch (error) {
             console.error(error)
         }
