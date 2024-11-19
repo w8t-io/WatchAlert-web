@@ -414,8 +414,6 @@ export const AlertHisEvent = () => {
                         current: pagination.current ?? 1,
                         pageSize: pagination.pageSize ?? 10,
                         total: pagination.total ?? 0,
-                        showQuickJumper: true,
-                        showSizeChanger: true,
                         showTotal: handleShowTotal,
                     }}
                     onChange={handlePageChange}

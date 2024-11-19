@@ -14,7 +14,7 @@ const MyFormItem = ({ name, ...props }) => {
     return <Form.Item name={concatName} {...props} />
 }
 
-export const AlertRuleGroupCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
+export const AlertRuleGroupCreateModal = ({ visible, onClose, selectedRow, type, handleList, pagination}) => {
     const [form] = Form.useForm()
 
     // 禁止输入空格
@@ -47,7 +47,7 @@ export const AlertRuleGroupCreateModal = ({ visible, onClose, selectedRow, type,
     const handleCreate = async (data) => {
         try {
             await createRuleGroup(data)
-            handleList()
+            handleList(pagination.index,pagination.size)
         } catch (error) {
             console.error(error)
         }
@@ -56,7 +56,7 @@ export const AlertRuleGroupCreateModal = ({ visible, onClose, selectedRow, type,
     const handleUpdate = async (data) => {
         try {
             await updateRuleGroup(data)
-            handleList()
+            handleList(pagination.index,pagination.size)
         } catch (error) {
             console.error(error)
         }
