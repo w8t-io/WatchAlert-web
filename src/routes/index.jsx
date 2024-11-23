@@ -22,14 +22,15 @@ import { AuditLog } from "../pages/audit";
 import { SystemSettings } from "../pages/settings";
 import { TenantDetail } from "../pages/tenant/detail";
 import { AlertRule } from "../pages/alert/rule/create";
-import { MonitorSSL } from "../pages/monitor/ssl";
-import { CreateMonitorSSLRule } from "../pages/monitor/ssl/create";
 import {Dashboards} from "../pages/dashboards/dashboard";
 import {Subscribe} from "../pages/subscribe";
 import {CreateSubscribeModel} from "../pages/subscribe/create";
 import {NoticeRecords} from "../pages/notice/history";
 import {CalendarApp} from "../pages/duty/calendar";
 import {AlertEvent} from "../pages/event";
+import {Probing} from "../pages/probing";
+import {CreateProbingRule} from "../pages/probing/create";
+import {OnceProbing} from "../pages/probing/once";
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default [
@@ -142,16 +143,20 @@ export default [
         element: <ComponentsContent name="系统设置" c={<SystemSettings/>}/>
     },
     {
-        path: '/monitor/ssl/list',
-        element: <ComponentsContent name="证书监控" c={<MonitorSSL/>} />
+        path: '/onceProbing',
+        element: <ComponentsContent name="及时拨测" c={<OnceProbing/>} />
     },
     {
-        path: '/monitor/ssl/create',
-        element: <ComponentsContent name="创建证书监控规则" c={<CreateMonitorSSLRule type="add"/>} />
+        path: '/probing',
+        element: <ComponentsContent name="拨测任务" c={<Probing/>} />
     },
     {
-        path: '/monitor/ssl/:id/edit',
-        element: <ComponentsContent name="编辑证书监控规则" c={<CreateMonitorSSLRule type="edit"/>} />
+        path: '/probing/create',
+        element: <ComponentsContent name="创建拨测规则" c={<CreateProbingRule type="add"/>} />
+    },
+    {
+        path: '/probing/:id/edit',
+        element: <ComponentsContent name="编辑拨测规则" c={<CreateProbingRule type="edit"/>} />
     },
     {
         path: '/subscribes',
