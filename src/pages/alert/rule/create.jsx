@@ -1,4 +1,18 @@
-import { List, Form, Input, Button, Switch, Radio, Divider, Select, Tooltip, InputNumber, Card,TimePicker } from 'antd'
+import {
+    List,
+    Form,
+    Input,
+    Button,
+    Switch,
+    Radio,
+    Divider,
+    Select,
+    Tooltip,
+    InputNumber,
+    Card,
+    TimePicker,
+    Typography
+} from 'antd'
 import React, { useState, useEffect, useRef } from 'react'
 import { QuestionCircleOutlined } from '@ant-design/icons'
 import {createRule, searchRuleInfo, updateRule} from '../../../api/rule'
@@ -1679,6 +1693,9 @@ export const AlertRule = ({ type, ruleGroupId }) => {
                                 value={secondsToDateObj(endTime)}
                             />
                         </div>
+                        <Typography.Text type="secondary" style={{ marginTop: '5px', fontSize: '12px' }}>
+                            {"> 默认情况下规则随时生效。如需指定生效时间，请选择具体的时间。"}
+                        </Typography.Text>
                     </MyFormItem>
 
                 </div>
