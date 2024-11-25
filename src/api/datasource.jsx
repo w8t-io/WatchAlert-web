@@ -99,11 +99,29 @@ async function deleteDatasource(params) {
     }
 }
 
+async function DatasourcePing(params) {
+    try {
+        const res = await http('post', `/api/w8t/datasource/dataSourcePing`, params);
+        message.open({
+            type: 'success',
+            content: '数据源测试通过',
+        });
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '数据源测试失败',
+        });
+        return error
+    }
+}
+
 export {
     getDatasourceList,
     searchDatasource,
     createDatasource,
     updateDatasource,
     deleteDatasource,
-    getDatasource
+    getDatasource,
+    DatasourcePing
 }

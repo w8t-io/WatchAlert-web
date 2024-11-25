@@ -1,4 +1,4 @@
-import { createDatasource, updateDatasource } from '../../api/datasource'
+import {createDatasource, DatasourcePing, updateDatasource} from '../../api/datasource'
 import {Modal, Form, Input, Button, Switch, Select, InputNumber, Alert, Drawer} from 'antd'
 import React, { useState, useEffect } from 'react'
 const { TextArea } = Input
@@ -115,28 +115,43 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
         setSubmitLoading(true)
     }
 
+    const handleTestConnection = async () => {
+        // 获取表单数据
+        const values = await form.validateFields().catch((err) => null);
+        if (!values) {
+            // 如果表单验证失败，直接返回
+            return;
+        }
+
+        try {
+           await DatasourcePing(values)
+        } catch (error) {
+            console.error('连接测试失败:', error);
+        }
+    };
+
     return (
         <Drawer title="创建数据源" open={visible} onClose={onClose}>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
                 <MyFormItem name="name" label="数据源名称"
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}>
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}>
                     <Input
                         value={spaceValue}
                         onChange={handleInputChange}
                         onKeyPress={handleKeyPress}
-                        disabled={type === 'update'} />
+                        disabled={type === 'update'}/>
                 </MyFormItem>
 
                 <MyFormItem name="type" label="数据源类型"
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}>
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}>
                     <Select
                         placeholder="请选择数据源类型"
                         style={{
@@ -192,7 +207,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                             message: '请输入正确的URL格式，且结尾不应包含"/"',
                                         },
                                     ]}>
-                            <Input />
+                            <Input/>
                         </MyFormItem>
 
                         <MyFormItem name="timeout" label="Timeout"
@@ -202,7 +217,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                         },
                                     ]}>
                             <InputNumber
-                                style={{ width: '100%' }}
+                                style={{width: '100%'}}
                                 addonAfter={<span>秒</span>}
                                 placeholder="10"
                                 min={1}
@@ -219,7 +234,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                             required: true,
                                         },
                                     ]}>
-                            <Input />
+                            <Input/>
                         </MyFormItem>
 
                         <MyFormItem name="alicloudAk" label="AccessKeyId"
@@ -228,7 +243,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                             required: true,
                                         },
                                     ]}>
-                            <Input />
+                            <Input/>
                         </MyFormItem>
 
                         <MyFormItem name="alicloudSk" label="AccessKeySecret"
@@ -237,7 +252,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                             required: true,
                                         },
                                     ]}>
-                            <Input />
+                            <Input/>
                         </MyFormItem>
                     </div>
                 }
@@ -251,7 +266,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                                 required: true,
                                             },
                                         ]}>
-                                <Input />
+                                <Input/>
                             </MyFormItem>
 
                             <MyFormItem name="accessKey" label="AccessKey"
@@ -260,7 +275,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                                 required: true,
                                             },
                                         ]}>
-                                <Input />
+                                <Input/>
                             </MyFormItem>
 
                             <MyFormItem name="secretKey" label="SecretKey"
@@ -269,7 +284,7 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                                 required: true,
                                             },
                                         ]}>
-                                <Input />
+                                <Input/>
                             </MyFormItem>
                         </MyFormItemGroup>
                     </div>
@@ -277,10 +292,10 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
 
                 {selectedType === 'Kubernetes' &&
                     <MyFormItem name="kubeConfig" label="认证配置"
-                        rules={[{
-                            required: true,
-                        }]}>
-                        <TextArea rows={15} placeholder="输入 Kubernetes 认证配置" />
+                                rules={[{
+                                    required: true,
+                                }]}>
+                        <TextArea rows={15} placeholder="输入 Kubernetes 认证配置"/>
                     </MyFormItem>
                 }
 
@@ -296,21 +311,21 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                                             message: '请输入正确的URL格式，且结尾不应包含"/"',
                                         },
                                     ]}>
-                            <Input />
+                            <Input/>
                         </MyFormItem>
 
                         <MyFormItem name="username" label="用户名">
-                            <Input />
+                            <Input/>
                         </MyFormItem>
 
                         <MyFormItem name="password" label="密码">
-                            <Input />
+                            <Input/>
                         </MyFormItem>
                     </MyFormItemGroup>
                 }
 
                 <MyFormItem name="description" label="描述">
-                    <Input />
+                    <Input/>
                 </MyFormItem>
 
                 <MyFormItem
@@ -319,10 +334,13 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
                     tooltip="启用/禁用"
                     valuePropName="checked"
                 >
-                    <Switch checked={enabled} onChange={setEnabled} />
+                    <Switch checked={enabled} onChange={setEnabled}/>
                 </MyFormItem>
 
-                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Button type="default" onClick={handleTestConnection}>
+                        连接测试
+                    </Button>
                     <Button type="primary" htmlType="submit" loading={submitLoading} onClick={handleSubmit}>
                         提交
                     </Button>
