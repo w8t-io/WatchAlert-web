@@ -9,10 +9,11 @@ const UserChangePass = ({ visible, onClose, userid, username }) => {
     // 提交
     const handleFormSubmit = async (values) => {
         try {
-            const query = {
-                "userid": userid
+            const params = {
+                ...values,
+                userid: userid
             }
-            await changeUserPass(query, values)
+            await changeUserPass(params)
         } catch (error) {
             console.error(error)
         }

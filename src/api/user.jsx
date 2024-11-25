@@ -109,13 +109,9 @@ async function checkUser(params) {
     }
 }
 
-async function changeUserPass(query, params) {
+async function changeUserPass(params) {
     try {
-        const queryString = Object.keys(query)
-            .map(key => params[key] !== undefined ? `${key}=${params[key]}` : '')
-            .filter(Boolean)
-            .join('&');
-        const res = await http('post', `/api/w8t/user/userChangePass?${queryString}`, params);
+        const res = await http('post', `/api/w8t/user/userChangePass`, params);
         message.open({
             type: 'success',
             content: '修改密码成功',

@@ -7,15 +7,14 @@ import { deleteUser, getUserList, searchUser } from '../../../api/user';
 const { Search } = Input;
 
 export const User = () => {
-    const [selectedRow, setSelectedRow] = useState(null);
-    const [updateVisible, setUpdateVisible] = useState(false);
-    const [changeVisible, setChangeVisible] = useState(false);
-    const [selectedUsername, setSelectedUsername] = useState(null);
-    const [selectedUserId, setSelectedUserId] = useState(null);
-    const [visible, setVisible] = useState(false);
-    const [list, setList] = useState([]);
+    const [selectedRow, setSelectedRow] = useState(null); // 当前选中行
+    const [updateVisible, setUpdateVisible] = useState(false); // 更新弹窗可见性
+    const [changeVisible, setChangeVisible] = useState(false); // 修改密码弹窗可见性
+    const [visible, setVisible] = useState(false); // 创建弹窗可见性
+    const [list, setList] = useState([]); // 用户列表
+    const [height, setHeight] = useState(window.innerHeight); // 动态表格高度
 
-    // 表头
+    // 表格列定义
     const columns = [
         {
             title: '用户名',
@@ -28,14 +27,14 @@ export const User = () => {
             dataIndex: 'email',
             key: 'email',
             width: 40,
-            render: (text) => (!text ? '-' : text),
+            render: (text) => text || '-',
         },
         {
             title: '手机号',
             dataIndex: 'phone',
             key: 'phone',
             width: 40,
-            render: (text) => (!text ? '-' : text),
+            render: (text) => text || '-',
         },
         {
             title: '创建人',
@@ -48,10 +47,7 @@ export const User = () => {
             dataIndex: 'create_at',
             key: 'create_at',
             width: 50,
-            render: (text) => {
-                const date = new Date(text * 1000);
-                return date.toLocaleString();
-            },
+            render: (text) => new Date(text * 1000).toLocaleString(),
         },
         {
             title: '操作',
@@ -59,27 +55,17 @@ export const User = () => {
             fixed: 'right',
             width: 30,
             render: (_, record) => (
-                list.length >= 1 ? (
+                list.length >= 1 && (
                     <div>
                         <Button
                             type="link"
-                            onClick={() => {
-                                setChangeVisible(true);
-                                setSelectedUserId(record.userid);
-                                setSelectedUsername(record.username);
-                            }}
+                            onClick={() => openChangePassModal(record)}
                             disabled={record.create_by === 'LDAP'}
                         >
                             重置密码
                         </Button>
-                        <UserChangePass
-                            visible={changeVisible}
-                            onClose={() => setChangeVisible(false)}
-                            userid={selectedUserId}
-                            username={selectedUsername}
-                        />
                         <Popconfirm
-                            title="Sure to delete?"
+                            title="确定删除此用户？"
                             onConfirm={() => handleDelete(record)}
                             disabled={record.username === 'admin'}
                         >
@@ -96,28 +82,19 @@ export const User = () => {
                             更新
                         </Button>
                     </div>
-                ) : null
+                )
             ),
         },
     ];
 
-    const [height, setHeight] = useState(window.innerHeight);
-
+    // 动态调整表格高度
     useEffect(() => {
-        // 定义一个处理窗口大小变化的函数
-        const handleResize = () => {
-            setHeight(window.innerHeight);
-        };
-
-        // 监听窗口的resize事件
+        const handleResize = () => setHeight(window.innerHeight);
         window.addEventListener('resize', handleResize);
-
-        // 在组件卸载时移除监听器
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    // 加载用户列表
     const handleList = async () => {
         try {
             const res = await getUserList();
@@ -127,33 +104,39 @@ export const User = () => {
         }
     };
 
+    // 删除用户
     const handleDelete = async (record) => {
         try {
-            const params = {
-                userid: record.userid,
-            };
-            await deleteUser(params);
+            await deleteUser({ userid: record.userid });
             handleList();
         } catch (error) {
             console.error(error);
         }
     };
 
+    // 打开更新用户弹窗
     const handleUpdateModalOpen = (record) => {
         setSelectedRow(record);
         setUpdateVisible(true);
     };
 
+    // 打开重置密码弹窗
+    const openChangePassModal = (record) => {
+        setSelectedRow(record); // 动态绑定当前选中用户
+        setChangeVisible(true);
+    };
+
+    // 搜索用户
     const onSearch = async (value) => {
         try {
-            const params = { query: value };
-            const res = await searchUser(params);
+            const res = await searchUser({ query: value });
             setList(res.data);
         } catch (error) {
             console.error(error);
         }
     };
 
+    // 初始化加载用户列表
     useEffect(() => {
         handleList();
     }, []);
@@ -161,21 +144,18 @@ export const User = () => {
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                    <Search
-                        allowClear
-                        placeholder="输入搜索关键字"
-                        onSearch={onSearch}
-                        style={{ width: 300 }}
-                    />
-                </div>
-                <div>
-                    <Button type="primary" onClick={() => setVisible(true)}>
-                        创建
-                    </Button>
-                </div>
+                <Search
+                    allowClear
+                    placeholder="输入搜索关键字"
+                    onSearch={onSearch}
+                    style={{ width: 300 }}
+                />
+                <Button type="primary" onClick={() => setVisible(true)}>
+                    创建
+                </Button>
             </div>
 
+            {/* 用户创建弹窗 */}
             <UserCreateModal
                 visible={visible}
                 onClose={() => setVisible(false)}
@@ -183,6 +163,7 @@ export const User = () => {
                 handleList={handleList}
             />
 
+            {/* 用户更新弹窗 */}
             <UserCreateModal
                 visible={updateVisible}
                 onClose={() => setUpdateVisible(false)}
@@ -191,11 +172,23 @@ export const User = () => {
                 handleList={handleList}
             />
 
+            {/* 重置密码弹窗 */}
+            {selectedRow && (
+                <UserChangePass
+                    visible={changeVisible}
+                    onClose={() => setChangeVisible(false)}
+                    userid={selectedRow.userid}
+                    username={selectedRow.username}
+                />
+            )}
+
+            {/* 用户表格 */}
             <div style={{ overflowX: 'auto', marginTop: 10 }}>
                 <Table
                     columns={columns}
                     dataSource={list}
-                    scroll={{ x: 1500, y: height-400 }}
+                    rowKey="userid"
+                    scroll={{ x: 1500, y: height - 400 }}
                 />
             </div>
         </>
