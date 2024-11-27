@@ -1,6 +1,7 @@
 import {createDatasource, DatasourcePing, updateDatasource} from '../../api/datasource'
-import {Modal, Form, Input, Button, Switch, Select, InputNumber, Alert, Drawer} from 'antd'
+import {Modal, Form, Input, Button, Switch, Select, InputNumber, Alert, Drawer, Space} from 'antd'
 import React, { useState, useEffect } from 'react'
+import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 const { TextArea } = Input
 const MyFormItemContext = React.createContext([])
 
@@ -46,10 +47,16 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
 
     useEffect(() => {
         if (selectedRow) {
+            const labelsArray = Object.entries(selectedRow.labels || {}).map(([key, value]) => ({
+                key,
+                value,
+            }));
+
             setSelectedType(selectedRow.type)
             form.setFieldsValue({
                 name: selectedRow.name,
                 type: selectedRow.type,
+                labels: labelsArray,
                 http: {
                     url: selectedRow.http.url,
                     timeout: selectedRow.http.timeout
@@ -89,14 +96,26 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
     }
 
     const handleFormSubmit = async (values) => {
+        // 将 labels 数组转换为对象格式
+        const formattedLabels = values.labels?.reduce((acc, { key, value }) => {
+            if (key) {
+                acc[key] = value;
+            }
+            return acc;
+        }, {});
 
         if (type === 'create') {
-            await handleCreate(values)
+            const params = {
+                ...values,
+                labels: formattedLabels,
+            }
+            await handleCreate(params)
         }
 
         if (type === 'update') {
             const params = {
                 ...values,
+                labels: formattedLabels,
                 id: selectedRow.id
             }
             await handleUpdate(params)
@@ -118,33 +137,112 @@ export const CreateDatasourceModal = ({ visible, onClose, selectedRow, type, han
     const handleTestConnection = async () => {
         // 获取表单数据
         const values = await form.validateFields().catch((err) => null);
+        const formattedLabels = values.labels?.reduce((acc, { key, value }) => {
+            if (key) {
+                acc[key] = value;
+            }
+            return acc;
+        }, {});
         if (!values) {
             // 如果表单验证失败，直接返回
             return;
         }
 
         try {
-           await DatasourcePing(values)
+            const params = {
+                ...values,
+                labels: formattedLabels
+            }
+           await DatasourcePing(params)
         } catch (error) {
             console.error('连接测试失败:', error);
         }
     };
 
     return (
-        <Drawer title="创建数据源" open={visible} onClose={onClose}>
+        <Drawer title="创建数据源" open={visible} onClose={onClose} size='large'>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
-                <MyFormItem name="name" label="数据源名称"
-                            rules={[
-                                {
-                                    required: true,
-                                },
-                            ]}>
+                <MyFormItem
+                    name="name"
+                    label="数据源名称"
+                    rules={[{required: true}]}>
                     <Input
                         value={spaceValue}
                         onChange={handleInputChange}
                         onKeyPress={handleKeyPress}
                         disabled={type === 'update'}/>
                 </MyFormItem>
+
+                <label>标签</label>
+                <Alert
+                    message="提示：可添加外部标签(external labels), 它将会添加到事件当中用于区分数据来源。"
+                    type="info"
+                    showIcon
+                    style={{ marginBottom: 20, marginTop:'10px' }}
+                />
+
+                <Form.List name="labels">
+                    {(fields, { add, remove }) => (
+                        <>
+                            {fields.map(({ key, name, ...restField }) => (
+                                <div
+                                    key={key}
+                                    style={{
+                                        display: 'flex',
+                                        marginBottom: 8,
+                                        gap: '8px', // 控制组件之间的间距
+                                        alignItems: 'center', // 垂直居中
+                                    }}
+                                >
+                                    {/* 键（key）输入框 */}
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'key']}
+                                        style={{ flex: 3 }} // 占比 3
+                                        rules={[{ required: true, message: '请输入标签键（key）' }]}
+                                    >
+                                        <Input placeholder="键（key）" />
+                                    </Form.Item>
+
+                                    {/* 值（value）输入框 */}
+                                    <Form.Item
+                                        {...restField}
+                                        name={[name, 'value']}
+                                        style={{ flex: 3 }} // 占比 3
+                                        rules={[{ required: true, message: '请输入标签值（value）' }]}
+                                    >
+                                        <Input placeholder="值（value）" />
+                                    </Form.Item>
+
+                                    {/* 删除按钮 */}
+                                    <MinusCircleOutlined
+                                        style={{
+                                            // flex: 1, // 占比 1
+                                            marginTop: '-25px',
+                                            display: 'flex',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            cursor: 'pointer',
+                                        }}
+                                        onClick={() => remove(name)}
+                                    />
+                                </div>
+                            ))}
+
+                            <Form.Item>
+                                <Button
+                                    type="dashed"
+                                    onClick={() => add()}
+                                    block
+                                    icon={<PlusOutlined />}
+                                    disabled={fields.length >= 10}
+                                >
+                                    添加标签
+                                </Button>
+                            </Form.Item>
+                        </>
+                    )}
+                </Form.List>
 
                 <MyFormItem name="type" label="数据源类型"
                             rules={[
