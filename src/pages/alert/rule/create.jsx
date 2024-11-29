@@ -302,7 +302,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
             resource: resource
         }
         const res = await getKubernetesReasonList(params)
-        const options = res.data.map((item) => ({
+        const options = res.data?.map((item) => ({
             label: item.typeCN,
             value: item.type
         }))
@@ -439,7 +439,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
                 type: dsType
             }
             const res = await searchDatasource(params)
-            const newData = res.data.map((item) => ({
+            const newData = res.data?.map((item) => ({
                 label: item.name,
                 value: item.id,
                 url: item.http.url,
@@ -451,12 +451,6 @@ export const AlertRule = ({ type, ruleGroupId }) => {
             console.error(error)
         }
     }
-
-    const formRef = useRef(null);
-
-    const handleReset = () => {
-        formRef.current.reset();
-    };
 
     // 创建
     const handleFormSubmit = async (values) => {
@@ -470,15 +464,10 @@ export const AlertRule = ({ type, ruleGroupId }) => {
         window.history.back()
     }
 
-    // 获取数据源
-    const handleGetDatasourceData = async (data) => {
-        setSelectedType(data)
-    }
-
     // 获取通知对象
     const handleGetNoticeData = async () => {
         const res = await getNoticeList()
-        const newData = res.data.map((item) => ({
+        const newData = res.data?.map((item) => ({
             label: item.name,
             value: item.uuid
         }))
@@ -492,7 +481,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
         }
         const res = await getJaegerService(params)
 
-        const newData = res.data.data.map((item) => ({
+        const newData = res.data.data?.map((item) => ({
             label: item,
             value: item
         }))
@@ -652,14 +641,10 @@ export const AlertRule = ({ type, ruleGroupId }) => {
         setErrors(newErrors);
     };
 
-    const secondsToMoment = (seconds) => {
-        return moment.utc(seconds * 1000); // 将秒转换为毫秒，并使用 UTC 时间
-    };
-
     const handleGetMetricTypes = async() =>{
         try{
             const res = await getMetricTypes()
-            const ops = res.data.map((item) =>{
+            const ops = res.data?.map((item) =>{
                 return {
                     label: item,
                     value: item,
@@ -674,7 +659,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
     const handleGetMetricNames = async(params) =>{
         try{
             const res = await getMetricNames(params)
-            const ops = res.data.map((item) =>{
+            const ops = res.data?.map((item) =>{
                 return {
                     label: item,
                     value: item,
@@ -689,7 +674,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
     const handleGetStatistics = async() =>{
         try{
             const res = await getStatistics()
-            const ops = res.data.map((item) =>{
+            const ops = res.data?.map((item) =>{
                 return {
                     label: item,
                     value: item,
@@ -704,7 +689,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
     const handleGetDimensions = async(params) =>{
         try{
             const res = await getDimensions(params)
-            const ops = res.data.map((item) =>{
+            const ops = res.data?.map((item) =>{
                 return {
                     label: item,
                     value: item,
@@ -719,7 +704,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
     const handleGetRdsInstances = async(params) =>{
         try{
             const res = await getRdsInstances(params)
-            const ops = res.data.map((item) =>{
+            const ops = res.data?.map((item) =>{
                 return {
                     label: item,
                     value: item,
@@ -737,7 +722,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
             if (res.data === null){
                 setEndpointOptions([])
             }
-            const ops = res.data.map((item) =>{
+            const ops = res.data?.map((item) =>{
                 return {
                     label: item,
                     value: item,
@@ -750,7 +735,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
     }
 
     const onChangeSeverity = (e) => {
-        setSeverityValue(e.target.value)
+        setSeverityValue(e.target?.value)
     }
 
     const handleGetPromQL = () =>{
@@ -780,7 +765,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
         }
         const res = await queryPromMetrics(params)
         if (res.code === 200 && res.data && res.data.data && res.data.data.result) {
-            const formattedData = res.data.data.result.map(item => ({
+            const formattedData = res.data.data.result?.map(item => ({
                 metric: item.metric,
                 value: item.value
             }));
@@ -792,7 +777,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
     const handleGetKubernetesEventTypes = async() =>{
         try{
             const res = await getKubernetesResourceList()
-            const ops = res.data.map((item) =>{
+            const ops = res.data?.map((item) =>{
                 return {
                     label: item,
                     value: item,
@@ -887,7 +872,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
                         <div>
                             <p>数据源类型</p>
                             <div style={{display: 'flex', gap: '10px'}}>
-                                {cards.map((card, index) => (
+                                {cards?.map((card, index) => (
                                     <Card
                                         key={index}
                                         style={{
@@ -961,7 +946,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
                                     </MyFormItem>
 
                                     <MyFormItem name="" label="* 表达式" rules={[{required: !exprRule}]}>
-                                        {exprRule.map((label, index) => (
+                                        {exprRule?.map((label, index) => (
                                             <div className="rule-item" key={index} style={{gap: '10px'}}>
                                                 <MyFormItem
                                                     name={['rules', index, 'severity']}
@@ -1511,7 +1496,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
                                         value={filterTags}
                                         onChange={handleChangeFilterTags}
                                     >
-                                        {filterTags.map((tag) => (
+                                        {filterTags?.map((tag) => (
                                             <Option key={tag} value={tag}>
                                                 {tag}
                                             </Option>
@@ -1582,7 +1567,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
                             <span>筛选</span>
                             <div className="es-rule-config-container">
                                 <MyFormItem name="" label="" rules={[{required: !esfilter}]}>
-                                    {esfilter.map((label, index) => (
+                                    {esfilter?.map((label, index) => (
                                         <div className="rule-item" key={index} style={{gap: '10px'}}>
                                             <MyFormItem
                                                 name={['filter', index, 'field']}
@@ -1773,7 +1758,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
                             <label style={{marginRight: '27%'}}>* 通知对象</label>
                             <label>操作</label>
                         </div>) : null}
-                        {noticeLabels.map((label, index) => (
+                        {noticeLabels?.map((label, index) => (
                             <div style={{display: 'flex', alignItems: 'center', marginTop: '10px'}}>
                                 <Input
                                     name={`[${index}].key`}
