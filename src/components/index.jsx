@@ -153,12 +153,11 @@ export const ComponentsContent = (props) => {
                 </div>
 
                 {/* 内容区 */}
-                <Layout className="site-layout" >
+                <Layout className="site-layout">
                     {/* 右侧顶部 */}
-                    <Layout style={{ marginLeft: '-216px', padding: 0, borderRadius: '12px', }}>
+                    <Layout style={{marginLeft: '-216px', padding: 0, borderRadius: '12px',}}>
                         <Header
                             style={{
-                                height: '60px',
                                 margin: '16px 16px 0',
                                 background: colorBgContainer,
                                 borderRadius: borderRadiusLG,
@@ -184,17 +183,18 @@ export const ComponentsContent = (props) => {
                                 position: 'absolute',
                                 top: '12px',
                                 right: '35px',
-                                bottom: '10px'}}>
-                               <div style={{ marginRight: '20px', marginTop: '5px'}}>
-                                   <Dropdown overlay={menu} trigger={['click']} overlayStyle={{marginRight:'100px'}}>
-                                       <Typography.Link style={{fontSize: 13, color: '#404142'}}>
-                                           <Space>
-                                               {<TeamOutlined />}切换租户
-                                               <DownOutlined/>
-                                           </Space>
-                                       </Typography.Link>
-                                   </Dropdown>
-                               </div>
+                                bottom: '10px'
+                            }}>
+                                <div style={{marginRight: '20px', marginTop: '5px'}}>
+                                    <Dropdown overlay={menu} trigger={['click']} overlayStyle={{marginRight: '100px'}}>
+                                        <Typography.Link style={{fontSize: 13, color: '#404142'}}>
+                                            <Space>
+                                                {<TeamOutlined/>}切换租户
+                                                <DownOutlined/>
+                                            </Space>
+                                        </Typography.Link>
+                                    </Dropdown>
+                                </div>
 
                                 {/* 分割线 */}
                                 <div style={{
@@ -203,11 +203,10 @@ export const ComponentsContent = (props) => {
                                     width: '1px',
                                     height: '45px', // 设置分割线的高度
                                     backgroundColor: '#e0e0e0', // 分割线颜色
-                                    // margin: '0 20px', // 分割线左右的间距
-                                }} />
+                                }}/>
 
                                 {userInfo ? (
-                                    <div style={{ marginTop: '18px' }}>
+                                    <div style={{marginTop: '18px'}}>
                                         <Popover content={content} trigger="hover" placement="bottom">
                                             <Avatar
                                                 style={{
@@ -234,7 +233,7 @@ export const ComponentsContent = (props) => {
                     <Layout>
                         <Content
                             style={{
-                                height: 'calc(97vh - 100px )',
+                                height: 'calc(97vh - 100px)',
                                 margin: '0px 16px 0',
                                 background: colorBgContainer,
                                 borderRadius: borderRadiusLG,
@@ -252,23 +251,16 @@ export const ComponentsContent = (props) => {
                             </div>
                             <div
                                 className="site-layout-background"
-                                style={{padding: 24, textAlign: 'center', height: '10px'}}
+                                style={{padding: 24, textAlign: 'center'}}
                             >
                                 <Divider style={{marginTop: '-10px', marginBottom: '40px'}}/>
                                 {c}
                             </div>
                         </Content>
-                        <span style={{textAlign:'center',color:'#B1B1B1FF',marginLeft:'-200px'}}> WatchAlert 轻量级一站式监控报警服务!</span>
                     </Layout>
-
-                    {/*<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '1vh' }}>*/}
-                    {/*    <a href="https://github.com/w8t-io/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">*/}
-                    {/*        <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '2vh', height: '2vh', marginRight: '5px' }} />*/}
-                    {/*    </a>*/}
-                    {/*</div>*/}
-
+                    <span style={{textAlign: 'center', color: '#B1B1B1FF', marginLeft: '-200px'}}> WatchAlert 轻量级一站式监控报警服务!</span>
                 </Layout>
-            </Layout >
+            </Layout>
         </>
     )
 

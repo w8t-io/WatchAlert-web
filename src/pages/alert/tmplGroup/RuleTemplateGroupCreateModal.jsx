@@ -1,7 +1,7 @@
 import { Modal, Form, Input, Button } from 'antd'
 import React, { useState, useEffect } from 'react'
-import { createRuleTmplGroup } from '../../../api/ruleTmpl'
-
+import {createRuleTmplGroup, updateRuleTmplGroup} from '../../../api/ruleTmpl'
+import {useParams} from "react-router-dom";
 
 const MyFormItemContext = React.createContext([])
 
@@ -15,7 +15,7 @@ const MyFormItem = ({ name, ...props }) => {
     return <Form.Item name={concatName} {...props} />
 }
 
-const RuleTemplateGroupCreateModal = ({ visible, onClose, selectedRow, type, handleList }) => {
+const RuleTemplateGroupCreateModal = ({ visible, onClose, selectedRow, openType, tmplType, handleList }) => {
     const [form] = Form.useForm()
 
     // 禁止输入空格
@@ -39,6 +39,7 @@ const RuleTemplateGroupCreateModal = ({ visible, onClose, selectedRow, type, han
             form.setFieldsValue({
                 id: selectedRow.id,
                 name: selectedRow.name,
+                type: selectedRow.type,
                 description: selectedRow.description,
             })
         }
@@ -47,7 +48,25 @@ const RuleTemplateGroupCreateModal = ({ visible, onClose, selectedRow, type, han
 
     const handleCreate = async (data) => {
         try {
-            await createRuleTmplGroup(data)
+            const params = {
+                ...data,
+                type: tmplType,
+            }
+            await createRuleTmplGroup(params)
+            handleList()
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    const handleUpdate = async (data) => {
+        try {
+            const params = {
+                ...data,
+                id: selectedRow.id,
+                type: selectedRow.type,
+            }
+            await updateRuleTmplGroup(params)
             handleList()
         } catch (error) {
             console.error(error)
@@ -55,9 +74,12 @@ const RuleTemplateGroupCreateModal = ({ visible, onClose, selectedRow, type, han
     }
 
     const handleFormSubmit = async (values) => {
-
-        if (type === 'create') {
+        if (openType === 'create') {
             await handleCreate(values)
+        }
+
+        if (openType === 'update') {
+            await handleUpdate(values)
         }
 
         // 关闭弹窗
@@ -68,11 +90,7 @@ const RuleTemplateGroupCreateModal = ({ visible, onClose, selectedRow, type, han
         <Modal visible={visible} onCancel={onClose} footer={null}>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
                 <MyFormItem name="name" label="名称"
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
+                    rules={[{required: true}]}
                 >
                     <Input
                         value={spaceValue}

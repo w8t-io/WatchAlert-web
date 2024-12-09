@@ -1,12 +1,18 @@
-import { Button, Input, Table, Popconfirm } from 'antd';
+import {Button, Input, Table, Popconfirm, Divider, Layout, Menu} from 'antd';
 import React, { useState, useEffect } from 'react';
 import RuleTemplateGroupCreateModal from './RuleTemplateGroupCreateModal';
-import { Link } from 'react-router-dom';
+import {Link, useParams} from 'react-router-dom';
 import { deleteRuleTmplGroup, getRuleTmplGroupList } from '../../../api/ruleTmpl';
+import { ReactComponent as Metric } from "../assets/metric.svg";
+import { ReactComponent as Log } from "../assets/log.svg";
+import { ReactComponent as Trace } from "../assets/trace.svg";
+import { ReactComponent as Event } from "../assets/event.svg";
 
 const { Search } = Input;
 
 export const RuleTemplateGroup = () => {
+    const { tmplType } = useParams()
+    const [selectedType, setSelectedType] = useState(tmplType)
     const [selectedRow, setSelectedRow] = useState(null);
     const [updateVisible, setUpdateVisible] = useState(false);
     const [visible, setVisible] = useState(false);
@@ -26,7 +32,7 @@ export const RuleTemplateGroup = () => {
             render: (text, record) => (
                 <div>
                     <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <Link to={`/ruleTemplateGroup/${record.name}/templates`}>{text}</Link>
+                        <Link to={`/tmplType/${record.type}/${record.name}/templates`}>{text}</Link>
                     </div>
                 </div>
             ),
@@ -52,6 +58,11 @@ export const RuleTemplateGroup = () => {
                         <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record)}>
                             <a>删除</a>
                         </Popconfirm>
+
+                        <Button
+                            type="link" onClick={() => handleUpdateModalOpen(record)} >
+                            更新
+                        </Button>
                     </div>
                 ) : null,
         },
@@ -60,6 +71,8 @@ export const RuleTemplateGroup = () => {
     const [height, setHeight] = useState(window.innerHeight);
 
     useEffect(() => {
+        setSelectedType(tmplType)
+
         // 定义一个处理窗口大小变化的函数
         const handleResize = () => {
             setHeight(window.innerHeight);
@@ -75,7 +88,10 @@ export const RuleTemplateGroup = () => {
     }, []);
 
     const handleList = async () => {
-        const res = await getRuleTmplGroupList();
+        const params = {
+            type: selectedType,
+        }
+        const res = await getRuleTmplGroupList(params);
         setList(res.data);
     };
 
@@ -89,7 +105,7 @@ export const RuleTemplateGroup = () => {
 
     useEffect(() => {
         handleList();
-    }, [pagination.index, pagination.size]);
+    }, [pagination.index, pagination.size, selectedType]);
 
     const handleModalClose = () => setVisible(false);
 
@@ -98,6 +114,7 @@ export const RuleTemplateGroup = () => {
     const onSearch = async (value) => {
         try {
             const params = {
+                type: selectedType,
                 index: pagination.index,
                 size: pagination.size,
                 query: value,
@@ -117,39 +134,131 @@ export const RuleTemplateGroup = () => {
         }
     }
 
+    const menuItems = [
+        {
+            key: "Metrics",
+            label: "Metrics",
+            icon: <Metric style={{ height: "20px", width: "20px" }} />,
+        },
+        {
+            key: "Logs",
+            label: "Logs",
+            icon: <Log style={{ height: "20px", width: "20px" }} />,
+        },
+        {
+            key: "Traces",
+            label: "Traces",
+            icon: <Trace style={{ height: "20px", width: "20px" }} />,
+        },
+        {
+            key: "Events",
+            label: "Events",
+            icon: <Event style={{ height: "20px", width: "20px" }} />,
+        },
+    ];
+
+    // 处理菜单点击事件
+    const handleClick = (e) => {
+        const type = e.key; // 获取点击的类型
+        setSelectedType(type)
+        const pathname = `/tmplType/${type}/group`;
+        window.history.pushState({}, "", pathname);
+    };
+
+    const handleUpdateModalOpen = (record) => {
+        setUpdateVisible(true)
+        setSelectedRow(record)
+        console.log(record)
+    }
+
     return (
-        <>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                    <Search
-                        allowClear
-                        placeholder="输入搜索关键字"
-                        onSearch={onSearch}
-                        style={{ width: 300 }}
-                    />
-                </div>
-                <div>
-                    <Button type="primary" onClick={() => setVisible(true)}>
-                        创建
-                    </Button>
-                </div>
+        <div style={{display: 'flex'}}>
+            <div style={{
+                width: '200px' // 调整此处宽度以适应您的需求
+            }}>
+                <Layout.Sider
+                    style={{
+                        background: "white",
+                        borderRadius: "8px",
+                        marginLeft: "-10px",
+                        marginTop: "-5px",
+                    }}
+                >
+                    <Menu
+                        onClick={handleClick}
+                        mode="vertical"
+                        style={{ border: "none", width: "180px" }}
+                    >
+                        {menuItems.map((item) => (
+                            <Menu.Item key={item.key}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "10px", // 间距调整
+                                        fontSize: "14px", // 字体大小调整
+                                    }}
+                                >
+                                    {item.icon}
+                                    {item.label}
+                                </div>
+                            </Menu.Item>
+                        ))}
+                    </Menu>
+                </Layout.Sider>
             </div>
 
             <div>
-                <RuleTemplateGroupCreateModal visible={visible} onClose={handleModalClose} type="create" handleList={handleList} />
-                <RuleTemplateGroupCreateModal visible={updateVisible} onClose={handleUpdateModalClose} selectedRow={selectedRow} type="update" handleList={handleList} />
-            </div>
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    {/* 树形分割线 */}
+                    <Divider type="vertical" style={{
+                        position: 'absolute',
+                        marginTop: '160px',
+                        marginLeft: '-13px',
+                        height: '75%',
+                    }}/>
+                </div>
 
-            <div style={{ overflowX: 'auto', marginTop: 10 }}>
-                <Table
-                    columns={columns}
-                    dataSource={list}
-                    scroll={{
-                        x: 1000,
-                        y: height-400
-                    }}
-                />
+                <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                    <div>
+                        <Search
+                            allowClear
+                            placeholder="输入搜索关键字"
+                            onSearch={onSearch}
+                            style={{width: 300}}
+                        />
+                    </div>
+                    <div>
+                        <Button type="primary" onClick={() => setVisible(true)}>
+                            创建
+                        </Button>
+                    </div>
+                </div>
+
+                <div>
+                    <RuleTemplateGroupCreateModal
+                        visible={visible}
+                        onClose={handleModalClose}
+                        openType="create"
+                        tmplType={selectedType}
+                        handleList={handleList}/>
+                    <RuleTemplateGroupCreateModal
+                        visible={updateVisible}
+                        onClose={handleUpdateModalClose}
+                        tmplType={selectedType}
+                        selectedRow={selectedRow}
+                        openType="update"
+                        handleList={handleList}/>
+                </div>
+
+                <div style={{overflowX: 'auto', marginTop: 10}}>
+                    <Table
+                        columns={columns}
+                        dataSource={list}
+                        scroll={{x: 1000, y: height - 400}}
+                    />
+                </div>
             </div>
-        </>
+        </div>
     );
 };

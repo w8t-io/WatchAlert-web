@@ -75,12 +75,12 @@ export default [
         element: <ComponentsContent name="历史告警" c={<AlertHisEvent />} />
     },
     {
-        path: '/ruleTemplateGroup',
+        path: '/tmplType/:tmplType/group',
         element: <ComponentsContent name="规则模版组" c={<RuleTemplateGroup />} />,
     },
     {
-        path: '/ruleTemplateGroup/:ruleGroupName/templates',
-        element: <ComponentsContent name="告警模版" c={<RuleTemplate />} />
+        path: '/tmplType/:tmplType/:ruleGroupName/templates',
+        element: <ComponentsContent name="规则模版" c={<RuleTemplate />} />
     },
     {
         path: '/noticeObjects',

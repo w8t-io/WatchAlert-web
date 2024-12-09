@@ -33,11 +33,12 @@ export const theme = EditorView.theme({
     '&': {
         '&.cm-focused': {
             outline: 'none',
-            outline_fallback: 'none',
+            borderColor: '#40a9ff',
+            boxShadow: '0 0 0 2px rgba(24, 144, 255, 0.2)',
         },
     },
     '.cm-scroller': {
-        overflow: 'hidden',
+        overflow: 'visible',
         fontFamily: '"DejaVu Sans Mono", monospace',
     },
     '.cm-placeholder': {
@@ -82,7 +83,7 @@ export const theme = EditorView.theme({
         color: '#999',
     },
 
-    '.cm-tooltip.cm-completionInfo': {
+    '.cm-tooltip.cm-tooltip-completionInfo': {
         marginTop: '-11px',
         padding: '10px',
         fontFamily: "'Open Sans', 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;",
