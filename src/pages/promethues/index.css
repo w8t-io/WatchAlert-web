@@ -3,27 +3,35 @@
 }
 
 .cm-expression-input {
-    width: 100%; /* 固定宽度 */
-    height: 32px; /* 固定高度 */
-    padding: 1px 10px; /* 内边距 */
-    line-height: 1.58;
-    background-color: #ffffff; /* 底部背景色 */
-    border-width: 1px;
-    border-style: solid;
-    border-color: #d9d9d9;
-    border-radius: 6px; /* 边框圆角 */
-    box-sizing: border-box; /* 盒子模型 */
+    width: 100%;
+    min-height: 32px;
+    padding: 1px 10px;
+    background-color: #ffffff;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
-.cm-expression-input::after {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 5px; /* 设置底部颜色的高度 */
-    background-color: #ffffff; /* 底部背景色 */
-    border-bottom: 1px solid #ccc; /* 底部边框样式 */
-    border-radius: 0 0 4px 4px; /* 底部圆角 */
+.cm-scroller {
+    overflow: visible !important;
+    min-height: 32px;
+    height: auto !important;
+    padding: 0;
+}
+
+.cm-content {
+    min-height: 32px;
+    height: auto !important;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    padding: 0;
+}
+
+.cm-line {
+    padding: 0;
 }
 
 .promInputContent {

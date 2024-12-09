@@ -1,19 +1,40 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Input, Table, Popconfirm, message } from 'antd'
-import RuleTemplateCreateModal from './RuleTemplateCreateModal'
-import { useParams } from 'react-router-dom'
-import {deleteRuleTmpl, getRuleTmplList} from '../../../api/ruleTmpl'
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import {Button, Input, Table, Popconfirm, message, Modal, Select, Form} from 'antd';
+import RuleTemplateCreateModal from './RuleTemplateCreateModal';
+import {useParams, useNavigate} from 'react-router-dom';
+import {deleteRuleTmpl, getRuleTmplList} from '../../../api/ruleTmpl';
+import {getRuleGroupList} from "../../../api/rule";
+import { useRule } from '../../../context/RuleContext';
 
-const { Search } = Input
+const MyFormItemContext = React.createContext([])
+const { Search } = Input;
+
+function toArr(str) {
+    return Array.isArray(str) ? str : [str]
+}
+
+// 表单
+const MyFormItem = ({ name, ...props }) => {
+    const prefixPath = React.useContext(MyFormItemContext)
+    const concatName = name !== undefined ? [...prefixPath, ...toArr(name)] : undefined
+    return <Form.Item name={concatName} {...props} />
+}
 
 export const RuleTemplate = () => {
-    const [selectedRow, setSelectedRow] = useState(null)
-    const [viewVisible, setViewVisible] = useState(false)
-    const [visible, setVisible] = useState(false)
-    const [list, setList] = useState([])
-    const { ruleGroupName } = useParams()
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [viewVisible, setViewVisible] = useState(false);
+    const [visible, setVisible] = useState(false);
+    const [updateVisible, setUpdateVisible] = useState(false);
+    const [openSelectedRuleGroupVisible, setOpenSelectedRuleGroupVisible] = useState(false);
+    const [list, setList] = useState([]);
+    const { tmplType, ruleGroupName } = useParams();
+    const [height, setHeight] = useState(window.innerHeight);
+    const [ruleGroupOptions, setRuleGroupOptions] = useState([]);
+    const [selectedRuleGroup, setSelectedRuleGroup] = useState(null);
+    const navigate = useNavigate();
+    const { setRuleTemplate } = useRule();
 
-    const columns = [
+    const columns = useMemo(() => [
         {
             title: '模版名称',
             dataIndex: 'ruleName',
@@ -24,9 +45,7 @@ export const RuleTemplate = () => {
                     <div style={{ display: 'flex', alignItems: 'center' }}>
                         <a
                             style={{ cursor: 'pointer' }}
-                            onClick={() =>
-                                handleRuleNameClick(record)
-                            }>
+                            onClick={() => handleRuleNameClick(record)}>
                             {text}
                         </a>
                     </div>
@@ -41,96 +60,135 @@ export const RuleTemplate = () => {
         },
         {
             title: '告警事件详情',
-            dataIndex: 'annotations',
-            key: 'annotations',
-            render: (text) => <div>{text.length > 50 ? `${text.slice(0, 50)}......` : text}</div>,
+            key: 'prometheusConfig.annotations',
+            render: (record) => (
+                <div>
+                    {record.prometheusConfig?.annotations.length > 100 ? `${record.prometheusConfig?.annotations.slice(0,100)}...`: record.prometheusConfig?.annotations || '-'}
+                </div>
+            ),
         },
         {
             title: '操作',
             dataIndex: 'operation',
-            width: 100,
+            width: 160,
             fixed: 'right',
             render: (_, record) =>
                 list.length >= 1 ? (
                     <div>
-                        <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(_, record)}>
+                        <Popconfirm title="Sure to delete?" onConfirm={() => handleDelete(record)}>
                             <a>删除</a>
                         </Popconfirm>
+
+                        <Button type="link" onClick={() => handleUpdateTmpl(record)}>更新</Button>
+
+                        <Button type="link" onClick={() => handleOpenSelectedRuleGroup(record)} style={{padding: '0px'}}>应用</Button>
                     </div>
                 ) : null,
         },
-    ]
-    const [height, setHeight] = useState(window.innerHeight);
+    ], [list]);
 
     useEffect(() => {
-        // 定义一个处理窗口大小变化的函数
-        const handleResize = () => {
-            setHeight(window.innerHeight);
-        };
-
-        // 监听窗口的resize事件
+        const handleResize = () => setHeight(window.innerHeight);
         window.addEventListener('resize', handleResize);
-
-        // 在组件卸载时移除监听器
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     useEffect(() => {
-        handleList()
+        handleList();
+    }, [tmplType, ruleGroupName]);
+
+    const handleRuleNameClick = useCallback((record) => {
+        setSelectedRow(record);
+        setViewVisible(true);
+    }, []);
+
+    const handleUpdateTmpl = useCallback( (record) => {
+        setSelectedRow(record)
+        setUpdateVisible(true);
     }, [])
 
-    const handleRuleNameClick = (record) => {
-        setViewVisible(true)
-        setSelectedRow(record)
+    const handleList = useCallback(async () => {
+        const params = { type: tmplType, ruleGroupName };
+        const res = await getRuleTmplList(params);
+        setList(res.data);
+    }, [tmplType, ruleGroupName]);
 
-    }
-
-    const handleList = async () => {
+    const handleGetRuleGroupList = useCallback( async () => {
         const params = {
-            "ruleGroupName": ruleGroupName
+            index: 1,
+            size: 9999,
         }
-        const res = await getRuleTmplList(params)
-        console.log(res)
-        setList(res.data)
-    }
+        const res = await getRuleGroupList(params);
+        const newData = res.data.list.map((item) => ({
+            label: item.name,
+            value: item.id,
+        }))
+        setRuleGroupOptions(newData)
+    }, [])
 
-    // 删除
-    const handleDelete = async (_, record) => {
+    const handleDelete = useCallback(async (record) => {
         try {
             const params = {
                 ruleGroupName: record.ruleGroupName,
-                ruleName: record.ruleName,
-            }
-            await deleteRuleTmpl(params)
-            handleList()
+                ruleName: record.ruleName
+            };
+            await deleteRuleTmpl(params);
+            handleList();
         } catch (error) {
-            message.error(error)
+            message.error(error);
         }
-    }
+    }, [handleList]);
 
-    const handleViewModalClose = () => {
-        setViewVisible(false)
-    }
+    const handleViewModalClose = useCallback(() => setViewVisible(false), []);
 
-    const handleModalClose = () => {
-        setVisible(false)
-    }
+    const handleModalClose = useCallback(() => setVisible(false), []);
 
-    const onSearch = async (value) => {
+    const handleUpdateModalClose = useCallback(() => setUpdateVisible(false), []);
+
+    const onSearch = useCallback(async (value) => {
         try {
             const params = {
-                ruleGroupName: ruleGroupName,
+                ruleGroupName,
                 query: value,
-            }
-
-            const res = await getRuleTmplList(params)
+                type: tmplType,
+            };
+            const res = await getRuleTmplList(params);
             setList(res.data);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
-    }
+    }, [ruleGroupName]);
+
+    const handleOpenSelectedRuleGroup = useCallback((record) => {
+        setSelectedRow(record)
+        setOpenSelectedRuleGroupVisible(true)
+    }, []);
+
+    const handleCloseSelectedRuleGroup = useCallback(() => setOpenSelectedRuleGroupVisible(false), []);
+
+    const handleSelectRuleGroupChange = useCallback((_, value)=> {setSelectedRuleGroup(value.value)},[])
+
+    const handleSubmitUseTmplToRule = useCallback(() => {
+        if (!selectedRuleGroup || !selectedRow) {
+            message.error('请选择规则组');
+            return;
+        }
+
+        // 准备模板数据
+        const templateData = {
+            ...selectedRow,
+            ruleGroupId: selectedRuleGroup.value,
+            ruleGroupName: selectedRuleGroup.label
+        };
+
+        // 将数据存储到 Context 中
+        setRuleTemplate(templateData);
+
+        // 跳转到创建页面
+        navigate(`/ruleGroup/${selectedRuleGroup}/rule/add`);
+        handleCloseSelectedRuleGroup();
+    }, [selectedRuleGroup, selectedRow, setRuleTemplate, navigate]);
+
     return (
         <>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -144,19 +202,70 @@ export const RuleTemplate = () => {
                 </div>
             </div>
 
-            <RuleTemplateCreateModal visible={visible} onClose={handleModalClose} type="create" handleList={handleList} ruleGroupName={ruleGroupName} />
+            { openSelectedRuleGroupVisible && (
+                <div>
+                    <Modal visible={openSelectedRuleGroupVisible} onCancel={handleCloseSelectedRuleGroup} footer={null}>
+                        <p style={{marginTop: '-2px', fontSize: '15px', fontWeight: 'bold',}}>应用</p>
+                        <MyFormItem
+                            label="告警规则组"
+                            rules={[{required: true}]}
+                            labelCol={{span: 24}}
+                            wrapperCol={{span: 24}}
+                        >
+                            <Select
+                                showSearch
+                                placeholder="将规则模版应用到哪个规则组中"
+                                options={ruleGroupOptions}
+                                onClick={handleGetRuleGroupList}
+                                onChange={handleSelectRuleGroupChange}
+                            />
+                        </MyFormItem>
 
-            <RuleTemplateCreateModal visible={viewVisible} onClose={handleViewModalClose} selectedRow={selectedRow} type='view' handleList={handleList} ruleGroupName={ruleGroupName} />
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <Button onClick={handleCloseSelectedRuleGroup} style={{marginRight: '10px'}}>
+                                取消
+                            </Button>
+                            <Button type="primary" onClick={handleSubmitUseTmplToRule}>
+                                提交
+                            </Button>
+                        </div>
+                    </Modal>
+                </div>
+            )}
 
-            <div style={{ overflowX: 'auto', marginTop: 10}}>
+            <RuleTemplateCreateModal
+                visible={visible}
+                onClose={handleModalClose}
+                type="create"
+                handleList={handleList}
+                ruleGroupName={ruleGroupName}
+            />
+
+            <RuleTemplateCreateModal
+                visible={updateVisible}
+                onClose={handleUpdateModalClose}
+                selectedRow={selectedRow}
+                type="update"
+                handleList={handleList}
+                ruleGroupName={ruleGroupName}
+            />
+
+            <RuleTemplateCreateModal
+                visible={viewVisible}
+                onClose={handleViewModalClose}
+                selectedRow={selectedRow}
+                type="view"
+                handleList={handleList}
+                ruleGroupName={ruleGroupName}
+            />
+
+            <div style={{ overflowX: 'auto', marginTop: 10 }}>
                 <Table
                     columns={columns}
                     dataSource={list}
-                    scroll={{
-                        x: 1000,
-                        y: height-400
-                    }} />
+                    scroll={{ x: 1000, y: height - 400 }}
+                />
             </div>
         </>
-    )
-}
+    );
+};

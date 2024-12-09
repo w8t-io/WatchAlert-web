@@ -35,6 +35,23 @@ async function createRuleTmpl(params) {
     }
 }
 
+async function updateRuleTmpl(params) {
+    try {
+        const res = await http('post', `/api/w8t/ruleTmpl/ruleTmplUpdate`, params);
+        message.open({
+            type: 'success',
+            content: '规则模版更新成功',
+        });
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '规则模版更新失败',
+        });
+        return error
+    }
+}
+
 async function deleteRuleTmpl(params) {
     try {
 
@@ -83,6 +100,23 @@ async function createRuleTmplGroup(params) {
     }
 }
 
+async function updateRuleTmplGroup(params) {
+    try {
+        const res = await http('post', `/api/w8t/ruleTmplGroup/ruleTmplGroupUpdate`, params);
+        message.open({
+            type: 'success',
+            content: '规则模版组更新成功',
+        });
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '规则模版组更新失败',
+        });
+        return error
+    }
+}
+
 async function deleteRuleTmplGroup(params) {
     try {
         const res = await http('post', `/api/w8t/ruleTmplGroup/ruleTmplGroupDelete`,params);
@@ -103,8 +137,10 @@ async function deleteRuleTmplGroup(params) {
 export {
     getRuleTmplList,
     createRuleTmpl,
+    updateRuleTmpl,
     deleteRuleTmpl,
     getRuleTmplGroupList,
     createRuleTmplGroup,
+    updateRuleTmplGroup,
     deleteRuleTmplGroup
 }

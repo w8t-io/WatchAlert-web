@@ -41,6 +41,7 @@ import K8sImg from "./img/Kubernetes.svg"
 import ESImg from "./img/ElasticSearch.svg"
 import {PrometheusPromQL} from "../../promethues";
 import {getKubernetesReasonList, getKubernetesResourceList} from "../../../api/kubernetes";
+import { useRule } from '../../../context/RuleContext';
 
 const format = 'HH:mm';
 const MyFormItemContext = React.createContext([])
@@ -64,7 +65,8 @@ const MyFormItem = ({ name, ...props }) => {
     return <Form.Item name={concatName} {...props} />
 }
 
-export const AlertRule = ({ type, ruleGroupId }) => {
+export const AlertRule = ({ type }) => {
+    const { ruleTemplate } = useRule();
     const [form] = Form.useForm()
     const { id,ruleId } = useParams()
     const [selectedRow,setSelectedRow] = useState({})
@@ -137,8 +139,17 @@ export const AlertRule = ({ type, ruleGroupId }) => {
     const [selectedKubeResource,setSelectedKubeResource]=useState('')
     const [kubeReasonListOptions,setKubeReasonListOptions]=useState({})
     const [filterTags,setFilterTags] = useState([])
-
     const [esfilter, setEsfilter] = useState([{}])
+
+    useEffect(() => {
+        if (ruleTemplate) {
+            // 使用模板数据初始化表单
+            type = "tmpl";
+            form.setFieldsValue(ruleTemplate);
+            setPromQL(ruleTemplate.prometheusConfig.promQL)
+            setExprRule(ruleTemplate.prometheusConfig.rules)
+        }
+    }, [ruleTemplate]);
 
     useEffect(() => {
         const handleSearchRuleInfo = async ()=>{
@@ -201,6 +212,7 @@ export const AlertRule = ({ type, ruleGroupId }) => {
             elasticSearchConfig: selectedRow.elasticSearchConfig,
             recoverNotify:selectedRow.recoverNotify,
         })
+        setPromQL(selectedRow.prometheusConfig.promQL)
         setSelectedItems(selectedRow.datasourceId)
         setWeek(selectedRow.effectiveTime.week)
         setStartTime(selectedRow.effectiveTime.startTime)
@@ -879,9 +891,9 @@ export const AlertRule = ({ type, ruleGroupId }) => {
                                             height: 100,
                                             width: 120,
                                             position: 'relative',
-                                            cursor: type === 'edit' ? 'not-allowed' : 'pointer',
+                                            cursor: (type !== 'add') ? 'not-allowed' : 'pointer',
                                             border: selectedCard === index ? '2px solid #1890ff' : '1px solid #d9d9d9',
-                                            pointerEvents: type === 'edit' ? 'none' : 'auto',
+                                            pointerEvents: (type !== 'add') ? 'none' : 'auto',
                                         }}
                                         onClick={() => handleCardClick(index)}
                                     >
