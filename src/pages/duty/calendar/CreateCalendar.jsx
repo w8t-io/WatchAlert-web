@@ -1,19 +1,35 @@
-import React, { useState } from 'react'
-import { Form, Modal, Divider, InputNumber, DatePicker, Select, Button, message } from 'antd'
+import React, {useEffect, useState} from 'react'
+import {Form, Modal, InputNumber, DatePicker, Select, Button, List, Avatar, Space, Drawer, Input} from 'antd'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { PlusOutlined, DeleteOutlined, MenuOutlined } from '@ant-design/icons'
 import { getAllUsers } from '../../../api/other.jsx'
-import { createCalendar } from '../../../api/duty'
+import {createCalendar, GetCalendarUsers} from '../../../api/duty'
+import Search from "antd/es/input/Search";
 
 export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
     const { Option } = Select
     const [form] = Form.useForm()
-    const [selectedItems, setSelectedItems] = useState([])
     const [selectedMonth, setSelectedMonth] = useState(null)
     const [dutyPeriod, setDutyPeriod] = useState(1)
     const [filteredOptions, setFilteredOptions] = useState([])
     const [dateType, setDateType] = useState('day')
+    const [selectedUsers, setSelectedUsers] = useState([])
+    const [searchVisible, setSearchVisible] = useState(false)
 
-    const handleSelectChange = (_, value) => {
-        setSelectedItems(value)
+    useEffect(() => {
+        handleGetCalendarUsers()
+    }, [visible])
+
+    const handleGetCalendarUsers = async ()  =>{
+        try {
+            const params = {
+                dutyId: dutyId
+            }
+            const res = await GetCalendarUsers(params)
+            setSelectedUsers(res.data)
+        } catch (error) {
+            console.error(error)
+        }
     }
 
     const onChangeDate = (date, dateString) => {
@@ -49,19 +65,153 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
         }
     }
 
+    const onSearchDutyUser = (query) =>{
+        // 确保 query 是一个有效的字符串
+        if (!query || typeof query !== "string") {
+            handleSearchDutyUser()
+            return;
+        }
+
+        // 过滤 filteredOptions
+        const filtered = filteredOptions.filter((item) =>
+            item.username.toLowerCase().includes(query.toLowerCase())
+        );
+
+        // 更新过滤后的结果
+        setFilteredOptions(filtered);
+    }
+
+    const handleDragEnd = (result) => {
+        if (!result.destination) return
+
+        const items = Array.from(selectedUsers)
+        const [reorderedItem] = items.splice(result.source.index, 1)
+        items.splice(result.destination.index, 0, reorderedItem)
+
+        setSelectedUsers(items)
+    }
+
+    const handleDeleteUser = (index) => {
+        const newUsers = selectedUsers.filter((_, idx) => idx !== index)
+        setSelectedUsers(newUsers)
+    }
+
+    const SelectUserModal = () => (
+        <Modal
+            title="选择值班人员"
+            visible={searchVisible}
+            onCancel={() => setSearchVisible(false)}
+            footer={null}
+            styles={{ body: { maxHeight: 'calc(100vh - 300px)', overflowY: 'auto' } }}
+        >
+            <Search
+                placeholder="搜索值班人员"
+                onSearch={onSearchDutyUser}
+            />
+            <List
+                dataSource={filteredOptions.filter(
+                    option => !selectedUsers.find(user => user.userid === option.userid)
+                )}
+                renderItem={item => (
+                    <List.Item
+                        onClick={() => {
+                            setSelectedUsers([...selectedUsers, item])
+                            setSearchVisible(false)
+                        }}
+                        style={{ cursor: 'pointer' }}
+                    >
+                        <List.Item.Meta
+                            avatar={<Avatar>{item.username[0]}</Avatar>}
+                            title={item.username}
+                        />
+                    </List.Item>
+                )}
+            />
+        </Modal>
+    )
+
+    const DutyUserList = () => (
+        <Form.Item
+            name="dutyUser"
+            label="值班人员"
+            rules={[{ required: true, message: '请选择值班人员' }]}
+        >
+            <div>
+                <Button
+                    type="dashed"
+                    onClick={() => {
+                        handleSearchDutyUser()
+                        setSearchVisible(true)
+                    }}
+                    style={{ marginBottom: 16 }}
+                >
+                    <PlusOutlined /> 添加值班人员
+                </Button>
+
+                <DragDropContext onDragEnd={handleDragEnd}>
+                    <Droppable droppableId="dutyUsers">
+                        {(provided) => (
+                            <div {...provided.droppableProps} ref={provided.innerRef}>
+                                {selectedUsers.map((user, index) => (
+                                    <Draggable
+                                        key={user.userid}
+                                        draggableId={user.userid}
+                                        index={index}
+                                    >
+                                        {(provided) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                style={{
+                                                    padding: '8px',
+                                                    marginBottom: '8px',
+                                                    border: '1px solid #f0f0f0',
+                                                    borderRadius: '4px',
+                                                    backgroundColor: 'white',
+                                                    ...provided.draggableProps.style
+                                                }}
+                                            >
+                                                <Space>
+                                                    <span {...provided.dragHandleProps}>
+                                                        <MenuOutlined />
+                                                    </span>
+                                                    <Avatar>{user.username[0]}</Avatar>
+                                                    {user.username}
+                                                    <Button
+                                                        type="text"
+                                                        danger
+                                                        icon={<DeleteOutlined />}
+                                                        onClick={() => handleDeleteUser(index)}
+                                                    />
+                                                </Space>
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+                </DragDropContext>
+            </div>
+        </Form.Item>
+    )
 
     const generateCalendar = () => {
-        if (selectedMonth && dutyPeriod && selectedItems.length > 0) {
+        if (selectedMonth && dutyPeriod && selectedUsers.length > 0) {
             const startDate = new Date(selectedMonth)
             const endDate = new Date(startDate)
-            endDate.setDate(endDate.getDate() + (dutyPeriod * selectedItems.length) - 1)
+            endDate.setDate(endDate.getDate() + (dutyPeriod * selectedUsers.length) - 1)
 
             const calendarData = {
                 dutyId: dutyId,
                 month: selectedMonth,
                 dutyPeriod: dutyPeriod,
                 dateType: dateType,
-                users: selectedItems.map((item) => ({ username: item.value, userid: item.userid })),
+                users: selectedUsers.map((user) => ({
+                    username: user.username,
+                    userid: user.userid
+                })),
             }
 
             handleFormSubmit(calendarData)
@@ -71,15 +221,7 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
     }
 
     return (
-        <Modal
-            visible={visible}
-            onCancel={onClose}
-            footer={null}
-            styles={{ body: { maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' } }}
-            centered
-        >
-            <Divider />
-
+        <Drawer title="发布日程" open={visible} onClose={onClose} size='large'>
             <Form>
                 <Form.Item
                     name="year-month"
@@ -116,36 +258,15 @@ export const CreateCalendarModal = ({ visible, onClose, dutyId }) => {
                     />
                 </Form.Item>
 
-                <Form.Item
-                    name="dutyUser"
-                    label="值班人员"
-                    rules={[
-                        {
-                            required: true,
-                        },
-                    ]}
-                >
-                    <Select
-                        mode="multiple"
-                        placeholder="请选择需要值班的人员"
-                        onChange={handleSelectChange}
-                        onClick={handleSearchDutyUser}
-                        style={{
-                            width: '100%',
-                        }}
-                    >
-                        {filteredOptions.map((item) => (
-                            <Option key={item.username} value={item.username} userid={item.userid}>
-                                {item.username}
-                            </Option>
-                        ))}
-                    </Select>
-                </Form.Item>
+                <DutyUserList />
             </Form>
 
-            <Button type="primary" onClick={generateCalendar}>
-                提交
-            </Button>
-        </Modal>
+            <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Button type="primary" onClick={generateCalendar}>
+                    提交
+                </Button>
+            </div>
+            <SelectUserModal/>
+        </Drawer>
     )
 }

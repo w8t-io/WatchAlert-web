@@ -112,6 +112,19 @@ async function searchCalendar(params) {
     }
 }
 
+async function GetCalendarUsers(params) {
+    try {
+        const res = await http('get', '/api/w8t/calendar/getCalendarUsers', params);
+        return res;
+    } catch (error) {
+        message.open({
+            type: 'error',
+            content: '获取值班表用户列表失败',
+        });
+        return error
+    }
+}
+
 export {
     getDutyManagerList,
     createDutyManager,
@@ -119,5 +132,6 @@ export {
     deleteDutyManager,
     createCalendar,
     updateCalendar,
-    searchCalendar
+    searchCalendar,
+    GetCalendarUsers
 }

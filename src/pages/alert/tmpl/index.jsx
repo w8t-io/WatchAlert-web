@@ -181,6 +181,8 @@ export const RuleTemplate = () => {
             ruleGroupName: selectedRuleGroup.label
         };
 
+        console.log(templateData)
+
         // 将数据存储到 Context 中
         setRuleTemplate(templateData);
 
