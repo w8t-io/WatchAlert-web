@@ -73,7 +73,7 @@ export const AlertRule = ({ type }) => {
     const [enabled, setEnabled] = useState(true) // 设置初始状态为 true
     const [recoverNotify,setRecoverNotify] = useState(true)
     const [alarmAggregation,setAlarmAggregation] = useState(true)
-    const [selectedType, setSelectedType] = useState(null) // 数据源类型
+    const [selectedType, setSelectedType] = useState(0) // 数据源类型
     const [datasourceOptions, setDatasourceOptions] = useState([])  // 数据源列表
     const [selectedItems, setSelectedItems] = useState([])  //选择数据源
     const [noticeLabels, setNoticeLabels] = useState([]) // noAice Lable
@@ -85,7 +85,7 @@ export const AlertRule = ({ type }) => {
     const [severityValue, setSeverityValue] = useState(1)
 
     const [jaegerServiceList, setJaegerServiceList] = useState([])
-    const [selectedCard, setSelectedCard] = useState(null);
+    const [selectedCard, setSelectedCard] = useState(0);
     const [exprRule, setExprRule] = useState([{}])
     // 初始化时间数据的状态
     const [week,setWeek] = useState(null)
@@ -144,32 +144,45 @@ export const AlertRule = ({ type }) => {
     useEffect(() => {
         if (ruleTemplate) {
             // 使用模板数据初始化表单
-            type = "tmpl";
             form.setFieldsValue(ruleTemplate);
-            setPromQL(ruleTemplate.prometheusConfig.promQL)
-            setExprRule(ruleTemplate.prometheusConfig.rules)
-        }
-    }, [ruleTemplate]);
+            setPromQL(ruleTemplate.prometheusConfig.promQL);
+            setExprRule(ruleTemplate.prometheusConfig.rules);
 
-    useEffect(() => {
-        const handleSearchRuleInfo = async ()=>{
-            try {
-                const params = {
-                    ruleGroupId: id,
-                    ruleId: ruleId
-                };
-                const res = await searchRuleInfo(params);
-                setSelectedRow(res.data); // 更新状态
-                initBasicInfo(res.data)
-            } catch (error) {
-                console.error('Error fetching rule info:', error);
-            } finally {
-                setLoading(false); // 请求完成后设置 loading 状态
+            const datasourceTypeMap = {
+                "Prometheus": 0,
+                "Loki": 1,
+                "AliCloudSLS": 2,
+                "Jaeger": 3,
+                "CloudWatch": 4,
+                "VictoriaMetrics": 5,
+                "KubernetesEvent": 6,
+                "ElasticSearch": 7
+            };
+
+            const t = datasourceTypeMap[ruleTemplate.datasourceType] || 0;
+            setSelectedType(t);
+            setSelectedCard(t);
+            type = 'tmpl'
+        } else {
+            const handleSearchRuleInfo = async ()=>{
+                try {
+                    const params = {
+                        ruleGroupId: id,
+                        ruleId: ruleId
+                    };
+                    const res = await searchRuleInfo(params);
+                    setSelectedRow(res.data); // 更新状态
+                    initBasicInfo(res.data)
+                } catch (error) {
+                    console.error('Error fetching rule info:', error);
+                } finally {
+                    setLoading(false); // 请求完成后设置 loading 状态
+                }
             }
-        }
 
-        if (type === "edit"){
-            handleSearchRuleInfo()
+            if (type === "edit"){
+                handleSearchRuleInfo()
+            }
         }
     }, [])
 
@@ -1034,7 +1047,7 @@ export const AlertRule = ({ type }) => {
 
                                     <div className="action-buttons">
                                         <Button type="link" onClick={handleQueryMetrics}>数据预览</Button>
-                                        <Button type="link" onClick={addExprRule} disabled={exprRule.length === 3}>
+                                        <Button type="link" onClick={addExprRule} disabled={exprRule?.length === 3}>
                                             + 添加规则条件
                                         </Button>
                                     </div>

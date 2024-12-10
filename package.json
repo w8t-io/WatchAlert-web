@@ -37,6 +37,7 @@
     "moment": "^2.30.1",
     "prom-client": "^15.1.0",
     "react": "^18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.6.5",
     "react-helmet": "^6.1.0",
