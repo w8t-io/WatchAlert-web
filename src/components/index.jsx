@@ -165,7 +165,7 @@ export const ComponentsContent = (props) => {
                                 alignItems: 'center',
                             }}>
 
-                            <div style={{display: 'flex', marginTop: '25px', marginLeft: '-25px', gap: '5px'}}>
+                            <div style={{display: 'flex', marginTop: '12px', marginLeft: '-25px', gap: '5px'}}>
                                 <div className="footer">
                                     <a target="_blank" title="Logo">
                                         <img src={logoIcon} alt="Logo" className="icon"
