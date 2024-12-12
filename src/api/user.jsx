@@ -1,7 +1,7 @@
 import http from '../utils/http';
 import { message } from 'antd';
 
-async function getUserList(params) {
+async function getUserList() {
     try {
         const res = await http('get', `/api/w8t/user/userList`);
         return res;
@@ -101,10 +101,6 @@ async function checkUser(params) {
         const res = await http('get', `/api/system/checkUser?${queryString}`);
         return res;
     } catch (error) {
-        message.open({
-            type: 'error',
-            content: '用户检查失败',
-        });
         return error
     }
 }

@@ -1,252 +1,238 @@
-import React, { useEffect, useState } from 'react'
-import { Modal, Layout, Button, Checkbox, Form, Input } from 'antd';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { ReactComponent as MyIcon } from '../img/701986.svg'
-import { useNavigate } from 'react-router-dom'
-import githubIcon from '../img/github_logo.png'
-import { checkUser, loginUser, registerUser } from '../api/user'
+'use client'
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import AnimatedMonitoringSVG from "./AnimatedMonitoringSVG";
 import './login.css'
+import { checkUser, loginUser, registerUser } from '../api/user';
+import {message} from "antd";
 
 export const Login = () => {
-    const navigate = useNavigate()
-    const [passwordModal, setPasswordModal] = useState(false)
-    const [isModalVisible, setIsModalVisible] = useState(false)
-    const handleShowModal = () => {
-        setIsModalVisible(true)
-    }
-    const handleHideModal = () => {
-        setIsModalVisible(false)
-    }
-    const siderStyle = {
-        textAlign: 'center',
-        lineHeight: '100vh', // 设置一个固定的行高，或者使用其他方式来控制高度
-        color: 'white', // 如果背景是黑色，文字颜色应该是白色以便可见
-        backgroundColor: 'black', // 背景颜色设置为黑色
-        borderRadius: 0, // 取消圆边角
-    };
+    const [passwordModal, setPasswordModal] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const navigate = useNavigate();
 
-    const layoutStyle = {
-        overflow: 'hidden',
-        width: '100%', // 宽度占据全屏
-        height: '100%', // 高度占据全屏
-    };
-
-    const copyrightStyle = {
-        position: 'absolute',
-        bottom: 0,
-        height: '60%',
-        width: '100%',
-        textAlign: 'center',
-        color: 'white',
-        padding: '10px 0',
-    };
-    const { Sider } = Layout;
-
-    const run = async () => {
-        try {
-            const params = {
-                username: 'admin'
-            }
-            const res = await checkUser(params)
-            if (res.data.username === 'admin') {
-                setPasswordModal(true)
-            }
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
+    // 检查是否已登录
     useEffect(() => {
-        run()
-    }, [])
-
-    // 检查用户是否已经登录
-    useEffect(() => {
-        const token = localStorage.getItem('Authorization')
-        if (!token) {
-            navigate('/login') // 未登录，跳转到登录页面
-        } else {
-            navigate('/')
+        const token = localStorage.getItem('Authorization');
+        if (token) {
+            navigate('/'); // 已登录，跳转到主页
         }
-    }, [navigate])
+    }, [navigate]);
 
-    const onFinish = async (data) => {
+    // 检查 admin 用户是否存在
+    useEffect(() => {
+        const checkAdminUser = async () => {
+            try {
+                const params = { username: 'admin' };
+                const res = await checkUser(params);
+                if (res?.data?.username === 'admin') {
+                    setPasswordModal(true);
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        checkAdminUser();
+    }, []);
+
+    // 处理登录表单提交
+    const onFinish = async (event) => {
+        event.preventDefault(); // 阻止默认表单提交行为
+
+        const formData = new FormData(event.target);
+        const params = {
+            username: formData.get('username'),
+            password: formData.get('password'),
+        };
+
         try {
-            const response = await loginUser(data)
-            const token = response.data
+            const response = await loginUser(params);
+            const token = response.data;
             if (token) {
-                localStorage.setItem('Authorization', token)
-                navigate('/')
+                localStorage.setItem('Authorization', token);
+                navigate('/'); // 登录成功，跳转到主页
             }
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
-    }
+    };
 
-    const handlePasswordSubmit = async (values) => {
+    // 处理密码初始化表单提交
+    const handlePasswordSubmit = async (event) => {
+        event.preventDefault(); // 阻止默认表单提交行为
+
+        const formData = new FormData(event.target);
+        const password = formData.get('password');
+        const confirmPassword = formData.get('confirm-password');
+
+        console.log(password,"-",confirmPassword)
+        if (password !== confirmPassword) {
+            message.open({
+                type: 'error',
+                content: '两次输入的密码不一致',
+            });
+            return;
+        }
+
         try {
-
             const params = {
-                "userid": "admin",
-                "username": "admin",
-                "email": "admin@qq.com",
-                "phone": "18888888888",
-                "password": values.password,
-                "role": "admin",
-            }
+                userid: 'admin',
+                username: 'admin',
+                email: 'admin@qq.com',
+                phone: '18888888888',
+                password: password,
+                role: 'admin',
+            };
 
-            await registerUser(params)
-            handleHideModal()
-            window.location.reload()
+            await registerUser(params);
+            handleHideModal();
+            window.location.reload();
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
-    }
+    };
 
+    // 显示密码初始化模态框
+    const handleShowModal = () => {
+        setIsModalVisible(true);
+    };
+
+    // 隐藏密码初始化模态框
+    const handleHideModal = () => {
+        setIsModalVisible(false);
+    };
     return (
-        <div style={{ height: '100vh' }}>
-            <Layout style={layoutStyle}>
-                <Sider width="50%" style={siderStyle}>
-                    <div>
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: '-80vh', marginLeft: '30px' }}>
-                            <MyIcon className="custom-svg" width="35px" height="35px" />
-                            <span style={{ marginLeft: '10px', fontSize: '18px' }}>AlertCloud</span>
-                            <div style={{ marginTop: '70vh' }}>
-                                <span style={{ marginLeft: '10px', fontSize: '55px' }}>
-                                    WatchAlert
-                                </span>
-                                <span style={{ marginLeft: '10px', fontSize: '15px' }}>
-                                    智能监控，触手可及！
-                                </span>
+        <div className="min-h-screen flex">
+            <div className="w-1/2 bg-black"></div>
+            <div className="w-1/2 bg-white"></div>
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="fixed inset-0 flex items-center justify-center"
+            >
+                <div className="bg-white rounded-3xl overflow-hidden flex w-[800px] h-[500px] shadow-2xl">
+                    {/* Left Side - Login Form */}
+                    <div className="w-3/5 p-10 flex flex-col">
+                        <h1 className="text-3xl font-bold mb-2">登陆</h1>
+                        <p className="text-gray-600 mb-8">欢迎使用 WatchAlert 监控云平台！</p>
+
+                        <form onSubmit={onFinish} className="flex-grow flex flex-col justify-between">
+                            <div className="space-y-6">
+                                <div>
+                                    <input
+                                        type="text"
+                                        name="username"
+                                        placeholder="用户名"
+                                        className="w-full px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                                        required
+                                    />
+                                </div>
+
+                                <div>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        placeholder="密码"
+                                        className="w-full px-4 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                                        required
+                                    />
+                                </div>
+
+                                <div className="flex items-center justify-between">
+                                    <label className="flex items-center space-x-2 cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            className="form-checkbox h-4 w-4 text-black rounded border-gray-300"
+                                        />
+                                        <span className="text-sm text-gray-600">记住我</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="mb-6 flex items-center justify-between">
+                                {!passwordModal && (
+                                    <button
+                                        type="button"
+                                        onClick={handleShowModal}
+                                        className="text-sm text-blue-600 hover:underline"
+                                    >
+                                        ➡️ 点击我初始化 admin 用户密码
+                                    </button>
+                                )}
+                            </div>
+
+                            <div className="space-y-4">
+                                <button
+                                    type="submit"
+                                    className="w-full bg-black text-white py-3 rounded-full hover:bg-gray-800 transition-colors"
+                                >
+                                    登陆
+                                </button>
+                                <p className="text-sm text-gray-500 text-center">
+                                    未来支持 SSO 登录
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+
+                    {/* 密码初始化模态框 */}
+                    {isModalVisible && (
+                        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                            <div className="bg-white p-8 rounded-lg">
+                                <h2 className="text-2xl font-bold mb-4">初始化密码</h2>
+                                <form onSubmit={handlePasswordSubmit}>
+                                    <div className="mb-4">
+                                        <label htmlFor="init-password" className="block text-sm font-medium mb-2 text-gray-700">
+                                            Password
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="init-password"
+                                            name="password"
+                                            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label htmlFor="confirm-password" className="block text-sm font-medium mb-2 text-gray-700">
+                                            Confirm Password
+                                        </label>
+                                        <input
+                                            type="password"
+                                            id="confirm-password"
+                                            name="confirm-password"
+                                            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="flex justify-end">
+                                        <button
+                                            type="button"
+                                            onClick={handleHideModal}
+                                            className="mr-2 px-4 py-2 text-gray-600 hover:text-gray-800"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                                            Submit
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div style={copyrightStyle}>
-                            WatchAlert ©2024 Created by Cairry
-                        </div>
+                    )}
+
+                    {/* Right Side - Decorative */}
+                    <div
+                        className="w-2/5 bg-black p-10 flex flex-col justify-center items-center relative overflow-hidden">
+                        <AnimatedMonitoringSVG/>
                     </div>
-                </Sider>
-                <Layout >
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginTop: '3vh', marginRight: '20px' }}>
-                        <a href="https://github.com/w8t-io/WatchAlert" target="_blank" title="GitHub" rel="noreferrer">
-                            <img src={githubIcon} alt="GitHub Icon" className="icon" style={{ width: '3.5vh', height: '3.5vh', marginRight: '5px' }} />
-                        </a>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '40vh' }}>
-                        <span style={{ marginLeft: '10px', fontSize: '30px', fontWeight: 'bold' }}>
-                            Login System
-                        </span>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', marginTop: '-50px' }}>
-                        <Form
-                            style={{ width: '50vh', marginLeft: '25%' }}
-                            name="normal_login"
-                            className="login-form"
-                            initialValues={{
-                                remember: true,
-                            }}
-                            onFinish={onFinish}
-                        >
-                            <Form.Item
-                                name="username"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input your Username!',
-                                    },
-                                ]}
-                            >
-                                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
-                            </Form.Item>
-                            <Form.Item
-                                name="password"
-                                rules={[
-                                    {
-                                        required: true,
-                                        message: 'Please input your Password!',
-                                    },
-                                ]}
-                            >
-                                <Input
-                                    prefix={<LockOutlined className="site-form-item-icon" />}
-                                    type="password"
-                                    placeholder="Password"
-                                />
-                            </Form.Item>
-                            <Form.Item>
-                                <Form.Item name="remember" valuePropName="checked" noStyle>
-                                    <Checkbox>自动登录</Checkbox>
-                                    {!passwordModal && (
-                                        <a className="login-form-forgot" onClick={handleShowModal}>
-                                            Initialization Password
-                                        </a>
-                                    )}
-                                </Form.Item>
-                            </Form.Item>
-
-                            <Modal
-                                title="初始化密码"
-                                visible={isModalVisible}
-                                onCancel={handleHideModal}
-                                footer={null}>
-
-                                <Form name="password_form" onFinish={handlePasswordSubmit}>
-                                    <Form.Item
-                                        name="password"
-                                        label="Password"
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please input your password!',
-                                            },
-                                        ]}
-                                        hasFeedback
-                                    >
-                                        <Input.Password />
-                                    </Form.Item>
-
-                                    <Form.Item
-                                        name="confirm"
-                                        label="Confirm Password"
-                                        dependencies={['password']}
-                                        hasFeedback
-                                        rules={[
-                                            {
-                                                required: true,
-                                                message: 'Please confirm your password!',
-                                            },
-                                            ({ getFieldValue }) => ({
-                                                validator(_, value) {
-                                                    if (!value || getFieldValue('password') === value) {
-                                                        return Promise.resolve()
-                                                    }
-                                                    return Promise.reject(new Error('The new password that you entered do not match!'))
-                                                },
-                                            }),
-                                        ]}
-                                    >
-                                        <Input.Password />
-                                    </Form.Item>
-
-                                    <Form.Item wrapperCol={{ offset: 100, span: 16 }}>
-                                        <Button type="primary" htmlType="submit">
-                                            Submit
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
-
-                            </Modal>
-
-                            <Form.Item>
-                                <Button style={{ width: '50vh' }} type="primary" htmlType="submit" className="login-form-button">
-                                    登录
-                                </Button>
-                            </Form.Item>
-                        </Form>
-                    </div>
-                </Layout >
-            </Layout >
-
-        </div >
-    );
-
+                </div>
+            </motion.div>
+        </div>
+    )
 }
+
