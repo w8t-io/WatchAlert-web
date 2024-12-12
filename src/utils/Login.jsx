@@ -152,7 +152,7 @@ export const Login = () => {
                                 </div>
                             </div>
 
-                            <div className="mb-6 flex items-center justify-between">
+                            <div className="flex items-center justify-between">
                                 {!passwordModal && (
                                     <button
                                         type="button"
@@ -178,10 +178,16 @@ export const Login = () => {
                         </form>
                     </div>
 
+                    {/* Right Side - Decorative */}
+                    <div
+                        className="w-2/5 bg-black p-10 flex flex-col justify-center items-center relative overflow-hidden">
+                        <AnimatedMonitoringSVG/>
+                    </div>
+
                     {/* 密码初始化模态框 */}
                     {isModalVisible && (
                         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                            <div className="bg-white p-8 rounded-lg">
+                            <div className="bg-white p-8 rounded-lg h-500 w-500">
                                 <h2 className="text-2xl font-bold mb-4">初始化密码</h2>
                                 <form onSubmit={handlePasswordSubmit}>
                                     <div className="mb-4">
@@ -224,12 +230,6 @@ export const Login = () => {
                             </div>
                         </div>
                     )}
-
-                    {/* Right Side - Decorative */}
-                    <div
-                        className="w-2/5 bg-black p-10 flex flex-col justify-center items-center relative overflow-hidden">
-                        <AnimatedMonitoringSVG/>
-                    </div>
                 </div>
             </motion.div>
         </div>
