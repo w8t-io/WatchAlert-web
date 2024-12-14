@@ -5,6 +5,8 @@ import { deleteNotice, getNoticeList, searchNotice } from '../../api/notice';
 import { ReactComponent as FeiShuIcon } from './img/feishu.svg'
 import { ReactComponent as DingdingIcon } from './img/dingding.svg'
 import { ReactComponent as EmailIcon } from './img/Email.svg'
+import { ReactComponent as WeChatIcon } from './img/qywechat.svg'
+import { ReactComponent as CustomHookIcon } from './img/customhook.svg'
 
 export const NoticeObjects = () => {
     const { Search } = Input
@@ -44,6 +46,20 @@ export const NoticeObjects = () => {
                         <div style={{display: 'flex'}}>
                             <EmailIcon style={{height: '25px', width: '25px'}}/>
                             <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>邮件</div>
+                        </div>
+                    )
+                } else if (record.noticeType === 'WeChat') {
+                    return (
+                        <div style={{display: 'flex'}}>
+                            <WeChatIcon style={{height: '25px', width: '25px'}}/>
+                            <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>企业微信</div>
+                        </div>
+                    )
+                } else if (record.noticeType === 'CustomHook') {
+                    return (
+                        <div style={{display: 'flex'}}>
+                            <CustomHookIcon style={{height: '25px', width: '25px'}}/>
+                            <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>自定义Hook</div>
                         </div>
                     )
                 }

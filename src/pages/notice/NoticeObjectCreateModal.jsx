@@ -1,10 +1,12 @@
-import {Modal, Form, Input, Button, Select, Card} from 'antd'
+import {Modal, Form, Input, Button, Select, Card, Drawer, Divider} from 'antd'
 import React, { useState, useEffect } from 'react'
 import { createNotice, updateNotice } from '../../api/notice'
 import { getDutyManagerList } from '../../api/duty'
 import FeiShuImg from "./img/feishu.svg";
 import EmailImg from "./img/Email.svg";
 import DingDingImg from "./img/dingding.svg";
+import WeChatImg from "./img/qywechat.svg"
+import CustomHook from "./img/customhook.svg"
 import { searchNoticeTmpl} from "../../api/noticeTmpl";
 import { getAllUsers } from "../../api/other";
 const MyFormItemContext = React.createContext([])
@@ -93,6 +95,10 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
                 t = 1
             } else if (selectedRow.noticeType === "DingDing"){
                 t = 2
+            } else if (selectedRow.noticeType === "WeChat") {
+                t = 3
+            } else if (selectedRow.noticeType === "CustomHook") {
+                t = 4
             }
 
             setSubjectValue(selectedRow.email.subject)
@@ -182,6 +188,14 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
             imgSrc: DingDingImg,
             text: '钉钉',
         },
+        {
+            imgSrc: WeChatImg,
+            text: '企业微信',
+        },
+        {
+            imgSrc: CustomHook,
+            text: '自定义Hook'
+        }
     ];
 
     useEffect(() => {
@@ -197,6 +211,10 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
             t = "Email"
         } else if (index === 2){
             t = "DingDing"
+        } else if (index === 3){
+            t = "WeChat"
+        } else if (index === 4){
+            t = "CustomHook"
         }
 
         setNoticeType(t)
@@ -239,7 +257,7 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
     }
 
     return (
-        <Modal visible={visible} onCancel={onClose} footer={null} width={800} centered>
+        <Drawer title="创建通知对象" open={visible} onClose={onClose} size='large'>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
 
                 <div style={{display: 'flex'}}>
@@ -393,36 +411,66 @@ export const CreateNoticeObjectModal = ({ visible, onClose, selectedRow, type, h
                     )}
                 </div>
 
-                <div>
-                    <MyFormItem
-                        name="noticeTmplId"
-                        label="通知模版"
-                        rules={[
-                            {
-                                required: true,
-                            },
-                        ]}
+                {selectedNoticeCard !== 4 && (
+                    <div>
+                        <MyFormItem
+                            name="noticeTmplId"
+                            label="通知模版"
+                            rules={[
+                                {
+                                    required: true,
+                                },
+                            ]}
                         >
-                        <Select
-                            showSearch
-                            allowClear
-                            placeholder="请选择通知模版"
-                            options={noticeTmplItems}
-                            value={selectNoticeTmpl}
-                            tokenSeparators={[',']}
-                            onChange={setSelectNoticeTmpl}
-                            onClick={handleGetNoticeTmpl}
-                        />
-                    </MyFormItem>
+                            <Select
+                                showSearch
+                                allowClear
+                                placeholder="请选择通知模版"
+                                options={noticeTmplItems}
+                                value={selectNoticeTmpl}
+                                tokenSeparators={[',']}
+                                onChange={setSelectNoticeTmpl}
+                                onClick={handleGetNoticeTmpl}
+                            />
+                        </MyFormItem>
 
-                </div>
+                    </div>
+                )}
 
+                {selectedNoticeCard === 4 && (
+                    <pre>
+                        <span>Request Body</span>
+                        <code>{`
+{
+    "tenantId": "租户ID",
+    "rule_name": "规则名称",
+    "datasource_type": "数据源类型",
+    "fingerprint": "告警指纹",
+    "severity": "告警等级",
+    "metric": {
+        "__name__": "up",   // 指标 label
+    },
+    "labels": {
+        "key": "value",     // 额外 label
+    },
+    "annotations": "告警详情",
+    "is_recovered": false,  // 是否恢复
+    "first_trigger_time": 1734100959,   // 首次触发时间
+    "first_trigger_time_format": "",
+    "recover_time": 0,      // 恢复时间
+    "recover_time_format": "",
+    "duty_user": "暂无"      // 值班人员
+}
+                      `}</code>
+                    </pre>
+                )}
+                <Divider/>
                 <div style={{display: 'flex', justifyContent: 'flex-end'}}>
                     <Button type="primary" htmlType="submit">
                         提交
                     </Button>
                 </div>
             </Form>
-        </Modal>
+        </Drawer>
     )
 }

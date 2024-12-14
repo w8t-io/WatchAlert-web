@@ -1,9 +1,10 @@
-import {Modal, Form, Input, Button, Card, Tooltip, Checkbox} from 'antd'
+import {Modal, Form, Input, Button, Card, Tooltip, Checkbox, Drawer} from 'antd'
 import React, { useEffect, useState } from 'react'
 import { createNoticeTmpl, updateNoticeTmpl } from '../../../api/noticeTmpl'
 import FeiShuImg from "../img/feishu.svg";
 import EmailImg from "../img/Email.svg";
 import DingDingImg from "../img/dingding.svg";
+import WeChatImg from "../img/qywechat.svg"
 import {QuestionCircleOutlined} from "@ant-design/icons";
 
 const MyFormItemContext = React.createContext([])
@@ -63,6 +64,8 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
                 t = 1
             } else if (selectedRow.noticeType === "DingDing"){
                 t = 2
+            } else if (selectedRow.noticeType === "WeChat"){
+                t = 3
             }
 
             setIsChecked(selectedRow.enableFeiShuJsonCard)
@@ -130,6 +133,10 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
             imgSrc: DingDingImg,
             text: '钉钉',
         },
+        {
+            imgSrc: WeChatImg,
+            text: '企业微信'
+        }
     ];
 
     useEffect(() => {
@@ -145,14 +152,16 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
             t = "Email"
         } else if (index === 2){
             t = "DingDing"
-        }
+        } else if (index === 3){
+           t = "WeChat"
+       }
 
         setNotifyType(t)
         setSelectedNotifyCard(index);
     };
 
     return (
-        <Modal visible={visible} onCancel={onClose} footer={null} width={800} centered>
+        <Drawer title="创建通知模版" open={visible} onClose={onClose} size='large'>
             <Form form={form} name="form_item_path" layout="vertical" onFinish={handleFormSubmit}>
 
                 <div style={{display: 'flex'}}>
@@ -293,7 +302,7 @@ const NoticeTemplateCreateModal = ({ visible, onClose, selectedRow, type, handle
                     </Button>
                 </div>
             </Form>
-        </Modal>
+        </Drawer>
     )
 }
 
