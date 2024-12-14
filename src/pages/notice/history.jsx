@@ -5,6 +5,8 @@ import * as echarts from 'echarts';
 import { ReactComponent as FeiShuIcon } from './img/feishu.svg'
 import { ReactComponent as DingdingIcon } from './img/dingding.svg'
 import { ReactComponent as EmailIcon } from './img/Email.svg'
+import { ReactComponent as WeChatIcon } from './img/qywechat.svg'
+import { ReactComponent as CustomHookIcon } from './img/customhook.svg'
 import { ReactComponent as P0 } from "../alert/event/img/P0.svg"
 import { ReactComponent as P1 } from "../alert/event/img/P1.svg"
 import { ReactComponent as P2 } from "../alert/event/img/P2.svg"
@@ -70,6 +72,20 @@ export const NoticeRecords = () => {
                         <div style={{display: 'flex'}}>
                             <EmailIcon style={{height: '25px', width: '25px'}}/>
                             <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>邮件</div>
+                        </div>
+                    )
+                } else if (text === 'WeChat') {
+                    return (
+                        <div style={{display: 'flex'}}>
+                            <WeChatIcon style={{height: '25px', width: '25px'}}/>
+                            <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>企业微信</div>
+                        </div>
+                    )
+                } else if (text === 'CustomHook') {
+                    return (
+                        <div style={{display: 'flex'}}>
+                            <CustomHookIcon style={{height: '25px', width: '25px'}}/>
+                            <div style={{marginLeft: "5px",marginTop: '5px', fontSize:'12px' }}>自定义Hook</div>
                         </div>
                     )
                 }
